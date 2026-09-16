@@ -1,0 +1,13 @@
+Tickform — licensing strategy under review
+
+Questo file è un placeholder. Non costituisce e non deve essere interpretato
+come la licenza finale del progetto o come concessione di diritti d'uso.
+
+Ipotesi attuali, non ancora adottate:
+- Hardware: CERN-OHL-S-2.0 o altra variante CERN-OHL.
+- Firmware/software: GPL-3.0.
+- Documentazione: CC BY-SA 4.0.
+
+La scelta definitiva, l'ambito di applicazione e i testi delle licenze saranno
+confermati successivamente. L'intento open-source/open-hardware non sostituisce
+l'adozione esplicita delle licenze.

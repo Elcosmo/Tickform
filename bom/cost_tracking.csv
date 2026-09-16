@@ -1,0 +1,4 @@
+category,supplier,description,currency,amount_min_eur,amount_max_eur,amount_status,source,notes
+DEVELOPMENT_EXPENSE,AliExpress,Initial development components,EUR,48.73,48.73,APPROXIMATE,Project bootstrap specification 2026-09-16,Includes stock multiples and spares; not per-unit cost
+DEVELOPMENT_EXPENSE,TME,Initial development components,EUR,50,51,APPROXIMATE,Project bootstrap specification 2026-09-16,Aggregate estimate; line-item prices unknown
+ONE_TIME_TOOL,Amazon,Initial tools,EUR,32.07,32.07,ACTUAL,Supervision order cost update 2026-09-16,Known actual order cost reported by supervision; one-time tools included in initial development expense total

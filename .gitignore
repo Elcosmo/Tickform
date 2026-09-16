@@ -1,0 +1,54 @@
+# Python e ambienti locali (nessun ambiente creato in M0)
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+
+# Configurazioni locali e segreti
+.vscode/
+.idea/
+.env
+.env.*
+!.env.example
+
+# Build e output binari STM32 / software
+[Bb]uild/
+[Dd]ebug/
+[Rr]elease/
+dist/
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.exe
+*.elf
+*.hex
+*.bin
+*.map
+*.list
+*.su
+
+# Temporanei e sistema operativo
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Acquisizioni reali lunghe: conservarle fuori dal repository.
+# Eccezione intenzionale: piccoli RAW selezionati e relativi JSON in examples.
+*.[rR][aA][wW]
+!data/examples/**/*.[rR][aA][wW]

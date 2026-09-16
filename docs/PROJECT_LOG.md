@@ -29,3 +29,10 @@ Cronologia **APPEND-ONLY**: aggiungere nuove sezioni in fondo, senza riscrivere 
 
 - Il precedente valore indicativo di circa 31 EUR è sostituito dal costo effettivo noto dell'ordine Amazon tools: 32.07 EUR, comunicato dalla supervisione.
 - AliExpress resta 48.73 EUR e TME 50–51 EUR; la spesa iniziale di sviluppo aggiornata è 130.80–131.80 EUR, non il costo unitario di un Tickform.
+
+## 2026-09-16 — Baseline M0 registrata
+
+- Review M0 superata; primo commit di baseline creato: 97f102b (chore: bootstrap Tickform repository).
+- M0 — Repository Bootstrap dichiarato COMPLETE.
+- Prossima fase: FASE 0 — Receiving inspection, da avviare quando i componenti saranno disponibili; nessuna ricezione o verifica hardware dichiarata.
+- Memoria primaria del progetto operativa nel repository; PROJECT_STATE riferito al primo commit di baseline.

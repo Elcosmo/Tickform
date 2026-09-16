@@ -3,8 +3,9 @@
 Fotografia vivente dello stato corrente. Aggiornare quando cambia realmente il progetto; la cronologia resta in PROJECT_LOG e le decisioni negli ADR.
 
 - **Last updated:** 2026-09-16
-- **Reference commit:** NOT YET CREATED
-- **Current milestone:** M0 — Repository Bootstrap; bootstrap preparato, in attesa di review.
+- **Reference commit:** 97f102b — M0 bootstrap baseline
+- **Current milestone:** M0 — Repository Bootstrap: COMPLETE
+- **Next milestone:** FASE 0 — Receiving inspection
 
 ## Hardware status
 
@@ -42,7 +43,9 @@ Target indicativi, non prestazioni ottenute: V0 circa ±0,5 s/day di errore stru
 - Ispezione iniziale: root ufficiale esistente e vuota; nessun file preesistente o `.git`.
 - Struttura e documentazione M0 preparate, inclusi sei ADR accettati dalla specifica di avvio.
 - BOM as purchased, costi indicativi, checklist e formato RAW draft documentati.
-- Git locale inizializzato su `main`, origin configurato; nessun commit o push.
+- Review M0 superata; baseline iniziale committata (97f102b).
+- Repository locale inizializzato su main; remote origin configurato.
+- Memoria documentale primaria attiva nel repository.
 
 ## Open questions
 
@@ -57,14 +60,14 @@ Target indicativi, non prestazioni ottenute: V0 circa ±0,5 s/day di errore stru
 
 ## Blockers
 
-Nessun blocco rilevato per M0. La review del bootstrap precede commit/push e lavoro successivo. Ricezione e identificazione dell'hardware sono prerequisiti delle rispettive fasi di bring-up; non sono verifiche già completate.
+Nessun blocco rilevato per M0, revisionato e completo. Pubblicazione/sincronizzazione della baseline sul remote come prossima azione. Ricezione e identificazione dell'hardware sono prerequisiti delle rispettive fasi di bring-up; non sono verifiche già completate.
 
 ## Next actions
 
-1. Review del bootstrap da parte della supervisione.
-2. Solo dopo autorizzazione separata: primo commit e pubblicazione sul remote già esistente.
-3. Receiving inspection e aggiornamento della checklist con evidenze reali.
-4. Seguire il bring-up nell'ordine documentato, prima di sviluppare DSP o GUI.
+1. Pubblicare/sincronizzare la baseline sul remote.
+2. Receiving inspection dei componenti quando disponibili.
+3. Aggiornare checklist e PROJECT_STATE con evidenze reali.
+4. Successivamente procedere con FASE 1 e seguenti secondo roadmap.
 
 ## Important constraints
 
@@ -76,4 +79,4 @@ Nessun blocco rilevato per M0. La review del bootstrap precede commit/push e lav
 - Non confondere ipotesi, risoluzione, accuratezza e misure reali; niente DSP avanzato prima di dati reali affidabili.
 - Non modificare l'architettura senza CHANGE REQUEST documentata e decisione della supervisione.
 - Nessun secret o informazione personale nel repository; nessuna modifica alle configurazioni Git globali.
-- M0 limitato a repository e memoria documentale: niente installazioni, codice applicativo, dati inventati, commit, push, tag, release o branch aggiuntivi.
+- M0 limitato a repository e memoria documentale: niente installazioni, codice applicativo o dati inventati. Dopo review positiva sono autorizzati i due commit di baseline e il push; nessun tag, release, branch aggiuntivo o avvio della FASE 0 in questa attività.

@@ -1,16 +1,18 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Tutte le voci sono inizialmente non verificate. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. M0 non esegue queste fasi.
+Strumento operativo vivo. Stato aggiornato al 2026-09-25: le voci spuntate attestano soltanto gli esiti consolidati della receiving inspection riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; verifiche funzionali delle fasi successive non eseguite in questa attività.
 
 ## FASE 0 — Receiving inspection
 
 Identificare e ispezionare ogni componente ricevuto. Fotografie e verifiche di ricezione sotto riportate appartengono a questa fase; procedere all'alimentazione nelle fasi successive solo dopo i controlli pertinenti. Non assumere lo schema dei breakout o le specifiche AliExpress come certe.
 
+Esiti: supervisione, 2026-09-25; vedere PROJECT_LOG alla stessa data. Le voci PCM1808 fronte/retro attestano ispezione, non fotografie archiviate. La rete DS3231 D2 + R4 (201) conferma la precauzione: NON inserire CR2032 non ricaricabile; batteria non necessaria per V0. Nessun test ID è stato fornito per questi esiti. Ricezione/ispezione piezo registrata nel log: non esiste una corrispondente voce in questa checklist; Piezo connected resta non spuntata.
+
 ## FASE 1 — WeAct standalone
 
-- [ ] WeAct board received and identified
-- [ ] STM32G431CBU6 marking verified
-- [ ] Board inspected for damage
+- [x] WeAct board received and identified
+- [x] STM32G431CBU6 marking verified
+- [x] Board inspected for damage
 - [ ] 3V3 verified
 - [ ] ST-Link communication verified
 - [ ] Minimal firmware flashed
@@ -19,26 +21,26 @@ Identificare e ispezionare ogni componente ricevuto. Fotografie e verifiche di r
 
 ## FASE 2 — DS3231 standalone
 
-- [ ] DS3231 module received and identified
-- [ ] DS3231 board inspected
-- [ ] Battery/charging topology checked
-- [ ] INT/SQW pin identified
+- [x] DS3231 module received and identified
+- [x] DS3231 board inspected
+- [x] Battery/charging topology checked
+- [x] INT/SQW pin identified
 - [ ] I2C communication verified
 - [ ] SQW configured to 1 Hz
 - [ ] SQW 1 Hz verified
 
 ## FASE 3 — XO standalone
 
-- [ ] 24.576 MHz XO received
-- [ ] XO marking documented
+- [x] 24.576 MHz XO received
+- [x] XO marking documented
 - [ ] XO pinout verified before power-up
 - [ ] XO supply requirements verified
 
 ## FASE 4 — PCM1808 senza AFE
 
-- [ ] PCM1808 breakout received
-- [ ] PCM1808 front photographed
-- [ ] PCM1808 rear photographed
+- [x] PCM1808 breakout received
+- [x] PCM1808 front inspected
+- [x] PCM1808 rear inspected
 - [ ] Breakout topology inspected
 - [ ] PCM1808 supply rails verified
 - [ ] MD0/MD1/FMT configuration understood

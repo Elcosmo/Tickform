@@ -14,13 +14,15 @@ Non riaprire senza evidenza le scelte dei sei ADR: ADC/rate, MCU, RAW, metrologi
 
 ## Stato corrente
 
-M0 — Repository Bootstrap preparato, in attesa di review. Root ufficiale `A:\Documenti\Tickform`, PC sorgente primaria; remote https://github.com/Elcosmo/Tickform.git. Git su `main`, nessun commit (Reference commit: NOT YET CREATED), nessun push.
+Aggiornamento 2026-09-25: FASE 0 — Receiving inspection: COMPLETE. Prossima milestone FASE 1 — WeAct standalone (SWD, firmware minimo, clock MCU, USB), non avviata. Root ufficiale `A:\Documenti\Tickform`, PC sorgente primaria; remote https://github.com/Elcosmo/Tickform.git. Git su `main`; baseline M0 97f102b e aggiornamento memoria 3e96ee2 già pubblicati.
 
-Completati: struttura documentale, STATE/LOG/HANDOFF, sei ADR, checklist, BOM as purchased, costi indicativi, placeholder licenza, draft RAW e regole Git. Firmware, software, GUI e bring-up non iniziati. Componenti acquistati/in ricezione: non assumere che siano tutti disponibili. Nessun dato reale acquisito o sintetico generato; hardware e software non validati.
+Tutti gli ordini TME, Amazon e AliExpress ricevuti completi; componenti principali identificati, controlli visivi e passivi a campione completati, nessun problema macroscopico rilevato. Ricevuto e FASE 0 COMPLETE non significano hardware funzionalmente validato. Firmware, software e GUI non iniziati; nessuna acquisizione RAW di orologio disponibile. Dettagli e misure della receiving inspection nel PROJECT_LOG del 2026-09-25.
 
 ## Open questions e prossime azioni
 
-Review del bootstrap prima di autorizzare commit/push e lavoro successivo. Poi receiving inspection: topologia PCM1808, identificazione/pinout/alimentazione XO, batteria/ricarica DS3231 e identificazione MCU. AFE definitivo e meccanica pickup restano sperimentali; protocollo USB, framing e formato RAW non congelati. Licenze under review; accuratezza e costi unitari non misurati.
+In una successiva attività procedere con FASE 1. WeAct STM32G431CBU6 identificata, ma SWD/USB/MCU non testati. PCM1808 SKU:01325: topologia completa, rail sotto alimentazione, ADC, clock e MD/FMT ancora da verificare. DS3231 HW-084 / DS3231SN con AT24C32 e rete di carica D2 + R4 (201): NON inserire CR2032 non ricaricabile; batteria non necessaria per V0, I²C/SQW/accuratezza non testati. XO marcati 24.5760 MHz, metal can 4 pin con geometria DIP-14: NON ALIMENTARE finché pinout e supply voltage non sono verificati; non inferire il pinout dal package.
+
+AFE definitivo e meccanica pickup restano sperimentali; protocollo USB, framing e formato RAW non congelati. Licenze under review; accuratezza e costi unitari non misurati. Spesa iniziale di sviluppo 130.80–131.80 EUR, incluso Amazon 32.07 EUR; non costo unitario.
 
 Seguire le fasi 0–10 della checklist. Ordine DSP: RAW acquisition → waveform viewer → event detection → BPH → rate → beat error → amplitude → timegrapher plot → analisi avanzata. Niente DSP sofisticato prima di dati reali affidabili. Target V0 ±0,5 s/day o meglio e futuro V1 circa ±0,1 s/day sono obiettivi indicativi, non risultati.
 

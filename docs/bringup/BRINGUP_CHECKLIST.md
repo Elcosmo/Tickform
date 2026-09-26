@@ -1,6 +1,6 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Stato aggiornato al 2026-09-26: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 in corso, Gate 1/2/3 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB nativa ancora da verificare.
+Strumento operativo vivo. Stato aggiornato al 2026-09-26: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE, Gate 1/2/3/4 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB FS CDC enumeration verificata, stabile almeno 60 s e disconnect/reconnect PASS. FASE 2 DS3231 standalone NEXT, non avviata.
 
 ## FASE 0 — Receiving inspection
 
@@ -17,7 +17,7 @@ Esiti: supervisione, 2026-09-25; vedere PROJECT_LOG alla stessa data. Le voci PC
 - [x] ST-Link communication verified
 - [x] Minimal firmware flashed
 - [x] MCU clock verified
-- [ ] USB enumeration verified
+- [x] USB enumeration verified
 
 ## FASE 2 — DS3231 standalone
 

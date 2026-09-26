@@ -147,3 +147,17 @@ Esiti fisici comunicati dalla supervisione; nessuna nuova connessione o programm
 - Gate 3 PASS: configurazione 170 MHz nominali operativamente attiva e coerente con la diagnostica. Non è una misura metrologica di accuratezza assoluta del clock né una prova di stabilità prolungata.
 - Checklist: MCU clock verified completata; 3V3 verified completata sulla base della misura reale circa 3.29 V già documentata nel Gate 1. USB enumeration verified resta non completata.
 - FASE 1 resta IN PROGRESS; Gate 1/2/3 PASS, Gate 4 — native USB diventa NEXT, non avviato. Firmware Gate 3 validato conservato senza rifattorizzazioni; architettura e ADR invariati.
+
+## 2026-09-26 — Gate 4 PASS e FASE 1 COMPLETE
+
+Esiti fisici comunicati dalla supervisione; nessun nuovo accesso al target durante questo consolidamento. Firmware validato conservato senza rifattorizzazioni.
+
+- Build Gate 4 pulita PASS, senza warning: flash 31052 B, RAM allocata 4184 B, CubeCLT 1.22.0 / ARM GCC 14.3.1 e CubeG4 1.6.3. Artefatto firmware/stm32g431/build/gate4/tickform_gate4.hex escluso da Git.
+- Flash PASS, verify Download verified successfully, software reset PASS sulla WeAct STM32G431CBU6.
+- Core HSI16 → PLL → 170 MHz nominali, configurazione Gate 3 invariata. USB FS nativa PA11=DM/PA12=DP, HSI48 dedicato e CRS su USB SOF, CDC ACM ufficiale ST; product string Tickform Gate 4.
+- Windows: Dispositivo seriale USB, COM5 osservata nel test (assegnazione locale, non porta fissa né identificatore del protocollo). Hardware ID VID_0483 / PID_5740 verificato: DEVELOPMENT ONLY, non identità USB definitiva, da riesaminare e sostituire prima di qualsiasi release/prodotto.
+- Nessun triangolo giallo o errore driver; dispositivo indicato come funzionante correttamente, nessun driver custom richiesto. Enumerazione mantenuta almeno 60 s.
+- Disconnect/reconnect PASS: scollegando USB-C device/COM scompaiono, ricollegandola CDC ri-enumera correttamente. WeAct alimentata dalla USB-C al PC, ST-Link solo SWD senza alimentare la board.
+- Nessun test dati CDC eseguito, intenzionalmente. CDC resta diagnostica di bring-up: protocollo/trasporto RAW da progettare separatamente; streaming USB, throughput audio, I2S, DMA e metrologia BCK/DS3231 non validati.
+- Gate 4 PASS; checklist USB enumeration verified completata. Gate 1/2/3/4 PASS: FASE 1 — WeAct standalone COMPLETE.
+- FASE 2 — DS3231 standalone NEXT: collegamento, I2C, identificazione/configurazione, INT/SQW esplicitamente a 1 Hz e verifica SQW. Nessuna attività FASE 2 avviata; architettura e ADR invariati.

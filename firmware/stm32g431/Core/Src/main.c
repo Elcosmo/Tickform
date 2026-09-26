@@ -1,4 +1,6 @@
 #include "stm32g4xx.h"
+#include "stm32g4xx_hal.h"
+void gate4_usb_init(void);
 
 #define TARGET_HZ 170000000UL
 #define WAIT_LIMIT 1000000UL
@@ -107,15 +109,15 @@ static void clock_170mhz(void)
     gate3_status = 170U;
 }
 
-static void delay_ms(uint32_t milliseconds)
+void SysTick_Handler(void)
 {
-    SysTick->VAL = 0U;
-    for (uint32_t elapsed = 0U; elapsed < milliseconds; ++elapsed) {
-        if (!wait_bits(&SysTick->CTRL, SysTick_CTRL_COUNTFLAG_Msk,
-                       SysTick_CTRL_COUNTFLAG_Msk)) {
-            failure(7U);
-        }
-    }
+    HAL_IncTick();
+}
+
+void Error_Handler(void)
+{
+    __disable_irq();
+    failure(8U); /* Gate 4 HAL/USB initialization failed. */
 }
 
 int main(void)
@@ -131,14 +133,15 @@ int main(void)
     (void)RCC->APB1ENR1;
 
     clock_170mhz();
-    /* Fixed diagnostic reload: NEVER derive it from SystemCoreClock. */
-    SysTick->LOAD = (TARGET_HZ / 1000U) - 1U; /* 169999 */
-    SysTick->VAL = 0U;
-    SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
+    /* HAL SysTick runs at 1 ms with reload 169999 after the unchanged Gate 3 clock setup. */
+    if (HAL_Init() != HAL_OK || SysTick->LOAD != 169999U) {
+        Error_Handler();
+    }
+    gate4_usb_init();
     for (;;) {
         GPIOC->BSRR = (1UL << 6U);
-        delay_ms(500U);
+        HAL_Delay(500U);
         GPIOC->BSRR = (1UL << (6U + 16U));
-        delay_ms(500U);
+        HAL_Delay(500U);
     }
 }

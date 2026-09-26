@@ -1,59 +1,114 @@
-# Tickform — FASE 1, Gate 3: clock MCU 170 MHz
+# Tickform — FASE 1, Gate 4: native USB CDC diagnostic
 
-Firmware diagnostico per WeAct Studio STM32G431 Core Board V1.0 / STM32G431CBU6. Gate 2 resta la baseline fisicamente validata nel commit b9fadb9. Gate 3 PASS: il 2026-09-26 la supervisione ha confermato flash, verify e software reset riusciti; LED PC6 circa 0.5 s ON/OFF osservato per 10–15 secondi, senza LED fisso/failure path né andamento circa 5 s ON/OFF. Configurazione 170 MHz nominali operativamente attiva e coerente con il test; non misura di accuratezza assoluta o prova di stabilità prolungata. Non avvia Gate 4.
+Target: WeAct Studio STM32G431 Core Board V1.0, STM32G431CBU6 (UFQFPN48).
+Baseline Gate 3 fisicamente validata: e284bd3. Gate 4 PASS e FASE 1 COMPLETE: flash, verify e software reset riusciti;
+esiti fisici comunicati dalla supervisione il 2026-09-26. Nessun nuovo accesso
+al target durante il consolidamento.
 
-## Configurazione e verifica documentale
+## Hardware e clock
 
-HSI16 → PLLM /4 → 4 MHz → PLLN ×85 → VCO 340 MHz → PLLR /2 → SYSCLK 170 MHz nominali. AHB /1, APB1 /1, APB2 /1: HCLK, PCLK1 e PCLK2 nominalmente 170 MHz. Uscite PLL P/Q disabilitate; HSE e periferiche esterne non configurati.
+Verificato lo [schema ufficiale WeAct QFN48 V1.0](https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard/blob/master/Hardware/QFN48/WeAct-STM32G431CxUxCoreBoard_V10_SchDoc.pdf):
+J1 USB-C DN1/DN2 -> PA11 USB_DM, DP1/DP2 -> PA12 USB_DP. VBUS alimenta
+VCC e il regolatore 3.3 V. Lo stesso cavo USB-C dati al PC alimenta la board
+ed espone la USB nativa; ST-Link resta solo SWD, senza alimentazione 3.3/5 V.
+Nessun bridge USB/UART necessario. Non alimentare contemporaneamente da VCC esterna
+per questa prova, che assume alimentazione esclusiva dal bus USB.
 
-Fonti ufficiali consultate il 2026-09-26:
+La funzione clock_170mhz e i relativi controlli del Gate 3 restano invariati:
+HSI16 /4 x85 /2, ingresso PLL 4 MHz, VCO 340 MHz, SYSCLK/HCLK/PCLK1/PCLK2
+170 MHz nominali, bus /1, Range 1 Boost, Flash 4 WS, transizione AHB /2.
+La validazione precedente è operativa, non metrologica.
 
-- STM32CubeG4 1.6.3, `Projects/NUCLEO-G431RB/Templates_LL/Src/main.c`, SystemClock_Config: stessi HSI /4 ×85 /2, Boost, Flash 4 WS e passaggio AHB /2.
-- [Datasheet STM32G431xB DS12589 Rev 6](https://www.st.com.cn/resource/en/datasheet/stm32g431cb.pdf), tabella 45: ingresso PLL ammesso 2.66–16 MHz, VCO Range 1 ammesso 96–344 MHz, uscita R fino a 170 MHz in Boost. I valori scelti 4/340/170 MHz sono supportati. Il dispositivo non richiede un selettore PLLRGE/PLLVCOSEL come altre famiglie.
-- STM32CubeG4, `Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_hal_rcc.c`: massimo 170 MHz per SYSCLK/HCLK/PCLK1/PCLK2; tabella Flash Range 1 Boost, 4 wait state fino a 170 MHz.
-- `stm32g4xx_hal_pwr_ex.c`, HAL_PWREx_ControlVoltageScaling, e header CMSIS STM32G431: Range 1 (VOS=01), Boost abilitato (R1MODE=0); attesa VOSF prima di accelerare.
+USB usa HSI48 dedicato con selezione esplicita RCC_USBCLKSOURCE_HSI48.
+CRS: sorgente USB SOF 1 kHz, divisore /1, polarità rising, reload 47999,
+error limit e trimming iniziale ST di default (34 e 64), autotrim e contatore
+abilitati da HAL_RCCEx_CRSConfig. Nessuna attesa dei SOF prima dell'attach;
+il CRS lavora in hardware senza interrupt dedicato. PLL P/Q restano disabilitati.
 
-Sequenza: conferma HSI ready e avvio da reset su HSI; Range 1 Boost; Flash 4 WS con readback; PLL spento prima della configurazione e attesa PLLRDY; AHB temporaneo /2; selezione PLL e attesa SWS; permanenza ad HCLK 85 MHz per almeno 170 NOP (>=2 µs, rispetto al minimo 1 µs del template); AHB finale /1. SystemCoreClockUpdate legge i registri; controlli finali verificano PLL, prescaler, tensione, latenza e SystemCoreClock. Nessun timer aggiuntivo o HAL compilato.
+STM32G431CBU6 alimenta il transceiver da VDD: non espone VDDUSB separata né
+un bit PWR USV da abilitare. La rail circa 3.29 V già misurata è coerente con
+il requisito USB di 3.0–3.6 V del [datasheet DS12589, tabella USB](https://www.st.com/resource/en/datasheet/stm32g431cb.pdf).
+PA11/PA12 restano nello stato GPIO di reset: il peripheral USB ne assume il
+controllo, come nell'esempio ST; non si inventa una selezione alternate-function.
+Il PCD abilita il clock USB APB1 e USB_LP_IRQn (priorità 6), gestito da
+HAL_PCD_IRQHandler. Endpoint single-buffer: non serve USB_HP_IRQn.
+STOP, LPM, remote wakeup e battery charging detection non sono abilitati;
+non serve USBWakeUp_IRQn. Il suspend/resume passa al middleware mantenendo i clock.
+Questo gate non valida consumi in suspend o conformità USB completa.
 
-## Diagnostica fisica prevista
+## Classe e descrittori
 
-PC6 resta output push-pull active-high. SysTick usa direttamente HCLK, senza interrupt, con reload **169999 = 170000000 / 1000 - 1** costante, indipendente da SystemCoreClock. Blink atteso circa 500 ms ON / 500 ms OFF. Se il clock reale fosse 16 MHz pur superando erroneamente i controlli, ogni stato durerebbe circa 5.3125 s e il ciclo 10.625 s. Una configurazione fallita rilevata esplicitamente produce invece LED fisso, non un falso blink PASS.
+Middleware ufficiale ST USB Device, classe CDC ACM Full Speed, due interfacce.
+Stringa prodotto: **Tickform Gate 4**; seriale derivato dall'UID MCU come
+nell'esempio ST. Descrittore bus-powered, massimo dichiarato 100 mA (non una misura).
 
-Ogni attesa di ready/switch e SysTick è limitata a 1000000 letture: timeout di guardia ampio, non una durata metrologica, indipendente da SysTick durante il cambio clock. Al fallimento il firmware memorizza `gate3_status`, cattura i registri nei simboli `gate3_*`, disabilita SysTick e mantiene LED ON fino al reset esterno. Nessun reset automatico o ripiego silenzioso sul clock precedente.
+**VID 0x0483 / PID 0x5740: DEVELOPMENT ONLY**, valori dell'esempio CDC ST.
+Non sono l'identità USB finale di Tickform e **devono essere sostituiti prima
+di qualsiasi rilascio/prodotto**. Nessuna decisione definitiva VID/PID.
 
-Codici `gate3_status`: 0 configurazione in corso; 1 HSI/condizione iniziale di reset; 2 VOSF; 3 latenza Flash; 4 spegnimento PLL; 5 PLL lock; 6 switch SYSCLK; 7 readback finale o timeout SysTick; 170 configurazione completata. Il codice 170 è un esito software, non una misura indipendente della frequenza. Un arresto del clock CPU non può essere segnalato dal codice stesso.
+CDC serve soltanto al bring-up. Non decide il protocollo finale Tickform:
+lo streaming RAW sarà progettato separatamente, anche bulk/vendor-specific.
+Sono gestite le richieste line coding e control-line state; nessuna UART viene
+configurata. I dati OUT eventualmente ricevuti vengono scartati e la ricezione
+riarmata. Nessun echo o streaming applicativo, audio, I2S, DMA audio, DSP o RTOS.
 
-Per eventuali ripetizioni della prova mantenere la configurazione di alimentazione validata (WeAct via USB-C separata, ST-Link solo SWD), partire da reset e osservare più cicli consecutivi. L'HSI ha tolleranza propria: 170 MHz e i tempi sono nominali; il test distingue errori grossolani, non certifica accuratezza metrologica o stabilità prolungata.
+## Implementazione e provenienza
 
-## Fonti LED e supporto
+Dipendenza esterna bloccata a STM32CubeG4 1.6.3 già installato, senza download:
+CMSIS Core/Device G431, startup e system ufficiali; HAL RCC/RCCEx, Cortex,
+PCD/PCDEx e LL USB; USB Device Core e classe CDC compilati dal package.
 
-Verifica del 2026-09-26 nel repository ufficiale WeAct, esempio 01-Blink:
+USB_Device/usbd_conf.c/.h e usbd_desc.c/.h sono adattamenti dell'esempio
+Projects/STM32G474E-EVAL/Applications/USB_Device/CDC_Standalone del package,
+con copyright ST conservato e licenza originale in USB_Device/LICENSE-ST.txt.
+Adattamenti: due interfacce, bus-powered, stringhe diagnostiche, controllo dimensione
+allocazione statica, nessun percorso STOP/ripristino clock EVAL. PMA riservata:
+0x00–0x3f buffer table; EP0 OUT 0x40, EP0 IN 0x80, CDC IN 0xc0,
+CDC OUT 0x100, notification IN 0x140, senza sovrapposizioni.
+usb_device.c integra la sequenza HSI48/CRS e le API CDC ufficiali senza bridge UART.
+Core/Inc/stm32g4xx_hal_conf.h deriva dalla stessa configurazione ST, limitata
+ai moduli necessari; GPIO è incluso come dipendenza di compilazione RCC.
+Le licenze ST/CMSIS rimangono applicabili, indipendenti dal placeholder di progetto.
 
-- [board.h](https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard/blob/master/Examples/01-Blink/Core/Inc/board.h): variante STM32G431CxU6 → GPIOC, GPIO_PIN_6 (la variante CxT6 usa un altro pin).
-- [board.c](https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard/blob/master/Examples/01-Blink/Core/Src/board.c): board_led_set(1) imposta GPIO_PIN_SET; inizializzazione con GPIO_PIN_RESET. Polarità active-high secondo il driver ufficiale.
+Dopo clock_170mhz, HAL_Init abilita SysTick a 1 ms, reload controllato 169999,
+con SysTick_Handler/HAL_IncTick per i timeout HAL. PC6 lampeggia circa 500 ms ON/OFF
+tramite HAL_Delay: gli interrupt USB restano attivi durante il ritardo.
+LED fisso segnala il failure path; gate3_status 1..7 conserva la diagnostica
+precedente, 8 segnala errore HAL/USB iniziale, 170 conferma solo il core clock.
+**Il blink e il codice 170 non certificano enumerazione USB.**
 
-Nessun codice WeAct copiato. main.c è specifico per questa prova.
+Linker e startup invariati; RAM disponibile dichiarata 32 KiB, regione CCM
+separata non sommata. Heap riservato 512 B e stack 1024 B. CDC usa allocazione
+statica, nessun malloc dinamico.
 
-## Struttura e dipendenze
+## Build pulita (PowerShell)
 
-CMake + Ninja + CMSIS: per un solo GPIO è un percorso più piccolo e trasparente della generazione HAL/CubeMX. Non esiste un .ioc e non si promette rigenerazione CubeMX; CubeMX non è richiesto per ricompilare.
-
-Richiesti STM32CubeCLT 1.22.0 (GCC 14.3.1) e STM32CubeG4 1.6.3 già installati. I percorsi vengono passati al build, senza cambiare PATH o scaricare dipendenze. Sono compilati direttamente dal package ST:
-
-- Drivers/CMSIS/Include e Device/ST/STM32G4xx/Include;
-- Device/ST/STM32G4xx/Source/Templates/gcc/startup_stm32g431xx.s;
-- Device/ST/STM32G4xx/Source/Templates/system_stm32g4xx.c.
-
-Il linker STM32G431CBU6_FLASH.ld deriva dal template ST Projects/NUCLEO-G431KB/Templates/STM32CubeIDE/STM32G431KBTX_FLASH.ld, con la descrizione del dispositivo adattata alla variante CBU6. Conservati copyright, licenza e mappa del medesimo STM32G431xB: 128 KiB flash, 32 KiB RAM; regione CCM separata non utilizzata da questa prova e non sommata alla capacità RAM dichiarata. Heap riservato 512 B, stack riservato 1024 B; nessuna allocazione dinamica. I componenti ST/CMSIS restano soggetti alle rispettive licenze originali; il placeholder LICENSE del progetto non le sostituisce.
-
-## Build (PowerShell)
-
-Eseguire dalla cartella firmware/stm32g431, indicando le installazioni locali:
+Da firmware/stm32g431, con STM32CubeCLT 1.22.0 / GCC 14.3.1:
 
 ```powershell
 .\build.ps1 -CubeCltRoot 'B:\Programmi Scaricati\stm32_clt\STM32CubeCLT_1.22.0' -CubeG4Root "$env:USERPROFILE\STM32Cube\Repository\STM32Cube_FW_G4_V1.6.3"
 ```
 
-Il wrapper esegue configurazione pulita CMake (--fresh) e build Ninja (--clean-first), mantenendo -O0. Gli artefatti Gate 3 sono separati in build/gate3/ e non sostituiscono quelli Gate 2 in build/. HEX/ELF contengono gli indirizzi; il BIN è destinato a 0x08000000. Linker e startup del Gate 2 invariati.
+CMake --fresh, Ninja --clean-first, -O0, -Wall -Wextra. Build del 2026-09-26 PASS,
+senza warning: Flash 31052 B (text 30660 + data 392), RAM allocata 4184 B
+(data 392 + bss/riserva heap-stack 3792), CCM 0. L'uso effettivo dello stack
+non è stato misurato. Artefatti ignorati in build/gate4/tickform_gate4.{elf,hex,bin,map}.
+Gli artefatti Gate 2/3 restano separati. HEX/ELF includono gli indirizzi;
+BIN destinato a 0x08000000. Lo script non connette, programma o resetta il target.
 
-Nessun comando di connessione al target, flash o reset è eseguito dal build. La validazione fisica Gate 3 è registrata nella memoria del progetto il 2026-09-26; Gate 4 resta NEXT e non implementato.
+## Esito fisico Gate 4 — PASS, 2026-09-26
+
+Flash PASS, verify Download verified successfully, software reset PASS.
+Windows ha enumerato Dispositivo seriale USB, hardware ID VID_0483/PID_5740,
+senza triangolo giallo o errore driver, indicato come funzionante correttamente;
+nessun driver custom necessario. COM5 è stata osservata soltanto durante questo
+test: non è una porta fissa né parte del protocollo Tickform.
+
+Enumerazione stabile almeno 60 secondi. Scollegando USB-C device/COM sono
+scomparsi correttamente; ricollegandola CDC ha ri-enumerato correttamente.
+WeAct alimentata dalla propria USB-C dati al PC; ST-Link solo SWD, senza
+alimentare la board. Nessun test dati CDC eseguito, intenzionalmente.
+
+FASE 1 COMPLETE, tutti i quattro Gate PASS. La validazione riguarda
+l'enumerazione, non streaming affidabile, throughput audio o protocollo RAW.
+FASE 2 — DS3231 standalone NEXT, non iniziata in questo consolidamento.

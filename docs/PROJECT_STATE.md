@@ -2,16 +2,23 @@
 
 Fotografia vivente dello stato corrente. Aggiornare quando cambia realmente il progetto; la cronologia resta in PROJECT_LOG e le decisioni negli ADR.
 
-- **Last updated:** 2026-09-25
+- **Last updated:** 2026-09-26
 - **Reference commit:** 97f102b — M0 bootstrap baseline
-- **Current milestone:** FASE 0 — Receiving inspection: COMPLETE
-- **Next milestone:** FASE 1 — WeAct standalone
+- **Current milestone:** FASE 1 — WeAct standalone: IN PROGRESS
+- **Next milestone:** Gate 3 — MCU clock
+
+## Gate status
+
+- Gate 1 — SWD: PASS
+- Gate 2 — minimal firmware execution: PASS
+- Gate 3 — MCU clock: NEXT
+- Gate 4 — native USB: PENDING
 
 ## Hardware status
 
 Tutti gli ordini TME, Amazon e AliExpress sono ricevuti completi. Esiti consolidati comunicati dalla supervisione il 2026-09-25; dettagli e misure nel PROJECT_LOG alla stessa data. BOM **AS PURCHASED**, non AS BUILT. **Ricevuto e FASE 0 COMPLETE non significano hardware funzionalmente validato.**
 
-- WeAct Studio STM32G431 Core Board: PCB WeAct Studio V1.0, marcatura STM32G431CBU6 verificata, visual inspection PASS. A board completamente scollegata: continuità GND/SWD_GND e GND/GND PASS, 3V3/GND circa 540 kΩ, VCC/GND circa 350 kΩ; nessun corto evidente. SWD, USB e MCU non ancora testati.
+- WeAct Studio STM32G431 Core Board: PCB WeAct Studio V1.0, marcatura STM32G431CBU6 verificata, visual inspection PASS. A board completamente scollegata: continuità GND/SWD_GND e GND/GND PASS, 3V3/GND circa 540 kΩ, VCC/GND circa 350 kΩ; nessun corto evidente. Gate 1 SWD PASS a 400 kHz; rail 3V3 circa 3.29 V, nessun corto evidente dopo saldatura/collegamenti. CubeProgrammer identifica STM32G43x/G44x, Device ID 0x468, Cortex-M4, NVM 128 KB, target voltage circa 3.22 V. Gate 2 esecuzione firmware minimale e LED PC6 validati fisicamente. Clock avanzato/170 MHz e USB nativa non ancora verificati. Configurazione validata: WeAct alimentata via USB-C separata; ST-Link solo SWD, nessuna alimentazione 3.3 V o 5 V dallo ST-Link.
 - 2 breakout PCM1808 visivamente equivalenti, PCB PCM1808 SKU:01325, chip marking coerente. Visual inspection PASS e nessun corto evidente nei controlli passivi. Topologia completa, rail sotto alimentazione, clock, ADC e configurazione MD/FMT non ancora verificati.
 - 2 DS3231 HW-084 con chip DS3231SN ed EEPROM AT24C32: visual inspection PASS, pin SQW identificato, controlli passivi senza corti evidenti. Rete D2 + R4 marcata 201 visibile, associata al circuito di carica: **NON inserire CR2032 non ricaricabile**. Batteria non necessaria per V0. I²C, SQW e accuratezza non testati.
 - 2 XO marcati 24.5760 MHz: metal can, 4 pin, geometria DIP-14; visual inspection PASS. Il package osservato differisce da quello inizialmente ipotizzato. **NON ALIMENTARE: pinout e supply voltage NOT YET VERIFIED.** Non inferire il pinout dalla geometria; funzione non testata.
@@ -23,7 +30,7 @@ Strumenti disponibili: ST-Link V2, UNI-T UT139S, saldatore/stazione, stagno, flu
 
 ## Firmware status
 
-Sostanzialmente non iniziato. Nessun firmware reale, progetto CubeMX o toolchain creato in M0.
+Firmware custom Gate 2 compilato, programmato, verificato ed eseguito realmente: LED PC6 active-high, circa 500 ms ON / 500 ms OFF osservati fisicamente. CMake + Ninja, ARM GCC 14.3.1 tramite STM32CubeCLT 1.22.0, CMSIS STM32CubeG4 1.6.3; CubeMX 6.18.1 disponibile ma non usato per generare un .ioc. HSI/default semplice, nessun PLL a 170 MHz; SysTick in polling per il ritardo visibile. Nessuna USB, I2S, DMA, UART, RTOS o periferica esterna. Build validato senza warning: flash circa 1128 B, RAM allocata circa 1544 B. Baseline sorgente in firmware/stm32g431; output build ignorati. FASE 1 non completa: Gate 3 NEXT e Gate 4 PENDING.
 
 ## Software status
 
@@ -49,6 +56,8 @@ Target indicativi, non prestazioni ottenute: V0 circa ±0,5 s/day di errore stru
 - Memoria documentale primaria attiva nel repository; baseline M0 pubblicata su origin/main.
 - FASE 0 completa: tutti gli ordini ricevuti, componenti principali identificati, controlli visivi e passivi a campione completati; nessun problema macroscopico rilevato. Le verifiche funzionali appartengono alle fasi successive.
 
+- Gate 1 — SWD e Gate 2 — firmware minimale: PASS; flash/verify riusciti e blink PC6 osservato fisicamente, come comunicato dalla supervisione il 2026-09-26.
+
 ## Open questions
 
 - Schema effettivo, alimentazioni e configurazione dei breakout PCM1808.
@@ -66,9 +75,9 @@ Nessun problema macroscopico rilevato nella receiving inspection. XO: power-up b
 
 ## Next actions
 
-1. In una successiva attività, avviare FASE 1 — WeAct standalone: SWD, firmware minimo, clock MCU e USB.
-2. Aggiornare checklist e PROJECT_STATE con evidenze reali delle verifiche funzionali.
-3. Seguire le fasi successive della roadmap, verificando pinout e supply voltage XO prima di alimentarlo nella fase appropriata.
+1. Gate 3 — configurazione e verifica clock MCU.
+2. Gate 4 — USB nativa.
+3. Solo dopo completamento FASE 1 passare a FASE 2 — DS3231.
 
 ## Important constraints
 
@@ -80,4 +89,4 @@ Nessun problema macroscopico rilevato nella receiving inspection. XO: power-up b
 - Non confondere ipotesi, risoluzione, accuratezza e misure reali; niente DSP avanzato prima di dati reali affidabili.
 - Non modificare l'architettura senza CHANGE REQUEST documentata e decisione della supervisione.
 - Nessun secret o informazione personale nel repository; nessuna modifica alle configurazioni Git globali.
-- Questa attività aggiorna soltanto la memoria degli esiti consolidati della receiving inspection, con commit e push autorizzati. Non modifica architettura, ADR o formato RAW; non avvia FASE 1, firmware o bring-up; nessun branch, tag o release aggiuntivo.
+- Questa attività consolida firmware già validato ed evidenze dei Gate 1 e 2, con un commit e push autorizzati. Nessuna modifica al firmware eseguibile, architettura o ADR; non avvia Gate 3; nessun branch, tag o release aggiuntivo.

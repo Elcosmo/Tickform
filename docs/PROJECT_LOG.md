@@ -122,3 +122,16 @@ Tre esemplari a campione: 29 nF, 33 nF, 33.6 nF. Conclusione limitata: capacità
 FASE 0 — Receiving inspection: COMPLETE. Tutti gli ordini ricevuti, componenti principali identificati, controlli visivi e passivi a campione completati; nessun problema macroscopico rilevato. FASE 0 COMPLETE non significa hardware funzionante o validato: le verifiche funzionali appartengono alle fasi successive.
 
 Prossima milestone: FASE 1 — WeAct standalone, con obiettivi SWD, firmware minimo, clock MCU e USB. Non avviata in questa attività. Aggiornati STATE, HANDOFF, checklist e BOM; stato received distinto da validazione funzionale. Architettura, ADR e formato RAW invariati. Aperto e prioritario nella fase appropriata: verifica pinout e supply voltage XO prima del power-up.
+
+## 2026-09-26 — FASE 1: Gate 1 e Gate 2 PASS
+
+Esiti fisici consolidati comunicati dalla supervisione; nessun nuovo test hardware eseguito da Codex in questa attività.
+
+- Gate 1 — SWD PASS: WeAct Studio STM32G431 Core Board V1.0 / STM32G431CBU6, nessun corto evidente dopo saldatura/collegamenti, rail 3V3 circa 3.29 V. ST-Link comunica a 400 kHz; STM32CubeProgrammer identifica STM32G43x/G44x, Device ID 0x468, Cortex-M4, NVM 128 KB, target voltage circa 3.22 V.
+- Gate 2 — firmware minimale PASS: build CMake/Ninja, ARM GCC 14.3.1 tramite STM32CubeCLT 1.22.0, CMSIS STM32CubeG4 1.6.3; CubeMX 6.18.1 disponibile, nessun .ioc. Build riuscito senza warning; flash circa 1128 B, RAM allocata circa 1544 B. Sorgenti validati conservati senza rifattorizzazioni.
+- Artefatto programmato: firmware/stm32g431/build/tickform_gate2.hex. STM32CubeProgrammer CLI: connessione, programmazione e verify riusciti (Download verified successfully), seguito da software reset.
+- Primo tentativo DEV_CONNECT_ERR: GUI CubeProgrammer ancora connessa al target. Risolto con Disconnect/chiusura della GUI prima della connessione CLI.
+- Osservazione fisica: LED onboard PC6 active-high lampeggia regolarmente circa 500 ms ON / 500 ms OFF. Il firmware custom compilato dal progetto viene realmente eseguito sulla MCU.
+- Configurazione validata: WeAct alimentata tramite USB-C separata; ST-Link usato per SWD, senza alimentazione 3.3 V o 5 V proveniente dallo ST-Link.
+- Clock HSI/default semplice, nessun PLL a 170 MHz; SysTick in polling per il solo ritardo visibile. Nessuna USB, I2S, DMA, UART, RTOS o periferica esterna introdotta. Il blink non costituisce validazione metrologica del clock.
+- FASE 0 resta COMPLETE; FASE 1 resta IN PROGRESS. Gate 3 — MCU clock diventa NEXT; Gate 4 — native USB PENDING. FASE 2 DS3231 seguirà solo dopo completamento FASE 1. Architettura e ADR invariati; output build esclusi da Git.

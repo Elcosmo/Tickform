@@ -1,6 +1,6 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Stato aggiornato al 2026-09-26: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 in corso, Gate 1/2 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU e USB nativa ancora da verificare.
+Strumento operativo vivo. Stato aggiornato al 2026-09-26: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 in corso, Gate 1/2/3 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB nativa ancora da verificare.
 
 ## FASE 0 — Receiving inspection
 
@@ -13,10 +13,10 @@ Esiti: supervisione, 2026-09-25; vedere PROJECT_LOG alla stessa data. Le voci PC
 - [x] WeAct board received and identified
 - [x] STM32G431CBU6 marking verified
 - [x] Board inspected for damage
-- [ ] 3V3 verified
+- [x] 3V3 verified
 - [x] ST-Link communication verified
 - [x] Minimal firmware flashed
-- [ ] MCU clock verified
+- [x] MCU clock verified
 - [ ] USB enumeration verified
 
 ## FASE 2 — DS3231 standalone

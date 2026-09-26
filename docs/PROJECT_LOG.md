@@ -135,3 +135,15 @@ Esiti fisici consolidati comunicati dalla supervisione; nessun nuovo test hardwa
 - Configurazione validata: WeAct alimentata tramite USB-C separata; ST-Link usato per SWD, senza alimentazione 3.3 V o 5 V proveniente dallo ST-Link.
 - Clock HSI/default semplice, nessun PLL a 170 MHz; SysTick in polling per il solo ritardo visibile. Nessuna USB, I2S, DMA, UART, RTOS o periferica esterna introdotta. Il blink non costituisce validazione metrologica del clock.
 - FASE 0 resta COMPLETE; FASE 1 resta IN PROGRESS. Gate 3 — MCU clock diventa NEXT; Gate 4 — native USB PENDING. FASE 2 DS3231 seguirà solo dopo completamento FASE 1. Architettura e ADR invariati; output build esclusi da Git.
+
+## 2026-09-26 — Gate 3 MCU clock 170 MHz PASS
+
+Esiti fisici comunicati dalla supervisione; nessuna nuova connessione o programmazione hardware eseguita da Codex durante questo consolidamento.
+
+- Build Gate 3 pulita riuscita senza warning con CMake/Ninja, ARM GCC 14.3.1, CubeCLT 1.22.0 e CMSIS CubeG4 1.6.3; flash 1820 B, RAM allocata 1568 B. Artefatto: firmware/stm32g431/build/gate3/tickform_gate3.hex, escluso da Git come gli artefatti Gate 2.
+- Configurazione validata: HSI16 → PLL, M=4/N=85/R=2; ingresso 4 MHz, VCO 340 MHz; SYSCLK/HCLK/PCLK1/PCLK2 nominali 170 MHz, AHB/APB1/APB2 /1 a regime. Range 1 Boost, Flash latency 4 WS, transizione AHB /2 come implementata. SysTick reload fisso 169999.
+- Target rilevato: Device ID 0x468, STM32G43x/G44x, Cortex-M4, NVM 128 KB, target voltage circa 3.22 V. Programmazione PASS, verify Download verified successfully, software reset riuscito.
+- PC6 osservato fisicamente per circa 10–15 secondi: circa 0.5 s ON e 0.5 s OFF. Nessun LED fisso/failure path e nessun comportamento circa 5 s ON / 5 s OFF.
+- Gate 3 PASS: configurazione 170 MHz nominali operativamente attiva e coerente con la diagnostica. Non è una misura metrologica di accuratezza assoluta del clock né una prova di stabilità prolungata.
+- Checklist: MCU clock verified completata; 3V3 verified completata sulla base della misura reale circa 3.29 V già documentata nel Gate 1. USB enumeration verified resta non completata.
+- FASE 1 resta IN PROGRESS; Gate 1/2/3 PASS, Gate 4 — native USB diventa NEXT, non avviato. Firmware Gate 3 validato conservato senza rifattorizzazioni; architettura e ADR invariati.

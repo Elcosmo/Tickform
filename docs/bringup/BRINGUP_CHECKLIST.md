@@ -1,6 +1,6 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Stato aggiornato al 2026-09-26: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE, Gate 1/2/3/4 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB FS CDC enumeration verificata, stabile almeno 60 s e disconnect/reconnect PASS. FASE 2 DS3231 standalone NEXT, non avviata.
+Strumento operativo vivo. Stato aggiornato al 2026-09-27: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE, Gate 1/2/3/4 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB FS CDC enumeration verificata, stabile almeno 60 s e disconnect/reconnect PASS. FASE 2 DS3231 standalone COMPLETE: I2C1 PA15/PB7 e SQW ~1 Hz verificati funzionalmente, come riportato nel PROJECT_LOG del 2026-09-27; nessuna accuratezza ppm attestata. FASE 3 XO standalone NEXT, non avviata.
 
 ## FASE 0 — Receiving inspection
 
@@ -25,9 +25,9 @@ Esiti: supervisione, 2026-09-25; vedere PROJECT_LOG alla stessa data. Le voci PC
 - [x] DS3231 board inspected
 - [x] Battery/charging topology checked
 - [x] INT/SQW pin identified
-- [ ] I2C communication verified
-- [ ] SQW configured to 1 Hz
-- [ ] SQW 1 Hz verified
+- [x] I2C communication verified
+- [x] SQW configured to 1 Hz
+- [x] SQW 1 Hz verified
 
 ## FASE 3 — XO standalone
 

@@ -1,6 +1,6 @@
 /* Gate 4 integration of STM32CubeG4 1.6.3 CDC_Standalone.
  * Uses the installed official ST HAL/PCD and USB Device CDC middleware.
- * Enumeration diagnostic only: no UART bridge or Tickform application protocol.
+ * Bring-up diagnostics: no UART bridge or final Tickform application protocol.
  */
 #include "stm32g4xx_hal.h"
 #include "usbd_core.h"
@@ -11,7 +11,7 @@ extern PCD_HandleTypeDef hpcd_USB_FS;
 void Error_Handler(void);
 USBD_HandleTypeDef hUsbDeviceFS;
 static uint8_t rx_buffer[CDC_DATA_FS_MAX_PACKET_SIZE];
-static uint8_t tx_buffer[CDC_DATA_FS_MAX_PACKET_SIZE];
+static uint8_t tx_buffer[1536]; /* Persistent until USB completes transmission. */
 /* CDC line coding is retained for host requests, without configuring a UART. */
 static uint8_t line_coding[7] = {0x00, 0xC2, 0x01, 0x00, 0x00, 0x00, 0x08};
 
@@ -106,4 +106,23 @@ void gate4_usb_init(void)
         USBD_Start(&hUsbDeviceFS) != USBD_OK) {
         Error_Handler();
     }
+}
+
+/* Called only from main, never waits for a disconnected or busy host. */
+int diagnostic_cdc_send(const char *text)
+{
+    size_t length = strlen(text);
+    if (length > sizeof(tx_buffer)) { return 0; }
+    uint32_t mask = __get_PRIMASK();
+    __disable_irq(); /* Serialize with USB reset/deinit and IN completion. */
+    USBD_CDC_HandleTypeDef *cdc = hUsbDeviceFS.pClassData;
+    int sent = 0;
+    if (hUsbDeviceFS.dev_state == USBD_STATE_CONFIGURED && cdc != NULL &&
+        cdc->TxState == 0U) {
+        memcpy(tx_buffer, text, length);
+        USBD_CDC_SetTxBuffer(&hUsbDeviceFS, tx_buffer, (uint32_t)length);
+        sent = (USBD_CDC_TransmitPacket(&hUsbDeviceFS) == USBD_OK);
+    }
+    __set_PRIMASK(mask);
+    return sent;
 }

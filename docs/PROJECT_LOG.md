@@ -161,3 +161,14 @@ Esiti fisici comunicati dalla supervisione; nessun nuovo accesso al target duran
 - Nessun test dati CDC eseguito, intenzionalmente. CDC resta diagnostica di bring-up: protocollo/trasporto RAW da progettare separatamente; streaming USB, throughput audio, I2S, DMA e metrologia BCK/DS3231 non validati.
 - Gate 4 PASS; checklist USB enumeration verified completata. Gate 1/2/3/4 PASS: FASE 1 — WeAct standalone COMPLETE.
 - FASE 2 — DS3231 standalone NEXT: collegamento, I2C, identificazione/configurazione, INT/SQW esplicitamente a 1 Hz e verifica SQW. Nessuna attività FASE 2 avviata; architettura e ADR invariati.
+
+## 2026-09-27 — FASE 2 DS3231 standalone COMPLETE
+
+Esiti reali comunicati dalla supervisione; firmware validato conservato senza rifattorizzazioni, nessun nuovo accesso al target in questo consolidamento.
+
+- Modulo #1 HW-084 / DS3231SN senza batteria, AT24C32 presente ma non testata/scritta; 32K non usato. VCC e I2C idle ~3.3 V, pull-up I2C onboard ~4.7 kΩ. Mapping definitivo I2C1 PA15=SCL / PB7=SDA, AF4 open-drain; 100 kHz PASS, TIMINGR 0xD0F32F38 (CubeMX, PCLK1 170 MHz, filtro analogico ON/digitale 0, rise/fall ipotizzati 1000/300 ns).
+- PB8/BOOT0 escluso: pull-down board ~10 kΩ e pull-up modulo ~4.7 kΩ spiegano SCL ~2.2 V osservata. PB6/PB7 scartato perché PB6 non dispone di I2C SCL. Correzione di mapping del prototipo, nessuna modifica architetturale o ADR/change request.
+- Build FASE 2 PASS senza warning, flash 40792 B / RAM allocata 7384 B. Flash PASS, verify Download verified successfully, USB CDC PASS. COM5 osservata nel test, non identificatore stabile o specifica Tickform; CDC rimane diagnostica development-only.
+- DS3231 0x68 FOUND (HAL 0xD0), letture registri riuscite: CTRL 0x1C → 0x00, readback PASS; STATUS 0x88, OSF=1 preservato, compatibile con power loss senza batteria e non interpretato come guasto; temperatura 27.00 °C, prova di comunicazione e non metrologia. Nessuna scrittura data/ora.
+- SQW configuration PASS: read-modify-write Control, INTCN/RS2/RS1/A2IE/A1IE=0. Pull-up SQW misurata ~4.6 kΩ verso 3V3. SQW physical verification PASS: logic analyzer USB 8CH/24 MHz, PulseView/sigrok, SQW→CH1/D0 e massa comune; 100 kHz / 1 M samples (~10 s). Circa 10 cicli regolari, periodo ~1.0 s, frequenza ~1 Hz, HIGH/LOW ~0.5 s, duty ~50%. Verifica funzionale, nessuna accuratezza ppm attribuita; metrologia BCK/TIM2 non iniziata.
+- Checklist I2C communication verified, SQW configured to 1 Hz, SQW 1 Hz verified completate. FASE 2 COMPLETE; FASE 3 — XO standalone NEXT, non avviata: verificare pinout reale e supply voltage prima dell'alimentazione.

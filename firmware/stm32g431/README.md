@@ -1,4 +1,88 @@
-# Tickform — FASE 1, Gate 4: native USB CDC diagnostic
+# Tickform — FASE 2: diagnostica DS3231 (validata fisicamente)
+
+Baseline FASE 1: b39939e. Core 170 MHz, HSI48/CRS USB e descrittori CDC
+restano invariati; stringa USB ancora Tickform Gate 4, VID/PID 0483:5740
+DEVELOPMENT ONLY. Il report ASCII identifica invece Tickform FASE 2 - DS3231.
+Non è il protocollo RAW definitivo. FASE 2 COMPLETE sulla base degli esiti fisici
+comunicati dalla supervisione il 2026-09-27; nessun nuovo accesso al target nel consolidamento.
+
+## Configurazione FASE 2
+
+I2C1: PA15 SCL / PB7 SDA, AF4, alternate-function open-drain, GPIO_NOPULL;
+pull-up onboard circa 4.7 kohm a 3.3 V. PA13/PA14 SWD preservati.
+Mapping confermato dal database ufficiale CubeMX GPIO-STM32G43x_gpio_v1_0_Modes.xml.
+PB6/PB8/PB9 non usati. SQW e 32K non collegati alla MCU, EEPROM non interrogata.
+
+Kernel I2C1 PCLK1=170 MHz, Standard Mode 100 kHz, filtro analogico ON, DNF=0.
+TIMINGR **0xD0F32F38**: PRESC=13, SCLDEL=15, SDADEL=3, SCLH=47, SCLL=56.
+Calcolato eseguendo il motore ufficiale STM32CubeMX 6.18.1 (plugins/ip/i2c.jar):
+I2cTimingTraitement("I2C_Standard",100,170000.0,0,1000,300,"I2C_ANALOGFILTER_ENABLE"),
+CalculSDLDEL_SCLDEL(), calculeSCLL_SCLH(). Unità input: target kHz, kernel kHz,
+rise/fall ns. Rise=1000 ns e fall=300 ns sono ipotesi di calcolo Standard Mode,
+non misure delle linee reali; frequenza/fronti restano da verificare fisicamente.
+HAL I2C in polling: timeout 100 ms per operazione, probe due tentativi;
+nessun IRQ I2C o DMA attivato. Header HAL DMA incluso solo come dipendenza dei tipi I2C.
+
+## Sequenza e report
+
+Probe soltanto 0x68 (7 bit), passato alle API HAL come 0xD0. FOUND significa
+ACK del dispositivo atteso, non verifica di un registro silicon ID.
+Letture 0x00..0x06 raw, Control 0x0E, Status 0x0F e temperatura 0x11..0x12;
+nessuna data arbitraria, nessuna scrittura Status/OSF o EEPROM.
+Temperatura signed a passi di 0.25 C, ultima conversione disponibile,
+formattata senza floating point; non è una misura metrologica Tickform.
+
+Come da [datasheet DS3231 Rev 10, pp. 13–14](https://www.analog.com/media/en/technical-documentation/data-sheets/DS3231.pdf),
+Control viene letto/modificato/scritto/riletto: azzerati RS2/RS1/INTCN/A2IE/A1IE
+(maschera 0x1F), preservati gli altri bit. Verificati i cinque bit a zero e
+la conservazione EOSC/BBSQW; CONV può auto-azzerarsi. In alimentazione VCC
+l'oscillatore è attivo indipendentemente da EOSC. OSF resta visibile e non
+cancellato; può seguire power loss senza batteria, non implica da solo guasto.
+SQW è open-drain del DS3231: per la misura successiva verificare la presenza
+di una pull-up SQW a 3.3 V; le pull-up I2C non ne dimostrano la presenza.
+
+Report di avvio conservato e ritrasmesso ogni 5 s quando USB è configurata,
+così l'apertura tardiva della COM non perde la diagnostica. È esplicitamente
+un boot snapshot, non una nuova lettura periodica. Nessuna attesa bloccante
+sul PC; buffer TX persistente protetto da sovrascrittura mentre occupato.
+Aprire la COM assegnata da Windows (non necessariamente COM5), ad esempio
+115200 8N1 senza flow control; il baud CDC non determina il clock I2C.
+FAIL esplicito con fase/HAL/error code per errori init, probe, letture, write
+oppure readback. PC6 fisso ON in errore DS3231, USB continua a funzionare;
+blink se la sequenza riesce. SQW config PASS attesta soltanto i registri.
+
+## Build e test successivo
+
+Stesso comando build.ps1 riportato sotto; ora genera esclusivamente
+build/phase2/tickform_phase2_ds3231.{hex,elf,bin,map}, ignorati da Git.
+Artefatti Gate 2/3/4 preservati. Build pulita del 2026-09-27 PASS, zero warning:
+Flash 40792 B, RAM allocata 7384 B (incluse riserve heap/stack), CCM 0.
+
+## Validazione fisica FASE 2 — 2026-09-27
+
+Flash e verify PASS (Download verified successfully), USB CDC PASS; COM5
+osservata soltanto nel test, non porta stabile o parte delle specifiche.
+I2C1 PA15/PB7 100 kHz PASS, DS3231 0x68 FOUND; CTRL 0x1C → 0x00,
+STATUS 0x88, OSF=1 non cancellato (compatibile con power loss senza batteria),
+temperatura 27.00 °C come evidenza di lettura reale, non misura metrologica.
+
+**SQW configuration PASS**: readback Control=0x00.
+**SQW physical 1 Hz verification PASS**: pull-up SQW onboard misurata ~4.6 kΩ
+verso 3V3; SQW→CH1/D0 del logic analyzer USB 8CH/24 MHz e massa comune,
+PulseView/sigrok, acquisizione 100 kHz / 1 M samples (~10 s). Circa 10 cicli
+regolari, periodo ~1 s, HIGH/LOW ~0.5 s e duty ~50%.
+Verifica funzionale senza accuratezza ppm; **metrologia BCK/TIM2 non iniziata**.
+Il messaggio firmware Physical SQW measurement: PENDING resta intenzionalmente
+invariato: descrive ciò che il firmware può verificare, non la prova esterna.
+
+Mapping da preservare: PA15/PB7. PB8/BOOT0 escluso perché il pull-down board
+~10 kΩ con la pull-up modulo ~4.7 kΩ produceva SCL ~2.2 V; PB6 non dispone
+di I2C SCL. Correzione pin mapping, nessuna modifica architetturale.
+FASE 2 COMPLETE; FASE 3 XO standalone NEXT, non iniziata.
+
+---
+
+# Baseline storica FASE 1, Gate 4: native USB CDC diagnostic
 
 Target: WeAct Studio STM32G431 Core Board V1.0, STM32G431CBU6 (UFQFPN48).
 Baseline Gate 3 fisicamente validata: e284bd3. Gate 4 PASS e FASE 1 COMPLETE: flash, verify e software reset riusciti;

@@ -1,6 +1,6 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Stato aggiornato al 2026-09-27: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE, Gate 1/2/3/4 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB FS CDC enumeration verificata, stabile almeno 60 s e disconnect/reconnect PASS. FASE 2 DS3231 standalone COMPLETE: I2C1 PA15/PB7 e SQW ~1 Hz verificati funzionalmente, come riportato nel PROJECT_LOG del 2026-09-27; nessuna accuratezza ppm attestata. FASE 3 XO standalone NEXT, non avviata.
+Strumento operativo vivo. Stato aggiornato al 2026-10-05: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE, Gate 1/2/3/4 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB FS CDC enumeration verificata, stabile almeno 60 s e disconnect/reconnect PASS. FASE 2 DS3231 standalone COMPLETE: I2C1 PA15/PB7 e SQW ~1 Hz verificati funzionalmente, come riportato nel PROJECT_LOG del 2026-09-27; nessuna accuratezza ppm attestata. FASE 3 XO standalone COMPLETE: power-up 3.3 V e 16 finestre di conteggio/plausibility ±5% PASS; verifica funzionale, non metrologica (PROJECT_LOG 2026-10-05). FASE 4 PCM1808 no AFE NEXT, non avviata.
 
 ## FASE 0 — Receiving inspection
 
@@ -33,8 +33,10 @@ Esiti: supervisione, 2026-09-25; vedere PROJECT_LOG alla stessa data. Le voci PC
 
 - [x] 24.576 MHz XO received
 - [x] XO marking documented
-- [ ] XO pinout verified before power-up
-- [ ] XO supply requirements verified
+- [x] XO pinout verified before power-up
+- [x] XO supply requirements verified
+
+Esiti FASE 3, 2026-10-05 (PROJECT_LOG): XO usato identificato e validato funzionalmente; pin 4 GND, pin 5 OUT, pin 8 VCC, pin 1 OPEN. Supply verificata operativamente a 3.3 V, non specifica nominale del costruttore attestata; bypass 100 nF. Clock rilevato via PA0/TIM2_ETR AF14, 16 finestre PASS, accuratezza assoluta non misurata.
 
 ## FASE 4 — PCM1808 senza AFE
 

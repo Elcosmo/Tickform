@@ -2,10 +2,10 @@
 
 Fotografia vivente dello stato corrente. Aggiornare quando cambia realmente il progetto; la cronologia resta in PROJECT_LOG e le decisioni negli ADR.
 
-- **Last updated:** 2026-09-27
+- **Last updated:** 2026-10-05
 - **Reference commit:** 97f102b — M0 bootstrap baseline
-- **Current milestone:** FASE 2 — DS3231 standalone: COMPLETE
-- **Next milestone:** FASE 3 — XO standalone
+- **Current milestone:** FASE 3 — XO standalone: COMPLETE
+- **Next milestone:** FASE 4 — PCM1808 no AFE
 
 ## Gate status
 
@@ -21,7 +21,7 @@ Tutti gli ordini TME, Amazon e AliExpress sono ricevuti completi. Esiti consolid
 - WeAct Studio STM32G431 Core Board: PCB WeAct Studio V1.0, marcatura STM32G431CBU6 verificata, visual inspection PASS. A board completamente scollegata: continuità GND/SWD_GND e GND/GND PASS, 3V3/GND circa 540 kΩ, VCC/GND circa 350 kΩ; nessun corto evidente. Gate 1 SWD PASS a 400 kHz; rail 3V3 circa 3.29 V, nessun corto evidente dopo saldatura/collegamenti. CubeProgrammer identifica STM32G43x/G44x, Device ID 0x468, Cortex-M4, NVM 128 KB, target voltage circa 3.22 V. Gate 2 esecuzione firmware minimale e LED PC6 validati fisicamente. Clock MCU 170 MHz nominali validato operativamente nel Gate 3; USB FS CDC enumeration validata nel Gate 4. Configurazione validata: WeAct alimentata via USB-C dati collegata al PC; ST-Link solo SWD, nessuna alimentazione 3.3 V o 5 V dallo ST-Link.
 - 2 breakout PCM1808 visivamente equivalenti, PCB PCM1808 SKU:01325, chip marking coerente. Visual inspection PASS e nessun corto evidente nei controlli passivi. Topologia completa, rail sotto alimentazione, clock, ADC e configurazione MD/FMT non ancora verificati.
 - 2 DS3231 HW-084 con chip DS3231SN ed EEPROM AT24C32: visual inspection PASS, pin SQW identificato, controlli passivi senza corti evidenti. Rete D2 + R4 marcata 201 visibile, associata al circuito di carica: **NON inserire CR2032 non ricaricabile**. Batteria non necessaria per V0. Modulo #1: I2C e SQW 1 Hz validati funzionalmente in FASE 2; accuratezza non misurata, modulo #2 non validato funzionalmente.
-- 2 XO marcati 24.5760 MHz: metal can, 4 pin, geometria DIP-14; visual inspection PASS. Il package osservato differisce da quello inizialmente ipotizzato. **NON ALIMENTARE: pinout e supply voltage NOT YET VERIFIED.** Non inferire il pinout dalla geometria; funzione non testata.
+- 2 XO marcati 24.5760 MHz: metal can, 4 pin, geometria DIP-14; visual inspection PASS. XO usato in FASE 3 alimentato a 3.3 V (circa 3.3 V misurati, precedentemente 3.29 V), bypass locale 100 nF. Pinout operativo usato: pin 4 GND, pin 5 OUT, pin 8 VCC, pin 1 OPEN. Power-up e clock detection PASS; nessuna anomalia termica, nessun test a 5 V. Il secondo XO non è dichiarato funzionalmente validato; accuratezza assoluta non misurata.
 - 2 MCP6022-I/P: marcatura coerente, DIP-8 corretto, nessun danno visivo evidente; VISUAL IDENTIFICATION PASS, FUNCTIONAL TEST NOT YET PERFORMED. AFE definitivo aperto.
 - RG174 coerente con HELU 400189 / RG174/U e costruzione coassiale miniaturizzata. Controlli a campione PASS: 1 kΩ → 0.998 kΩ; 100 kΩ → 99.1 kΩ; 4.7 MΩ → 4.703 MΩ; 1N4148-DIO forward 0.61 V, reverse OL. Non costituiscono caratterizzazione completa della BOM.
 - 10 piezo cablati 27 mm ricevuti, etichetta buzzer-27mm-10pc, visual inspection PASS. Tre campioni: 29 / 33 / 33.6 nF; nessun campione palesemente aperto/anomalo. Sensibilità, risposta meccanica e pickup non validati; meccanica sperimentale.
@@ -47,6 +47,10 @@ SQW configuration PASS: INTCN/RS2/RS1/A2IE/A1IE azzerati con read-modify-write. 
 Mapping da preservare: PB8/BOOT0 escluso come SCL per questo prototipo; pull-down board circa 10 kΩ con pull-up modulo circa 4.7 kΩ forma il partitore coerente con SCL ~2.2 V osservati. PB6/PB7 scartato: PB6 non dispone di I2C SCL sullo STM32G431CBU6. PA15/PB7 è una correzione del pin mapping, non una modifica architetturale; nessun ADR/change request necessario.
 
 Firmware FASE 2: TIMINGR 0xD0F32F38 derivato da CubeMX per PCLK1 170 MHz, analog filter ON, digital filter 0, rise/fall ipotizzati 1000/300 ns. Core 170 MHz e USB HSI48/CRS invariati. Flash/verify (Download verified successfully) e USB CDC PASS; COM5 osservata, non porta stabile né specifica Tickform. Build senza warning: flash 40792 B, RAM allocata 7384 B; artefatti build/phase2 ignorati. Timeout finiti, diagnostica registri/OSF/temperatura; nessuna scrittura EEPROM.
+
+FASE 3 — XO standalone COMPLETE, esiti fisici comunicati dalla supervisione il 2026-10-05. OUT pin 5 -> 100 ohm serie -> PA0/TIM2_ETR AF14 validato; resistenza prudenziale per il cablaggio temporaneo, non decisione architetturale definitiva. TIM2 32 bit, External Clock Mode 2, rising edge, ETR /1, filtro 0, PSC=0, ARR=0xFFFFFFFF. Finestre ~1000 ms via HAL tick, delta con wrap, normalizzazione sulla durata rilevata, diagnostica USB CDC e min/max dall'avvio. Flash PASS, verify Download verified successfully e USB CDC PASS. Sedici finestre consecutive: Signal detected >=1000 Hz PASS e plausibility 24.576 MHz ±5% (23.347200–25.804800 MHz) PASS; circa 24.6 milioni di fronti per finestra, stime 24.589627–24.602978 MHz.
+
+FUNCTIONAL / APPROXIMATE FREQUENCY CHECK, non ppm metrology: la finestra usa il clock interno STM32 e non misura l'accuratezza assoluta dell'XO; nessuna conformità alla presunta specifica ±20 ppm. Edges=0 iniziale causato dal pin A0/PA0 non saldato correttamente: dopo saldatura conteggio immediatamente presente. Continuità DC non garantisce integrità del collegamento per segnali ad alta frequenza. Build XO senza warning: flash 37004 B, RAM allocata 6544 B; artefatti build/phase3 ignorati. Metrologia BCK + DS3231 non iniziata.
 
 ## Software status
 
@@ -80,10 +84,12 @@ Target indicativi, non prestazioni ottenute: V0 circa ±0,5 s/day di errore stru
 
 - FASE 2 — DS3231 standalone COMPLETE: I2C1 PA15/PB7, registri, configurazione e verifica fisica SQW ~1 Hz PASS.
 
+- FASE 3 — XO standalone COMPLETE: power-up 3.3 V, PA0/TIM2_ETR AF14, conteggio e plausibility ±5% PASS; accuratezza assoluta non misurata.
+
 ## Open questions
 
 - Schema effettivo, alimentazioni e configurazione dei breakout PCM1808.
-- XO: pinout e tensione di alimentazione da verificare prima del power-up nella fase appropriata; funzione e prestazioni reali non testate.
+- XO: accuratezza assoluta e presunte specifiche ppm da verificare con riferimento indipendente; secondo esemplare non validato funzionalmente.
 - DS3231 #1: I2C e SQW funzionalmente validati, accuratezza e metrologia ancora da verificare; mantenere il divieto di CR2032 non ricaricabile con il circuito di carica presente.
 - AFE definitivo, guadagno/shaping e accoppiamento all'ADC dopo misure reali.
 - Meccanica del pickup; caratteristiche osservabili nei segnali reali.
@@ -93,12 +99,12 @@ Target indicativi, non prestazioni ottenute: V0 circa ±0,5 s/day di errore stru
 
 ## Blockers
 
-Nessun problema macroscopico rilevato nella receiving inspection. XO: power-up bloccato finché pinout e tensione di alimentazione non saranno verificati. FASE 0 completa non attesta funzionamento o validazione del sistema.
+Nessun blocco aperto per la FASE 3 consolidata. Alimentazioni, clock e configurazione del breakout PCM1808 restano da verificare in FASE 4; il sistema completo non è validato.
 
 ## Next actions
 
-1. FASE 3 — XO standalone NEXT: verificare pinout reale e supply voltage prima di qualsiasi alimentazione, poi relativo bring-up.
-2. FASE 3 non avviata in questo consolidamento.
+1. FASE 4 — PCM1808 no AFE NEXT: verificare alimentazioni reali del breakout, SCK/MCLK da XO, configurazione MD0/MD1/FMT, presenza LRCK e BCK prima della ricezione I2S.
+2. FASE 4 non avviata in questo consolidamento.
 
 ## Important constraints
 
@@ -110,4 +116,4 @@ Nessun problema macroscopico rilevato nella receiving inspection. XO: power-up b
 - Non confondere ipotesi, risoluzione, accuratezza e misure reali; niente DSP avanzato prima di dati reali affidabili.
 - Non modificare l'architettura senza CHANGE REQUEST documentata e decisione della supervisione.
 - Nessun secret o informazione personale nel repository; nessuna modifica alle configurazioni Git globali.
-- Questa attività consolida firmware già validato ed evidenze della FASE 2, con un commit e push autorizzati. Nessuna modifica al firmware eseguibile, architettura o ADR; non avvia FASE 3; nessun branch, tag o release aggiuntivo.
+- Questa attività consolida firmware XO già validato ed evidenze della FASE 3, con un commit e push autorizzati. Architettura e ADR invariati; non avvia FASE 4; nessun branch, tag o release aggiuntivo.

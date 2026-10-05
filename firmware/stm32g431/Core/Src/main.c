@@ -1,6 +1,6 @@
 #include "stm32g4xx.h"
 #include "stm32g4xx_hal.h"
-#include "ds3231.h"
+#include "xo_counter.h"
 int diagnostic_cdc_send(const char *text);
 void gate4_usb_init(void);
 
@@ -140,15 +140,9 @@ int main(void)
         Error_Handler();
     }
     gate4_usb_init();
-    const int ds_ok = ds3231_bringup();
-    uint32_t report_at = HAL_GetTick() - 5000U;
+    xo_counter_init();
     for (;;) {
-        if ((uint32_t)(HAL_GetTick() - report_at) >= 5000U) {
-            if (diagnostic_cdc_send(ds3231_report())) { report_at = HAL_GetTick(); }
-        }
-        GPIOC->BSRR = (1UL << 6U);
-        HAL_Delay(500U);
-        if (ds_ok) { GPIOC->BSRR = (1UL << (6U + 16U)); }
-        HAL_Delay(500U);
+        xo_counter_poll();
+        HAL_Delay(1U);
     }
 }

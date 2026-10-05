@@ -1,4 +1,92 @@
-# Tickform — FASE 2: diagnostica DS3231 (validata fisicamente)
+# Tickform — FASE 3: XO standalone, validata fisicamente
+
+Baseline 0b45ffa. Core HSI16/PLL 170 MHz, USB HSI48/CRS SOF e CDC invariati.
+Descrittori ancora Tickform Gate 4 / VID:PID 0483:5740 DEVELOPMENT ONLY;
+il report seriale identifica FASE 3. Nessun protocollo RAW o metrologia ppm.
+DS3231 non richiesto: ds3231.c/.h conservati ma esclusi da questa build,
+nessuna inizializzazione I2C o accesso al modulo. Nessuna attività PCM1808.
+
+## Ingresso e conteggio
+
+PA0 = TIM2_ETR AF14, confermato dal database ufficiale CubeMX
+GPIO-STM32G43x_gpio_v1_0_Modes.xml. GPIO alternate function senza pull;
+ETR è ingresso e la MCU non pilota OUT dell'XO. TIM2 resettato prima della
+configurazione: selezione ETR esterna di reset, External Clock Mode 2
+(SMCR.ECE=1), rising/non-inverted ETP=0, ETPS=/1, ETF=0 senza filtro,
+PSC=0, ARR=0xFFFFFFFF, contatore crescente 32 bit, CKD=/1, nessun IRQ/DMA.
+
+[Riferimento ST RM0440](https://www.st.com/resource/en/reference_manual/rm0440-stm32g4-series-advanced-armbased-32bit-mcus-stmicroelectronics.pdf):
+la risincronizzazione ETR limita il conteggio a circa tim_ker_ck/4.
+Con APB1=/1 e kernel TIM2=170 MHz, 42.5 MHz > 24.576 MHz; nessuna divisione
+ETR necessaria. È una verifica di compatibilità digitale, non di integrità
+analogica dei fronti o dell'accuratezza dell'XO.
+
+TIM2 conta continuamente. Ogni ~1000 ms di HAL tick vengono letti tick e CNT
+con interrupt sospesi solo per le due letture; delta unsigned gestisce il
+wrap 32-bit. Frequenza stimata = delta * 1000 / durata nominale in ms,
+con aritmetica intermedia 64-bit. Finestre >10 s scartate e ricampionate.
+Non si arresta il contatore durante formattazione o USB. Report ogni finestra;
+se USB occupata/scollegata, il report viene saltato senza bloccare il conteggio.
+
+**FUNCTIONAL / APPROXIMATE FREQUENCY CHECK**: risoluzione temporale del tick
+~1 ms, finestra software e riferimento HSI nominale. I decimali stampati non
+indicano accuratezza; non calibra il componente né verifica ±20 ppm.
+
+Soglie diagnostiche: signal detected PASS se frequenza stimata >=1000 Hz;
+altrimenti FAIL no/low activity. Plausibility PASS nell'intervallo inclusivo
+23,347,200–25,804,800 Hz (24,576,000 ±5%). Un errore moderato della misura
+non va attribuito automaticamente all'XO. Min/max delle stime dall'avvio,
+inclusi eventuali zeri iniziali, aiutano a osservare la stabilità grossolana.
+CDC mostra READY, durata nominale, delta fronti, MHz stimati, due esiti e min/max.
+PC6 cambia stato a ogni finestra plausibile; resta ON in errore/no plausibilità.
+
+## Validazione fisica FASE 3 — 2026-10-05
+
+Esiti comunicati dalla supervisione: XO 24.5760 MHz metal can, 4 pin,
+geometria DIP-14. Pinout operativo usato: pin 4 GND, pin 5 OUT, pin 8 VCC,
+pin 1 OPEN. Alimentazione 3.3 V, circa 3.3 V misurati (in precedenza 3.29 V
+sul componente), bypass 100 nF vicino all'XO fra VCC e GND. Nessun
+surriscaldamento, fumo o comportamento hardware anomalo; nessun test a 5 V.
+
+Collegamento validato: pin 5 OUT -> 100 ohm serie -> WeAct PA0/A0.
+I 100 ohm sono protezione/damping prudenziale del collegamento temporaneo,
+non una decisione architetturale definitiva.
+
+Flash PASS, verify `Download verified successfully`, USB CDC PASS.
+Dopo saldatura corretta del pin A0/PA0, TIM2 counting PASS: 16 finestre
+consecutive da circa 1 s, tutte Signal detected PASS e 24.576 MHz
+plausibility PASS. Circa 24.6 milioni di fronti per finestra; stime osservate
+fra 24.589627 e 24.602978 MHz. Esempi: 24.591406, 24.596207, 24.598936,
+24.599765, 24.602319, 24.602978, 24.599872 e 24.598584 MHz.
+
+Prima della saldatura si osservava Edges=0 pur con continuità DC rilevata;
+il contatto meccanico del pin non saldato non era affidabile per il clock.
+Dopo saldatura il conteggio è passato immediatamente a ~24.6 milioni di
+fronti/s. Continuità DC non garantisce integrità del collegamento per
+segnali ad alta frequenza.
+
+- **XO clock detection: PASS**.
+- **Absolute XO frequency accuracy: NOT MEASURED**.
+- **BCK + DS3231 metrology: NOT STARTED**.
+
+La finestra usa il clock interno STM32: la differenza rispetto a 24.576000
+MHz non è una misura dell'errore reale dell'XO. Nessuna accuratezza ppm o
+conformità alla presunta specifica ±20 ppm attestata.
+FASE 3 COMPLETE; FASE 4 PCM1808 no AFE NEXT, non iniziata.
+
+## Build FASE 3
+
+Stesso comando build.ps1 indicato nella baseline sotto, toolchain invariata.
+CMake --fresh e Ninja --clean-first, output separati e ignorati:
+build/phase3/tickform_phase3_xo.{hex,elf,bin,map}. Artefatti precedenti preservati.
+Build pulita 2026-10-05 PASS, nessun warning compilatore/linker:
+Flash 37004 B, RAM allocata 6544 B (riserve heap/stack incluse), CCM 0.
+Nessun nuovo accesso al target durante il consolidamento; firmware XO validato
+conservato senza rifattorizzazioni.
+
+---
+
+# Baseline storica FASE 2: diagnostica DS3231 (validata fisicamente)
 
 Baseline FASE 1: b39939e. Core 170 MHz, HSI48/CRS USB e descrittori CDC
 restano invariati; stringa USB ancora Tickform Gate 4, VID/PID 0483:5740

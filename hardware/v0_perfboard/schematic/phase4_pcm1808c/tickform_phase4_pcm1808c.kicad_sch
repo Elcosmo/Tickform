@@ -1,0 +1,1633 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "10.0")
+	(uuid "d480a719-75c1-4822-b91c-196d4b29a001")
+	(paper "A3")
+	(title_block
+		(title "TICKFORM — FASE 4 — PCM1808 C VERIFICA LRCK 96 kHz")
+		(date "2026-11-13")
+		(rev "R0.1")
+		(company "Tickform Open Source Timegrapher")
+		(comment 1 "Configurazione banco collaudo PCM1808 C: LRCK 96 kHz / BCK ~6.144 MHz")
+		(comment 2 "WeAct STM32G431 + XO 24.576 MHz + Breakout C + Logic Analyzer 8CH (Rev. R0.1)")
+	)
+	(lib_symbols
+		(symbol "tickform_symbols:WeAct_STM32G431_Header"
+			(pin_names (offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U" (at 0 10.16 0) (effects (font (size 1.27 1.27))))
+			(property "Value" "WeAct_STM32G431_Header" (at 0 -10.16 0) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical" (at 0 -12.7 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Description" "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "WeAct_STM32G431_Header_0_1"
+				(rectangle (start -15.24 7.62) (end 7.62 -7.62) (stroke (width 0.254) (type default)) (fill (type background)))
+				(text "WeAct Studio V1.0" (at -3.81 5.08 0) (effects (font (size 1.016 1.016) (bold yes))))
+				(text "STM32G431CBU6" (at -3.81 2.54 0) (effects (font (size 1.016 1.016))))
+				(text "Fila Destra (1..4)" (at -3.81 0 0) (effects (font (size 1.016 1.016) (italic yes))))
+				(text "USB-C In Alto (PC)" (at -3.81 -2.54 0) (effects (font (size 0.889 0.889))))
+				(text "Alimentazione 5V" (at -3.81 -5.08 0) (effects (font (size 0.889 0.889))))
+			)
+			(symbol "WeAct_STM32G431_Header_1_1"
+				(pin power_out line (at 12.7 3.81 180) (length 5.08) (name "3V3" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+				(pin power_out line (at 12.7 1.27 180) (length 5.08) (name "GND" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+				(pin bidirectional line (at 12.7 -1.27 180) (length 5.08) (name "B11" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27)))))
+				(pin power_out line (at 12.7 -3.81 180) (length 5.08) (name "V+" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))
+			)
+		)
+		(symbol "tickform_symbols:XO_24M576_DIP14"
+			(pin_names (offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U" (at 0 7.62 0) (effects (font (size 1.27 1.27))))
+			(property "Value" "XO_24M576_DIP14" (at 0 -7.62 0) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "Oscillator:Oscillator_DIP-14" (at 0 -10.16 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Description" "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "XO_24M576_DIP14_0_1"
+				(rectangle (start -10.16 5.08) (end 10.16 -5.08) (stroke (width 0.254) (type default)) (fill (type background)))
+				(text "XO 24.576 MHz" (at 0 1.27 0) (effects (font (size 1.27 1.27) (bold yes))))
+				(text "DIP-14 (Metal Can)" (at 0 -1.27 0) (effects (font (size 1.016 1.016))))
+			)
+			(symbol "XO_24M576_DIP14_1_1"
+				(pin input line (at -15.24 2.54 0) (length 5.08) (name "OE" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at -15.24 -2.54 0) (length 5.08) (name "GND" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at 15.24 2.54 180) (length 5.08) (name "VCC" (effects (font (size 1.27 1.27)))) (number "8" (effects (font (size 1.27 1.27)))))
+				(pin output line (at 15.24 -2.54 180) (length 5.08) (name "OUT" (effects (font (size 1.27 1.27)))) (number "5" (effects (font (size 1.27 1.27)))))
+			)
+		)
+		(symbol "tickform_symbols:PCM1808_Breakout_C"
+			(pin_names (offset 1.016))
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "MOD" (at 0 20.32 0) (effects (font (size 1.27 1.27))))
+			(property "Value" "PCM1808_Breakout_C" (at 0 -22.86 0) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "" (at 0 -25.4 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "https://www.ti.com/lit/ds/symlink/pcm1808.pdf" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Description" "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "PCM1808_Breakout_C_0_1"
+				(rectangle (start -17.78 17.78) (end 17.78 -17.78) (stroke (width 0.254) (type default)) (fill (type background)))
+				(text "PCM1808 Breakout C" (at 0 11.43 0) (effects (font (size 1.27 1.27) (bold yes))))
+				(text "Modulo ADC (TI PCM1808)" (at 0 8.89 0) (effects (font (size 1.016 1.016))))
+				(text "Master Mode 96 kHz" (at 0 6.35 0) (effects (font (size 1.016 1.016) (bold yes))))
+				(text "TSSOP-14 (SLES177B Rev. Aug 2015)" (at 0 3.81 0) (effects (font (size 0.762 0.762) (italic yes))))
+				(text "Pista interna 3.3V (J2.1<->J1.2)" (at 0 0.5 0) (effects (font (size 0.762 0.762) (bold yes))))
+				(text "Presunta su C (0R su #1/#2 in F0)" (at 0 -1.8 0) (effects (font (size 0.635 0.635) (italic yes))))
+				(text "Piano GND (AGND pin 2 <-> GND 2)" (at 0 -4.2 0) (effects (font (size 0.762 0.762) (bold yes))))
+				(text "Misurato ~0,2R su C (altre presunte)" (at 0 -6.5 0) (effects (font (size 0.635 0.635) (italic yes))))
+				(text "SCK (J2.3) -> R~100R -> SCKI (Pin 6)" (at 0 -9.5 0) (effects (font (size 0.762 0.762))))
+			)
+			(symbol "PCM1808_Breakout_C_1_1"
+				(pin power_in line (at -22.86 12.7 0) (length 5.08) (name "+5V" (effects (font (size 1.27 1.27)))) (number "J1.1" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at -22.86 7.62 0) (length 5.08) (name "3.3" (effects (font (size 1.27 1.27)))) (number "J1.2" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at -22.86 2.54 0) (length 5.08) (name "GND" (effects (font (size 1.27 1.27)))) (number "J1.3" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -22.86 -2.54 0) (length 5.08) (name "MD0" (effects (font (size 1.27 1.27)))) (number "J1.4" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -22.86 -7.62 0) (length 5.08) (name "MD1" (effects (font (size 1.27 1.27)))) (number "J1.5" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -22.86 -12.7 0) (length 5.08) (name "FMT" (effects (font (size 1.27 1.27)))) (number "J1.6" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at 22.86 12.7 180) (length 5.08) (name "3.3V" (effects (font (size 1.27 1.27)))) (number "J2.1" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at 22.86 7.62 180) (length 5.08) (name "GND_2" (effects (font (size 1.27 1.27)))) (number "J2.2" (effects (font (size 1.27 1.27)))))
+				(pin input line (at 22.86 2.54 180) (length 5.08) (name "SCK" (effects (font (size 1.27 1.27)))) (number "J2.3" (effects (font (size 1.27 1.27)))))
+				(pin output line (at 22.86 -2.54 180) (length 5.08) (name "LRC" (effects (font (size 1.27 1.27)))) (number "J2.4" (effects (font (size 1.27 1.27)))))
+				(pin output line (at 22.86 -7.62 180) (length 5.08) (name "OUT" (effects (font (size 1.27 1.27)))) (number "J2.5" (effects (font (size 1.27 1.27)))))
+				(pin output line (at 22.86 -12.7 180) (length 5.08) (name "BCK" (effects (font (size 1.27 1.27)))) (number "J2.6" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -10.16 -22.86 90) (length 5.08) (name "RIN" (effects (font (size 1.27 1.27)))) (number "J3.1" (effects (font (size 1.27 1.27)))))
+				(pin power_in line (at 0 -22.86 90) (length 5.08) (name "GND" (effects (font (size 1.27 1.27)))) (number "J3.2" (effects (font (size 1.27 1.27)))))
+				(pin input line (at 10.16 -22.86 90) (length 5.08) (name "LIN" (effects (font (size 1.27 1.27)))) (number "J3.3" (effects (font (size 1.27 1.27)))))
+			)
+		)
+		(symbol "tickform_symbols:Logic_Analyzer_8CH"
+			(pin_names (offset 1.016))
+			(in_bom no)
+			(on_board no)
+			(property "Reference" "INSTR" (at 0 17.78 0) (effects (font (size 1.27 1.27))))
+			(property "Value" "Logic_Analyzer_8CH" (at 0 -17.78 0) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Description" "Analizzatore logico USB 8CH / 24 MHz (PulseView) - Strumento passivo esterno (escluso da netlist)" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "Logic_Analyzer_8CH_0_1"
+				(rectangle (start -15.24 15.24) (end 15.24 -15.24) (stroke (width 0.254) (type default)) (fill (type background)))
+				(text "Logic Analyzer" (at 0 10.16 0) (effects (font (size 1.27 1.27) (bold yes))))
+				(text "8CH / 24 MHz" (at 0 7.62 0) (effects (font (size 1.016 1.016))))
+				(text "PulseView / sigrok" (at 0 5.08 0) (effects (font (size 1.016 1.016) (italic yes))))
+				(text "STRUMENTO PASSIVO ESTERNO" (at 0 1.27 0) (effects (font (size 0.762 0.762) (bold yes))))
+				(text "Non alimenta il circuito" (at 0 -1.27 0) (effects (font (size 0.762 0.762))))
+				(text "Escluso da netlist PCB (on_board no)" (at 0 -3.81 0) (effects (font (size 0.762 0.762) (italic yes))))
+				(text "SCK 24MHz NON connesso" (at 0 -7.62 0) (effects (font (size 0.889 0.889) (bold yes))))
+			)
+			(symbol "Logic_Analyzer_8CH_1_1"
+				(pin power_in line (at -20.32 10.16 0) (length 5.08) (name "GND" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -20.32 5.08 0) (length 5.08) (name "CH1_D0" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -20.32 0 0) (length 5.08) (name "CH2_D1" (effects (font (size 1.27 1.27)))) (number "3" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -20.32 -5.08 0) (length 5.08) (name "CH3_D2" (effects (font (size 1.27 1.27)))) (number "4" (effects (font (size 1.27 1.27)))))
+				(pin input line (at -20.32 -10.16 0) (length 5.08) (name "CH4_D3" (effects (font (size 1.27 1.27)))) (number "5" (effects (font (size 1.27 1.27)))))
+				(pin input line (at 20.32 5.08 180) (length 5.08) (name "CH5_D4" (effects (font (size 1.27 1.27)))) (number "6" (effects (font (size 1.27 1.27)))))
+				(pin input line (at 20.32 0 180) (length 5.08) (name "CH6_D5" (effects (font (size 1.27 1.27)))) (number "7" (effects (font (size 1.27 1.27)))))
+				(pin input line (at 20.32 -5.08 180) (length 5.08) (name "CH7_D6" (effects (font (size 1.27 1.27)))) (number "8" (effects (font (size 1.27 1.27)))))
+				(pin input line (at 20.32 -10.16 180) (length 5.08) (name "CH8_D7" (effects (font (size 1.27 1.27)))) (number "9" (effects (font (size 1.27 1.27)))))
+			)
+		)
+		(symbol "tickform_symbols:R"
+			(pin_numbers (hide yes))
+			(pin_names (offset 0))
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "R" (at 2.032 0 90) (effects (font (size 1.27 1.27))))
+			(property "Value" "R" (at 0 0 90) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Description" "Resistor" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "R_0_1"
+				(rectangle (start -1.016 2.54) (end 1.016 -2.54) (stroke (width 0.254) (type default)) (fill (type none)))
+			)
+			(symbol "R_1_1"
+				(pin passive line (at 0 5.08 270) (length 2.54) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+				(pin passive line (at 0 -5.08 90) (length 2.54) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+			)
+		)
+		(symbol "tickform_symbols:C"
+			(pin_numbers (hide yes))
+			(pin_names (offset 0))
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "C" (at 2.032 0 90) (effects (font (size 1.27 1.27))))
+			(property "Value" "C" (at 0 0 90) (effects (font (size 1.27 1.27))))
+			(property "Footprint" "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Datasheet" "" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(property "Description" "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+			(symbol "C_0_1"
+				(polyline (pts (xy -2.032 0.762) (xy 2.032 0.762)) (stroke (width 0.381) (type default)) (fill (type none)))
+				(polyline (pts (xy -2.032 -0.762) (xy 2.032 -0.762)) (stroke (width 0.381) (type default)) (fill (type none)))
+			)
+			(symbol "C_1_1"
+				(pin passive line (at 0 3.81 270) (length 3.048) (name "~" (effects (font (size 1.27 1.27)))) (number "1" (effects (font (size 1.27 1.27)))))
+				(pin passive line (at 0 -3.81 90) (length 3.048) (name "~" (effects (font (size 1.27 1.27)))) (number "2" (effects (font (size 1.27 1.27)))))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:WeAct_STM32G431_Header")
+		(at 60.96 127.00 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "deab59ad-2517-5ac3-b2c1-119e32120dbc")
+		(property "Reference" "U1"
+			(at 60.96 116.84 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "WeAct_STM32G431_Header"
+			(at 60.96 137.16 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical"
+			(at 60.96 139.70 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" "https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard"
+			(at 60.96 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)"
+			(at 60.96 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "839b84cf-bc7d-57d1-8a63-4ab8549a2b7c"))
+		(pin "2" (uuid "29709ffb-4c4e-5e4b-81e1-2dd41734cb0b"))
+		(pin "3" (uuid "a6e4ba04-0127-5930-93ab-89e477d78eb2"))
+		(pin "4" (uuid "7d88f2ad-b96d-5258-b610-605f5e1e758f"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "U1") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:XO_24M576_DIP14")
+		(at 139.70 76.20 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "48dbaad7-dcb4-5d30-a734-3dae32fbaf9b")
+		(property "Reference" "U2"
+			(at 139.70 68.58 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "XO_24M576_DIP14"
+			(at 139.70 83.82 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "Oscillator:Oscillator_DIP-14"
+			(at 139.70 86.36 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 139.70 76.20 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin"
+			(at 139.70 76.20 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "bec16b81-93f9-5c11-8155-b601e5ad3be6"))
+		(pin "4" (uuid "1352343c-85f2-508d-b44e-dc0e3fd1401d"))
+		(pin "8" (uuid "420375f9-bc36-5afc-af96-23f6c961b41e"))
+		(pin "5" (uuid "9663b790-bee2-5065-af94-24b6d0b332c5"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "U2") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:C")
+		(at 170.18 76.20 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "2baae3ef-72fc-5b42-86bb-88271b8825a4")
+		(property "Reference" "C1"
+			(at 173.99 74.93 0)
+			(effects (font (size 1.27 1.27)) (justify left))
+		)
+		(property "Value" "100nF"
+			(at 173.99 77.47 0)
+			(effects (font (size 1.27 1.27)) (justify left))
+		)
+		(property "Footprint" "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm"
+			(at 170.18 76.20 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 170.18 76.20 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)"
+			(at 170.18 76.20 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "4aa29c45-4f00-515d-98fc-90f7bf1cb98a"))
+		(pin "2" (uuid "8e66556d-c663-5ef5-8dad-f7e2df7b0850"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "C1") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:PCM1808_Breakout_C")
+		(at 236.22 127.00 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e6e0c623-9fbd-57ae-8906-ab9d113ffed1")
+		(property "Reference" "MOD1"
+			(at 236.22 106.68 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "PCM1808_Breakout_C"
+			(at 236.22 147.32 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 236.22 149.86 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" "https://www.ti.com/lit/ds/symlink/pcm1808.pdf"
+			(at 236.22 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)"
+			(at 236.22 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "J1.1" (uuid "5d4ffef3-1a2b-5efe-9493-eddfebdd01b6"))
+		(pin "J1.2" (uuid "907bc5b8-e85c-51c1-b868-8244c9844eb2"))
+		(pin "J1.3" (uuid "9b307d93-e1e4-59ab-b008-9d684eccb121"))
+		(pin "J1.4" (uuid "81599db6-3a1a-5a98-a2dc-806d3c45855b"))
+		(pin "J1.5" (uuid "61395052-daf8-5d80-8ef6-9984b36941ad"))
+		(pin "J1.6" (uuid "b9fbec9f-e5a7-50a6-a2ed-3a10ca5cfe3b"))
+		(pin "J2.1" (uuid "e16bb6fa-221c-5262-89b9-bab0b207c87e"))
+		(pin "J2.2" (uuid "56cd51e8-dd24-51ab-99ca-18341ec0be33"))
+		(pin "J2.3" (uuid "58f56ab3-3fd6-5265-adf6-a47a0d5c2f89"))
+		(pin "J2.4" (uuid "d69c24a0-8b5e-57b9-8d99-1d5344914479"))
+		(pin "J2.5" (uuid "ffcfe848-7ce3-55ac-9646-123bb8c58878"))
+		(pin "J2.6" (uuid "4e23050e-97e6-5932-b062-5bd285455275"))
+		(pin "J3.1" (uuid "0db8ecb5-1a7d-59f8-8dec-7663584ab9fd"))
+		(pin "J3.2" (uuid "b25b88de-2241-54d2-ac2f-8b156967e3a7"))
+		(pin "J3.3" (uuid "0274de72-04b9-5438-9bdf-e09373ecbaf5"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "MOD1") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:R")
+		(at 198.12 124.46 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "3ddd1a92-9f20-5ec7-a553-a28174f5ba76")
+		(property "Reference" "R1"
+			(at 195.58 124.46 90)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "10k"
+			(at 200.66 124.46 90)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+			(at 198.12 124.46 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 198.12 124.46 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "Resistenza di pull-up 10 kΩ 1% per MD0"
+			(at 198.12 124.46 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "d9dde6e6-cf89-5dd4-85b5-bccc56af41f1"))
+		(pin "2" (uuid "2e75333a-340f-5cf1-9b80-3fb7d7064839"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "R1") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:R")
+		(at 187.96 127.00 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "4db20d23-fd3a-52f3-aec1-42c8cf5184bc")
+		(property "Reference" "R2"
+			(at 185.42 127.00 90)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "10k"
+			(at 190.50 127.00 90)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal"
+			(at 187.96 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 187.96 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "Resistenza di pull-up 10 kΩ 1% per MD1"
+			(at 187.96 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "99884dcd-a51c-5968-a9df-a21953b3179c"))
+		(pin "2" (uuid "23e87b06-3d29-5d81-99a3-976f3931f71f"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "R2") (unit 1))
+			)
+		)
+	)
+	(symbol
+		(lib_id "tickform_symbols:Logic_Analyzer_8CH")
+		(at 345.44 127.00 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board no)
+		(dnp no)
+		(uuid "586aa27b-1071-588f-bd92-75b9b8cc11c2")
+		(property "Reference" "INSTR1"
+			(at 345.44 109.22 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Value" "Logic_Analyzer_8CH"
+			(at 345.44 144.78 0)
+			(effects (font (size 1.27 1.27)))
+		)
+		(property "Footprint" ""
+			(at 345.44 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Datasheet" ""
+			(at 345.44 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(property "Description" "Analizzatore logico USB 8CH / 24 MHz (PulseView) - Strumento passivo esterno (escluso da netlist)"
+			(at 345.44 127.00 0)
+			(effects (font (size 1.27 1.27)) (hide yes))
+		)
+		(pin "1" (uuid "e1d7e332-d440-5a97-872d-10e79c0df7c3"))
+		(pin "2" (uuid "c27b4f36-3a35-5637-a587-4b3aae488e7c"))
+		(pin "3" (uuid "7ed405ea-3b75-51c3-9ad4-de8b6b2e8acf"))
+		(pin "4" (uuid "0a47ae2c-0f2e-5157-8864-d3a180a4360c"))
+		(pin "5" (uuid "91b258c0-a733-55b7-aec3-ae661a2cc152"))
+		(pin "6" (uuid "8dd4b590-099c-54fe-a5d7-9c245d467b39"))
+		(pin "7" (uuid "27c597de-b0d1-5fce-9b80-a5c6d2a20b70"))
+		(pin "8" (uuid "4f452f88-74ae-5d44-ac2d-7714bcb9a62f"))
+		(pin "9" (uuid "9a8492c3-f57e-5a48-b884-1d16916baa9a"))
+		(instances
+			(project "tickform_phase4_pcm1808c"
+				(path "/d480a719-75c1-4822-b91c-196d4b29a001" (reference "INSTR1") (unit 1))
+			)
+		)
+	)
+	(no_connect
+		(at 73.66 128.27)
+		(uuid "846ce1ad-50b4-5838-9ceb-02bd9f6d339d")
+	)
+	(no_connect
+		(at 124.46 73.66)
+		(uuid "4c214b1c-25cf-5a7a-8f2e-3029b4e6aebe")
+	)
+	(no_connect
+		(at 213.36 124.46)
+		(uuid "dc92718d-cda5-5315-94a3-cd2276223dcc")
+	)
+	(no_connect
+		(at 213.36 139.70)
+		(uuid "966cee82-4733-5f85-8618-6537b9f6b57a")
+	)
+	(no_connect
+		(at 259.08 134.62)
+		(uuid "0fdd4013-1d58-5bf7-855c-16b8646654eb")
+	)
+	(no_connect
+		(at 226.06 149.86)
+		(uuid "bff1ac14-31a9-57c3-ad2e-e072362ab4ad")
+	)
+	(no_connect
+		(at 236.22 149.86)
+		(uuid "ae664fb9-2bc1-5fd0-8df8-84d2d2d0a23b")
+	)
+	(no_connect
+		(at 246.38 149.86)
+		(uuid "76b5bfbf-05c8-5029-90dc-3527933a19a8")
+	)
+	(no_connect
+		(at 325.12 132.08)
+		(uuid "56377a8d-0a54-58b9-a04a-7a1abdb341a7")
+	)
+	(no_connect
+		(at 325.12 137.16)
+		(uuid "963476cb-3393-5d65-8df8-950baea893f0")
+	)
+	(no_connect
+		(at 365.76 121.92)
+		(uuid "2ec8c3c8-d258-55c5-9a43-95146f983f28")
+	)
+	(no_connect
+		(at 365.76 127.00)
+		(uuid "b483c956-3023-5781-8631-023fbca6e61d")
+	)
+	(no_connect
+		(at 365.76 132.08)
+		(uuid "f1b04a45-5268-5b94-a6f9-9f50b7f816aa")
+	)
+	(no_connect
+		(at 365.76 137.16)
+		(uuid "23ea1a03-9392-57d8-8177-a1e6e91de2de")
+	)
+	(wire
+		(pts
+			(xy 73.66 130.81) (xy 81.28 130.81)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "320fa9aa-027b-585c-9060-2f4162ad947a")
+	)
+	(wire
+		(pts
+			(xy 81.28 130.81) (xy 81.28 160.02)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "f079cc00-948f-538c-a904-bdd4a2de402b")
+	)
+	(wire
+		(pts
+			(xy 81.28 160.02) (xy 165.10 160.02)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6d09ab4d-c7da-549e-b4ff-c688cc1f84e0")
+	)
+	(wire
+		(pts
+			(xy 165.10 160.02) (xy 165.10 114.30)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "86ea9203-a3eb-5cb8-89bc-ef20b796b365")
+	)
+	(wire
+		(pts
+			(xy 165.10 114.30) (xy 213.36 114.30)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "21f79f30-bf32-5b4f-bb4a-e7923df12dc9")
+	)
+	(label "+5V"
+		(at 90.00 160.02 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "24a1d620-717b-5b90-ad72-8c85da3d6f11")
+	)
+	(wire
+		(pts
+			(xy 73.66 123.19) (xy 93.98 123.19)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "272ffb86-812e-506c-bea4-0d24f8c48e50")
+	)
+	(wire
+		(pts
+			(xy 93.98 123.19) (xy 93.98 66.04)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "0394d2e6-b364-5aa1-ba86-e996ee117553")
+	)
+	(wire
+		(pts
+			(xy 93.98 66.04) (xy 154.94 66.04)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "3db25482-ffc1-5806-aa51-c9c213c23022")
+	)
+	(junction
+		(at 154.94 66.04)
+		(diameter 1.016)
+		(color 0 0 0 0)
+		(uuid "2f1194cb-7c21-5b52-b2e8-0842b1dda924")
+	)
+	(wire
+		(pts
+			(xy 154.94 66.04) (xy 154.94 73.66)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "56183b3e-f5fb-5a79-bf59-c8604a9e4a68")
+	)
+	(wire
+		(pts
+			(xy 154.94 66.04) (xy 170.18 66.04)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "6c8fe826-d1a0-5e50-a359-105b8558f85d")
+	)
+	(junction
+		(at 170.18 66.04)
+		(diameter 1.016)
+		(color 0 0 0 0)
+		(uuid "d2cecd05-ae22-56e7-b027-571b19febd8c")
+	)
+	(wire
+		(pts
+			(xy 170.18 66.04) (xy 170.18 72.39)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "51e5b50f-cf64-56b8-9c73-2b391ad7dd65")
+	)
+	(wire
+		(pts
+			(xy 170.18 66.04) (xy 259.08 66.04)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "cb3c330e-b924-534f-a828-02ee3469703e")
+	)
+	(wire
+		(pts
+			(xy 259.08 66.04) (xy 259.08 114.30)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "8ad73d26-cde0-585f-b4aa-4b4d5bb8b8e2")
+	)
+	(label "3V3"
+		(at 100.00 66.04 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "2126cd50-50fc-5654-bba3-c2a93f6fbc9c")
+	)
+	(wire
+		(pts
+			(xy 73.66 125.73) (xy 106.68 125.73)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "225ef176-d4e3-5ea2-b58e-b4ab61750493")
+	)
+	(wire
+		(pts
+			(xy 106.68 125.73) (xy 106.68 86.36)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "b72730bb-3510-58b1-84f2-2ad9363c285b")
+	)
+	(wire
+		(pts
+			(xy 106.68 86.36) (xy 116.84 86.36)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "71471c35-7254-517b-a03d-40ceb3595c5c")
+	)
+	(junction
+		(at 116.84 86.36)
+		(diameter 1.016)
+		(color 0 0 0 0)
+		(uuid "f6557749-8042-58a5-8811-86480f4d5ffb")
+	)
+	(wire
+		(pts
+			(xy 116.84 86.36) (xy 116.84 78.74)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "0058c431-9b04-584b-a617-361a2d5c51aa")
+	)
+	(wire
+		(pts
+			(xy 116.84 78.74) (xy 124.46 78.74)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "79ee2583-bd31-5d87-b584-41dd3dd5ea6d")
+	)
+	(wire
+		(pts
+			(xy 116.84 86.36) (xy 170.18 86.36)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "d776c3fc-2932-56f3-a13d-0371b25eb286")
+	)
+	(junction
+		(at 170.18 86.36)
+		(diameter 1.016)
+		(color 0 0 0 0)
+		(uuid "cf1a870a-c7f0-5fb0-b8f3-b009e41f2c9a")
+	)
+	(wire
+		(pts
+			(xy 170.18 86.36) (xy 170.18 80.01)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "cfe6d14a-4fdc-52eb-935d-10ce2fc9e08c")
+	)
+	(wire
+		(pts
+			(xy 170.18 86.36) (xy 266.70 86.36)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "88af3d23-d278-59e3-aace-548f07650c93")
+	)
+	(wire
+		(pts
+			(xy 266.70 86.36) (xy 266.70 116.84)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "ae427e94-8416-5779-b05f-d9ac235f4a44")
+	)
+	(junction
+		(at 266.70 116.84)
+		(diameter 1.016)
+		(color 0 0 0 0)
+		(uuid "b2e58e6d-a4e8-53fd-b16f-d8046de8439c")
+	)
+	(wire
+		(pts
+			(xy 266.70 116.84) (xy 325.12 116.84)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "4c2a21ae-0c28-5d7a-bfe5-72dcc61ce3f3")
+	)
+	(wire
+		(pts
+			(xy 266.70 116.84) (xy 266.70 119.38)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "9bea57e9-6a48-5d56-b1dd-02ada93139b9")
+	)
+	(wire
+		(pts
+			(xy 266.70 119.38) (xy 259.08 119.38)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "eaeddc74-c335-536a-ae55-0cb23b82e3ac")
+	)
+	(label "GND"
+		(at 130.00 86.36 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "c125afc5-8e2c-51ee-9d85-7f1a70b38e1f")
+	)
+	(wire
+		(pts
+			(xy 213.36 119.38) (xy 198.12 119.38)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "32b04117-c009-53ea-a867-925f58240465")
+	)
+	(junction
+		(at 198.12 119.38)
+		(diameter 1.016)
+		(color 0 0 0 0)
+		(uuid "b4523908-7f00-5ab0-b79e-e5b680ecda5c")
+	)
+	(wire
+		(pts
+			(xy 198.12 119.38) (xy 187.96 119.38)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "7223f707-a994-553a-82f8-901cabc5d4a1")
+	)
+	(wire
+		(pts
+			(xy 187.96 119.38) (xy 187.96 121.92)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "038db524-e8e7-5d95-a1bc-0b71bde6e3d5")
+	)
+	(label "3V3"
+		(at 200.00 119.38 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0e610885-31b1-51ee-aca2-83fdb8789e5f")
+	)
+	(wire
+		(pts
+			(xy 198.12 129.54) (xy 213.36 129.54)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "eeaa77bf-2507-5b87-9b6b-cb4a5e3cde67")
+	)
+	(label "MD0"
+		(at 205.00 129.54 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "669efecc-4870-5f68-bdbd-0c7c524e42a5")
+	)
+	(wire
+		(pts
+			(xy 187.96 132.08) (xy 187.96 134.62)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "8dbeea92-6a84-59a9-8a33-c9aa3e110eef")
+	)
+	(wire
+		(pts
+			(xy 187.96 134.62) (xy 213.36 134.62)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "08ea2a94-45d3-5f5e-acc0-5932078c35ed")
+	)
+	(label "MD1"
+		(at 205.00 134.62 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "d6070565-7ea0-532a-8ccb-ea623f10ba8b")
+	)
+	(wire
+		(pts
+			(xy 154.94 78.74) (xy 274.32 78.74)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "b2b918a2-246b-5800-a7d1-5274e57fb141")
+	)
+	(wire
+		(pts
+			(xy 274.32 78.74) (xy 274.32 124.46)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "9b0515fc-de5a-5646-835a-8542c6642e74")
+	)
+	(wire
+		(pts
+			(xy 274.32 124.46) (xy 259.08 124.46)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "88361878-582c-50ae-b27a-b9dab18385a3")
+	)
+	(label "PCM_SCK"
+		(at 210.00 78.74 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "dc8836bb-203b-5b44-bcd0-7e9bcbdcb6cc")
+	)
+	(wire
+		(pts
+			(xy 259.08 129.54) (xy 284.48 129.54)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "93cd044b-eefe-59f8-9770-8111cfe8ec18")
+	)
+	(wire
+		(pts
+			(xy 284.48 129.54) (xy 284.48 121.92)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "78f624fd-ad9e-59a0-8b95-3d11a3191b10")
+	)
+	(wire
+		(pts
+			(xy 284.48 121.92) (xy 325.12 121.92)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "948657ed-35b2-5772-a6d3-0ee7a38a9063")
+	)
+	(label "PCM_LRC"
+		(at 295.00 121.92 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "0451c515-5bd6-5851-9dd1-c38a2fcb401d")
+	)
+	(wire
+		(pts
+			(xy 259.08 139.70) (xy 297.18 139.70)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "9416990c-fe76-5c7e-9eb4-45fb69791b9a")
+	)
+	(wire
+		(pts
+			(xy 297.18 139.70) (xy 297.18 127.00)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "d449c3f1-401c-5c45-b144-1cc3cd910459")
+	)
+	(wire
+		(pts
+			(xy 297.18 127.00) (xy 325.12 127.00)
+		)
+		(stroke
+			(width 0)
+			(type solid)
+		)
+		(uuid "a42604a5-7b8a-5138-9982-ed4dc47b700b")
+	)
+	(label "PCM_BCK"
+		(at 305.00 127.00 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "3c238148-ccaf-504c-87fc-912e12447ccc")
+	)
+	(polyline
+		(pts
+			(xy 312.42 99.06) (xy 378.46 99.06) (xy 378.46 154.94) (xy 312.42 154.94) (xy 312.42 99.06)
+		)
+		(stroke
+			(width 0.254)
+			(type dash)
+		)
+		(fill (type none))
+		(uuid "834694de-6f86-55e3-8da8-cc30175d0ce1")
+	)
+	(text "STRUMENTAZIONE DI MISURA ESTERNA (PULSEVIEW)"
+		(exclude_from_sim no)
+		(at 314.96 103.00 0)
+		(effects
+			(font
+				(size 1.50 1.50)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "062503c8-6a1b-5601-a7c2-dba91437a384")
+	)
+	(text "Analizzatore logico USB 8CH / 24 MHz - Solo acquisizione passiva"
+		(exclude_from_sim no)
+		(at 314.96 107.00 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "0da8c75e-2382-5df2-ad06-6ed6a0972b4a")
+	)
+	(text "AVVISO: Escluso da netlist PCB (on_board no / in_bom no)"
+		(exclude_from_sim no)
+		(at 314.96 111.00 0)
+		(effects
+			(font
+				(size 0.90 0.90)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "5a3b05dd-ae5f-5ab2-9037-70b4f8d0dc3c")
+	)
+	(text "AVVISO: SCK (24.576 MHz) NON connesso (limite di banda 24 MS/s)"
+		(exclude_from_sim no)
+		(at 314.96 150.00 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "c3c48616-bf93-59d2-9a11-fe7f46e59601")
+	)
+	(text "J1.3 (GND): NC esterno (piano GND interno presunto su C)"
+		(exclude_from_sim no)
+		(at 148.00 123.50 0)
+		(effects
+			(font
+				(size 0.90 0.90)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "05959458-145a-5c6b-8cf2-b8e61f3b8607")
+	)
+	(text "J1.2 (3.3): Distribuzione R1/R2 (pista interna da J2.1 presunta su C)"
+		(exclude_from_sim no)
+		(at 135.00 116.50 0)
+		(effects
+			(font
+				(size 0.90 0.90)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "24933dd0-1cd8-566e-9124-52196c9158f3")
+	)
+	(text "C1 100nF: Documentato in FASE 3, non nuovamente verificato"
+		(exclude_from_sim no)
+		(at 145.00 92.00 0)
+		(effects
+			(font
+				(size 0.90 0.90)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "17014e3e-fd88-5be9-8ce9-d30ee0d54193")
+	)
+	(text "1. EVIDENZA SPERIMENTALE COLLAUDO PCM1808 C (12/11/2026):"
+		(exclude_from_sim no)
+		(at 30.48 178.00 0)
+		(effects
+			(font
+				(size 1.50 1.50)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "5d73a050-33e2-5358-ac41-24f459db84c4")
+	)
+	(text "- Tensione VCC analogica misurata: 5,0 V (rail WeAct V+ da bus USB-C del PC)."
+		(exclude_from_sim no)
+		(at 30.48 182.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "207c5c4f-4576-5922-968f-005ccd56588e")
+	)
+	(text "- Tensione VDD digitale misurata: 3,2 V (rail WeAct 3V3 da regolatore LDO onboard)."
+		(exclude_from_sim no)
+		(at 30.48 186.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "8c4301a0-b52a-5c95-aa75-4195ba050b1f")
+	)
+	(text "- Frequenza LRCK: 96,000 kHz rilevati tramite cursori PulseView."
+		(exclude_from_sim no)
+		(at 30.48 190.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "ccb275be-23fa-5617-b3cf-11c487ff8102")
+	)
+	(text "- Frequenza BCK: circa 16 periodi in 2,625 us su PulseView, compatibile"
+		(exclude_from_sim no)
+		(at 30.48 194.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "43a180f5-a32a-5ef1-9d8f-47cef8ff518c")
+	)
+	(text "  con 6,144 MHz nominali (nessuna misura metrologica esatta a 6,144 MHz dichiarata)."
+		(exclude_from_sim no)
+		(at 30.48 198.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "10812bcb-70fa-510d-83e3-4c64bb49d112")
+	)
+	(text "- Master clock SCK: 24,576 MHz nominali da oscillatore XO esterno (256 x Fs)."
+		(exclude_from_sim no)
+		(at 30.48 202.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "fa978602-3480-5124-9513-efe6fe2c99da")
+	)
+	(text "- Firmware MCU STM32G431: Nessuna modifica applicativa (Gate 4 standalone)."
+		(exclude_from_sim no)
+		(at 30.48 206.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "96807384-5982-5d15-a6f5-0f4dab44e5d4")
+	)
+	(text "- Conversione A/D audio: NON ancora verificata (RIN/LIN aperti, AFE non connesso)."
+		(exclude_from_sim no)
+		(at 30.48 210.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "4b3162b9-99c7-5609-a169-bab218305d79")
+	)
+	(text "2. CLOCK SCK, RESISTENZE BREAKOUT E BYPASS XO:"
+		(exclude_from_sim no)
+		(at 30.48 218.00 0)
+		(effects
+			(font
+				(size 1.50 1.50)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "a6b434b5-9a17-57db-8e91-edf927153e85")
+	)
+	(text "- Collegamento XO OUT -> PCM C SCK realizzato mediante FILO DIRETTO."
+		(exclude_from_sim no)
+		(at 30.48 222.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "c9e2e147-736e-5193-83e2-72c1494ce5a2")
+	)
+	(text "- Nessuna resistenza esterna da 100 ohm interposta (a differenza di FASE 3)."
+		(exclude_from_sim no)
+		(at 30.48 226.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "54d21d4f-44c8-5615-9524-bbe3b20ee2f3")
+	)
+	(text "- Misura passiva R percorso SCK: circa 100 ohm onboard tra SCK e Pin 6 (SCKI)."
+		(exclude_from_sim no)
+		(at 30.48 230.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "cf512a0d-77b6-5172-b055-12d1bc4dd571")
+	)
+	(text "- Misura passiva continuita' massa su C: AGND chip Pin 2 -> GND 2 breakout circa 0,2 ohm."
+		(exclude_from_sim no)
+		(at 30.48 234.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "0e60f44e-b67e-5d36-a190-08d0184f8ffe")
+	)
+	(text "  (Misura confermata su C; non estesa automaticamente ad altre continuita' non misurate)."
+		(exclude_from_sim no)
+		(at 30.48 238.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "37660ed6-3ca9-54d8-acfd-efd5557dde32")
+	)
+	(text "- Condensatore C1 (100 nF XO bypass): documentato storicamente in FASE 3"
+		(exclude_from_sim no)
+		(at 30.48 242.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "370bb72f-70ba-5fb5-90d8-e175e5ef779d")
+	)
+	(text "  (PROJECT_LOG.md#L180), non nuovamente verificato a banco nel collaudo C."
+		(exclude_from_sim no)
+		(at 30.48 246.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "905b1cd6-c564-5ab2-9b33-fa279e4ca45f")
+	)
+	(text "3. MAPPATURA TERMINALI BREAKOUT VS PIEDINI CHIP TSSOP-14:"
+		(exclude_from_sim no)
+		(at 210.82 175.00 0)
+		(effects
+			(font
+				(size 1.50 1.50)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "143b3a3c-d402-5f57-ac4b-99a3c0b0c42a")
+	)
+	(text "Rif. ufficiale: TI PCM1808 Datasheet SLES177B (APRIL 2006 - REVISED AUGUST 2015):"
+		(exclude_from_sim no)
+		(at 210.82 179.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+				(italic yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "6b1fa2d0-a394-53c9-bbc1-a9caf6936f44")
+	)
+	(text "  * Term. J1.1 (+5V)    -> Chip Pin 3 (VCC Analogica +5V)"
+		(exclude_from_sim no)
+		(at 210.82 183.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "7e274917-c7e7-5031-9d49-7f68f946411a")
+	)
+	(text "  * Term. J1.2 (3.3)    -> Chip Pin 4 (VDD Digitale +3.3V, continuita' interna con J2.1)"
+		(exclude_from_sim no)
+		(at 210.82 187.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "edf2c902-6bf4-5266-9c4d-43b0ed04120e")
+	)
+	(text "  * Term. J1.3 (GND)    -> Chip Pin 2/5 (AGND/DGND massa comune; NC esterno)"
+		(exclude_from_sim no)
+		(at 210.82 190.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "22c5fddd-8f9b-5358-950f-9d546f0eb299")
+	)
+	(text "  * Term. J1.4 (MD0)    -> Chip Pin 10 (MD0 Mode Control)"
+		(exclude_from_sim no)
+		(at 210.82 194.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "7665bd31-244d-5ba7-a7e0-3d3241fc8b68")
+	)
+	(text "  * Term. J1.5 (MD1)    -> Chip Pin 11 (MD1 Mode Control)"
+		(exclude_from_sim no)
+		(at 210.82 197.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "222f4187-d201-57c7-8f0b-e09abe564e04")
+	)
+	(text "  * Term. J1.6 (FMT)    -> Chip Pin 12 (FMT Audio Format)"
+		(exclude_from_sim no)
+		(at 210.82 201.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "e7abe76d-0fb8-55a2-b39a-94b3f275085c")
+	)
+	(text "  * Term. J2.1 (3.3V)   -> Chip Pin 4 (VDD Digitale, alimentazione da WeAct 3V3)"
+		(exclude_from_sim no)
+		(at 210.82 204.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "2d630822-7b31-5c23-8420-d841fc31defd")
+	)
+	(text "  * Term. J2.2 (GND_2)  -> Chip Pin 2/5 (AGND/DGND, connesso a WeAct GND; ~0,2R a Pin 2)"
+		(exclude_from_sim no)
+		(at 210.82 208.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "9e03b88e-d977-53ad-a038-7bb64b31a1c3")
+	)
+	(text "  * Term. J2.3 (SCK)    -> R_onboard (~100 ohm) -> Chip Pin 6 (SCKI System Clock)"
+		(exclude_from_sim no)
+		(at 210.82 211.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "67fd244d-4869-570c-9e1a-e103d617cf7b")
+	)
+	(text "  * Term. J2.4 (LRC)    -> Chip Pin 7 (LRCK Word Clock out, 96 kHz)"
+		(exclude_from_sim no)
+		(at 210.82 215.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "51ae9051-5e88-5035-bc4d-038fafee97dd")
+	)
+	(text "  * Term. J2.5 (OUT)    -> Chip Pin 9 (DOUT Audio Data out, non connesso)"
+		(exclude_from_sim no)
+		(at 210.82 218.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "ec143af7-86ec-5096-aaab-5c7c6e096f3e")
+	)
+	(text "  * Term. J2.6 (BCK)    -> Chip Pin 8 (BCK Bit Clock out, ~6.144 MHz)"
+		(exclude_from_sim no)
+		(at 210.82 222.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "caf8d2bc-da2c-58f4-ae33-67f955a13ec1")
+	)
+	(text "  * Term. J3.1 (RIN)    -> Chip Pin 14 (VINR Ingresso analogico destro, aperto)"
+		(exclude_from_sim no)
+		(at 210.82 225.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "22653797-7073-531f-81b6-b1c81d7db520")
+	)
+	(text "  * Term. J3.2 (GND)    -> Chip Pin 2 (AGND Massa analogica riferimento, aperto)"
+		(exclude_from_sim no)
+		(at 210.82 229.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "ad29a969-9518-51b0-9e21-993549100083")
+	)
+	(text "  * Term. J3.3 (LIN)    -> Chip Pin 13 (VINL Ingresso analogico sinistro, aperto)"
+		(exclude_from_sim no)
+		(at 210.82 232.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "ca104e87-d701-56b7-a29d-a18615d20861")
+	)
+	(text "  * (Interno silicio)   -> Chip Pin 1 (VREF Tensione riferimento interna)"
+		(exclude_from_sim no)
+		(at 210.82 236.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "314ff1c8-bb76-52cf-a571-b90672b145b9")
+	)
+	(text "4. CONFIGURAZIONE MASTER E DISTRIBUZIONE 3,3 V (PRECISAZIONE STORICA):"
+		(exclude_from_sim no)
+		(at 210.82 244.00 0)
+		(effects
+			(font
+				(size 1.50 1.50)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "26121848-6165-599b-9bd5-ae67bd00183d")
+	)
+	(text "- MD0/MD1 = HIGH (pull-up 10 kohm a 3.3V): Master Mode 256xFs (Fs=96kHz, BCK=64xFs)."
+		(exclude_from_sim no)
+		(at 210.82 248.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "7498567b-7ecf-597d-8801-ca7bb3e5ed23")
+	)
+	(text "- FMT = OPEN: livello LOW garantito da pull-down interno (formato I2S 24 bit)."
+		(exclude_from_sim no)
+		(at 210.82 252.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+			)
+			(justify left bottom)
+		)
+		(uuid "bd5978ca-8fce-50a5-88f2-827d5e4b7843")
+	)
+	(text "- DISTINZIONE COLLEGAMENTI ESTERNI VS INTERNI:"
+		(exclude_from_sim no)
+		(at 210.82 256.50 0)
+		(effects
+			(font
+				(size 1.10 1.10)
+				(bold yes)
+			)
+			(justify left bottom)
+		)
+		(uuid "9509d672-2fe7-5dff-bf17-cea31dee4606")
+	)
+	(text "  * CAVI ESTERNI REALI: WeAct 3V3 -> J2.1; WeAct GND -> J2.2; WeAct V+ -> J1.1."
+		(exclude_from_sim no)
+		(at 210.82 260.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "6aa7bced-6b25-51ce-9529-6bacdccdb87a")
+	)
+	(text "    R1 e R2 fisicamente attestati sul terminale J1.2. Nessun cavetto tra J2.1 e J1.2."
+		(exclude_from_sim no)
+		(at 210.82 264.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "d690445d-2069-59f9-a70e-9a6ce1988946")
+	)
+	(text "  * COLLEGAMENTO INTERNO J2.1 <-> J1.2: PRESUNTO su scheda C; la misura di continuita'"
+		(exclude_from_sim no)
+		(at 210.82 267.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "85c642b7-260a-578f-b5b1-f0ff6fa496f2")
+	)
+	(text "    a 0 ohm e' documentata storicamente SOLO su PCM1808 #1 e #2 in FASE 0 (PROJECT_LOG.md#L88)."
+		(exclude_from_sim no)
+		(at 210.82 271.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "7c55c86a-3479-5af4-99eb-d943839c4e15")
+	)
+	(text "  * NOTA STRUMENTAZIONE: Lo strumento INSTR1 compare nello schema ma e' escluso"
+		(exclude_from_sim no)
+		(at 210.82 274.50 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "4a0d540a-9536-569c-8d2a-9cecaa430bbe")
+	)
+	(text "    dalla netlist PCB (on_board no). I probe LA non sono tracciati come nodi PCB."
+		(exclude_from_sim no)
+		(at 210.82 278.00 0)
+		(effects
+			(font
+				(size 1.00 1.00)
+			)
+			(justify left bottom)
+		)
+		(uuid "686402f3-cb75-55c8-8b10-372ad74ff2ad")
+	)
+	(sheet_instances
+		(path "/" (page "1"))
+	)
+)

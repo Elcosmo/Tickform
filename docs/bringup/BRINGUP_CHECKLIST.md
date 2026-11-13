@@ -1,6 +1,6 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Stato aggiornato al 2026-10-05: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE, Gate 1/2/3/4 PASS sulla base dei test fisici comunicati dalla supervisione; clock MCU 170 MHz validato operativamente, non metrologicamente; USB FS CDC enumeration verificata, stabile almeno 60 s e disconnect/reconnect PASS. FASE 2 DS3231 standalone COMPLETE: I2C1 PA15/PB7 e SQW ~1 Hz verificati funzionalmente, come riportato nel PROJECT_LOG del 2026-09-27; nessuna accuratezza ppm attestata. FASE 3 XO standalone COMPLETE: power-up 3.3 V e 16 finestre di conteggio/plausibility ±5% PASS; verifica funzionale, non metrologica (PROJECT_LOG 2026-10-05). FASE 4 PCM1808 no AFE NEXT, non avviata.
+Strumento operativo vivo. Stato aggiornato al 2026-11-13: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4/5 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE (Gate 1/2/3/4 PASS); FASE 2 DS3231 standalone COMPLETE (I2C e SQW 1 Hz verificati); FASE 3 XO standalone COMPLETE (power-up 3.3 V e conteggio fronti PASS); **FASE 4 PCM1808 C clock bring-up COMPLETE (Gate LRCK 96 kHz PASS, CAD KiCad R0.1 APPROVATO)**. FASE 5 PCM1808 → STM32 NEXT.
 
 ## FASE 0 — Receiving inspection
 
@@ -38,17 +38,19 @@ Esiti: supervisione, 2026-09-25; vedere PROJECT_LOG alla stessa data. Le voci PC
 
 Esiti FASE 3, 2026-10-05 (PROJECT_LOG): XO usato identificato e validato funzionalmente; pin 4 GND, pin 5 OUT, pin 8 VCC, pin 1 OPEN. Supply verificata operativamente a 3.3 V, non specifica nominale del costruttore attestata; bypass 100 nF. Clock rilevato via PA0/TIM2_ETR AF14, 16 finestre PASS, accuratezza assoluta non misurata.
 
-## FASE 4 — PCM1808 senza AFE
+## FASE 4 — PCM1808 senza AFE (Breakout PCM1808 C)
 
-- [x] PCM1808 breakout received
+- [x] PCM1808 breakout received (moduli A, B, C)
 - [x] PCM1808 front inspected
 - [x] PCM1808 rear inspected
-- [ ] Breakout topology inspected
-- [ ] PCM1808 supply rails verified
-- [ ] MD0/MD1/FMT configuration understood
-- [ ] MCLK/SCK present
-- [ ] LRCK present
-- [ ] BCK present
+- [x] Breakout topology inspected (R_onboard ~100 Ω su SCK; AGND pin 2 → GND 2 ~0,2 Ω su C; continuità 3.3V/GND presunte su C; pinout chip TSSOP-14 allineato a TI SLES177B Rev. Agosto 2015)
+- [x] PCM1808 supply rails verified (5,0 V analogica da WeAct V+; 3,2 V digitale da WeAct 3V3)
+- [x] MD0/MD1/FMT configuration understood (Master Mode 256 × Fs: pull-up 10 kΩ a 3,3 V su MD0/MD1; FMT pull-down interno a LOW)
+- [x] MCLK/SCK present (24,576 MHz da XO via filo diretto)
+- [x] LRCK present (96,000 kHz rilevati tramite cursori PulseView — Gate LRCK 96 kHz PASS)
+- [x] BCK present (circa 16 periodi in 2,625 µs su PulseView, compatibile con 6,144 MHz nominali)
+
+Esiti FASE 4, 12-13/11/2026 (PROJECT_LOG): Breakout C validato operativamente per la generazione clock Master 96 kHz. Schema CAD nativo KiCad 10 (Rev. R0.1) approvato tecnicamente da CHAT OVERVIEW. Causa anomalia vecchia scheda B: SCONOSCIUTA. Conversione audio A/D: NON ancora verificata (spostata a FASE 5 con cablaggio I2S e DMA su STM32).
 
 ## FASE 5 — PCM1808 → STM32
 

@@ -183,3 +183,33 @@ Esiti fisici comunicati dalla supervisione; nessun nuovo accesso al target duran
 - FUNCTIONAL / APPROXIMATE FREQUENCY CHECK, non ppm metrology: finestra basata sul clock interno STM32, nessuna misura dell'accuratezza assoluta XO né conformità alla presunta specifica ±20 ppm. La differenza dal nominale non va interpretata come errore reale dell'XO. BCK + DS3231 metrology NOT STARTED.
 - Edges=0 iniziale in oltre 16 finestre: pin A0/PA0 non saldato correttamente. Continuità DC presente, flash/USB e alimentazione funzionanti; rimozione ST-Link senza effetto. Dopo saldatura conteggio immediatamente passato a ~24.6 milioni di fronti/s. Continuità DC non garantisce integrità del collegamento per segnali ad alta frequenza.
 - Checklist pinout e supply XO completate per il componente usato, con verifica operativa a 3.3 V. FASE 3 COMPLETE; FASE 4 PCM1808 no AFE NEXT: alimentazioni reali, SCK/MCLK, MD0/MD1/FMT, LRCK e BCK da verificare prima di I2S. FASE 4 non iniziata; architettura e ADR invariati, artefatti build ignorati.
+
+
+## 2026-11-13 — FASE 4 PCM1808 C clock bring-up: Gate LRCK 96 kHz PASS e CAD KiCad R0.1 APPROVATO
+
+Esiti fisici comunicati dalla supervisione e revisione CAD consolidata; nessun intervento hardware o firmware eseguito in questa sessione.
+
+- **Oggetto del collaudo:** Breakout stereo ADC commerciale per Texas Instruments PCM1808, identificato come **esemplare C** (modulo generico, marcatura SKU:01325 non accertata su C). Datasheet di riferimento: TI SLES177B (APRIL 2006 – REVISED AUGUST 2015), package TSSOP-14.
+- **Configurazione fisica del banco:**
+  - Alimentazione analogica: WeAct Header Pin 4 (V+, ~4,7 V – 5,0 V da USB-C del PC) → Breakout J1.1 (+5V).
+  - Alimentazione digitale: WeAct Header Pin 1 (3V3, ~3,2 V – 3,3 V) → Breakout J2.1 (3.3V).
+  - Massa comune: WeAct Header Pin 2 (GND) → Breakout J2.2 (GND_2).
+  - Terminale J1.3 (GND): lasciato OPEN all'esterno (nessun cavetto esterno installato; massa collegata internamente).
+  - Master clock SCK: XO 24.576 MHz DIP-14 (alimentato a 3,3 V con condensatore di bypass 100 nF documentato storicamente in FASE 3, non nuovamente verificato su C) → Pin 5 OUT collegato a Breakout J2.3 (SCK) con **filo diretto** (nessuna resistenza da 100 Ω esterna interposta).
+  - Configurazione Master Mode: due resistenze assiali da 10 kΩ attestate fisicamente sul terminale J1.2 ("3.3"), collegate rispettivamente a J1.4 (MD0) e J1.5 (MD1) → Livello logico HIGH (Master 256 × Fs).
+  - Formato dati: Pin J1.6 (FMT) lasciato OPEN → Livello logico LOW garantito da pull-down interno al chip (formato I2S standard 24 bit).
+  - Segnali non connessi: Uscita J2.5 (OUT) lasciata aperta (nessun collegamento I2S a STM32); connettore analogico tripolare J3 (RIN, GND, LIN) lasciato aperto (AFE non connesso).
+- **Misure strumentali e verifiche fisiche:**
+  - Tensioni operative: VCC analogica = 5,0 V; VDD digitale = 3,2 V.
+  - Word Clock: **LRCK = 96,000 kHz rilevati tramite cursori PulseView**. Gate LRCK 96 kHz SUPERATO.
+  - Bit Clock: **BCK rilevato con circa 16 periodi in 2,625 µs su PulseView**, compatibile con i 6,144 MHz nominali ($64 \times F_s$); nessuna misura metrologica esatta a 6,144 MHz dichiarata.
+  - Misura passiva di continuità su C: misurati con multimetro tra `AGND chip pin 2` e `GND 2 breakout (J2.2)` circa **0,2 Ω** (misura confermata su C; non estesa automaticamente ad altre continuità interne non misurate).
+  - Proprietà passiva osservata del modulo: resistenza serie onboard di circa **100 Ω** lungo la pista interna tra J2.3 (SCK) e il Pin 6 (SCKI) del chip TSSOP-14.
+  - Chiarimento storico continuità 3,3 V (J2.1 ↔ J1.2): la misura 0 Ω documentata in FASE 0 (`PROJECT_LOG.md#L88`) appartiene esclusivamente agli esemplari #1 e #2. Sulla scheda C la continuità interna tra i due pin 3.3V è **IPOTIZZATA / PRESUNTA** (non misurata con multimetro prima del test), ed è risultata operativamente attiva nel collaudo a 96 kHz.
+- **Stato schede precedenti:** La causa dell'anomalia di mancata oscillazione/clock riscontrata sulla vecchia scheda PCM1808 B è formalmente registrata come **SCONOSCIUTA**.
+- **Stato conversione audio:** **NON ancora verificata** (nessun segnale audio applicato a RIN/LIN; AFE non connesso).
+- **Schema elettrico CAD:** Prodotto progetto nativo KiCad 10 (`hardware/v0_perfboard/schematic/phase4_pcm1808c/tickform_phase4_pcm1808c.kicad_sch`) con libreria simboli autonoma, script deterministico portabile `generate_schematic.py` e pacchetto ZIP completo.
+  - Verificato con KiCad ERC nativo: **0 violazioni, 0 errori, 0 avvisi**.
+  - Netlist PCB esportata (`tickform_phase4_pcm1808c.net`): verificata; lo strumento esterno INSTR1 è escluso dalla netlist PCB (`on_board no`).
+  - **Revisione R0.1 APPROVATA TECNICAMENTE DA CHAT OVERVIEW** (13/11/2026).
+- **Checklist e stato:** FASE 4 — PCM1808 C clock bring-up: COMPLETE. Prossima milestone: FASE 5 — PCM1808 → STM32 (connessione I2S2 slave, DMA circolare, streaming e prima validazione conversione audio).

@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "tickform_symbols")(type "KiCad")(uri "${KIPRJMOD}/tickform_symbols.kicad_sym")(options "")(descr "Tickform Phase 4 Local Symbols"))
+)

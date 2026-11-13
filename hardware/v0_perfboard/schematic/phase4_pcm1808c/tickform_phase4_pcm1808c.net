@@ -1,0 +1,947 @@
+(export
+	(version "E")
+	(design
+		(source "A:\\Documenti\\Tickform\\hardware\\v0_perfboard\\schematic\\phase4_pcm1808c\\tickform_phase4_pcm1808c.kicad_sch")
+		(date "2026-11-13T11:27:33")
+		(tool "Eeschema 10.0.8")
+		(sheet
+			(number "1")
+			(name "/")
+			(tstamps "/")
+			(title_block
+				(title "TICKFORM — FASE 4 — PCM1808 C VERIFICA LRCK 96 kHz")
+				(company "Tickform Open Source Timegrapher")
+				(rev "R0.1")
+				(date "2026-11-13")
+				(source "tickform_phase4_pcm1808c.kicad_sch")
+				(comment
+					(number "1")
+					(value "Configurazione banco collaudo PCM1808 C: LRCK 96 kHz / BCK ~6.144 MHz")
+				)
+				(comment
+					(number "2")
+					(value "WeAct STM32G431 + XO 24.576 MHz + Breakout C + Logic Analyzer 8CH (Rev. R0.1)")
+				)
+				(comment
+					(number "3")
+					(value "")
+				)
+				(comment
+					(number "4")
+					(value "")
+				)
+				(comment
+					(number "5")
+					(value "")
+				)
+				(comment
+					(number "6")
+					(value "")
+				)
+				(comment
+					(number "7")
+					(value "")
+				)
+				(comment
+					(number "8")
+					(value "")
+				)
+				(comment
+					(number "9")
+					(value "")
+				)
+			)
+		)
+	)
+	(components
+		(comp
+			(ref "C1")
+			(value "100nF")
+			(footprint "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm")
+			(description "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)")
+			(fields
+				(field
+					(name "Footprint") "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)")
+			)
+			(libsource
+				(lib "tickform_symbols")
+				(part "C")
+				(description "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)")
+			)
+			(property
+				(name "Sheetname")
+				(value "tickform_phase4_pcm1808c")
+			)
+			(property
+				(name "Sheetfile")
+				(value "tickform_phase4_pcm1808c.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "2baae3ef-72fc-5b42-86bb-88271b8825a4")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "MOD1")
+			(value "PCM1808_Breakout_C")
+			(datasheet "https://www.ti.com/lit/ds/symlink/pcm1808.pdf")
+			(description "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)")
+			(fields
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet") "https://www.ti.com/lit/ds/symlink/pcm1808.pdf")
+				(field
+					(name "Description") "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)")
+			)
+			(libsource
+				(lib "tickform_symbols")
+				(part "PCM1808_Breakout_C")
+				(description "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)")
+			)
+			(property
+				(name "Sheetname")
+				(value "tickform_phase4_pcm1808c")
+			)
+			(property
+				(name "Sheetfile")
+				(value "tickform_phase4_pcm1808c.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "e6e0c623-9fbd-57ae-8906-ab9d113ffed1")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "J1.1")
+						)
+						(pin
+							(num "J1.2")
+						)
+						(pin
+							(num "J1.3")
+						)
+						(pin
+							(num "J1.4")
+						)
+						(pin
+							(num "J1.5")
+						)
+						(pin
+							(num "J1.6")
+						)
+						(pin
+							(num "J3.1")
+						)
+						(pin
+							(num "J3.2")
+						)
+						(pin
+							(num "J3.3")
+						)
+						(pin
+							(num "J2.1")
+						)
+						(pin
+							(num "J2.2")
+						)
+						(pin
+							(num "J2.3")
+						)
+						(pin
+							(num "J2.4")
+						)
+						(pin
+							(num "J2.5")
+						)
+						(pin
+							(num "J2.6")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R1")
+			(value "10k")
+			(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal")
+			(description "Resistenza di pull-up 10 kΩ 1% per MD0")
+			(fields
+				(field
+					(name "Footprint") "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Resistenza di pull-up 10 kΩ 1% per MD0")
+			)
+			(libsource
+				(lib "tickform_symbols")
+				(part "R")
+				(description "Resistor")
+			)
+			(property
+				(name "Sheetname")
+				(value "tickform_phase4_pcm1808c")
+			)
+			(property
+				(name "Sheetfile")
+				(value "tickform_phase4_pcm1808c.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "3ddd1a92-9f20-5ec7-a553-a28174f5ba76")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "R2")
+			(value "10k")
+			(footprint "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal")
+			(description "Resistenza di pull-up 10 kΩ 1% per MD1")
+			(fields
+				(field
+					(name "Footprint") "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Resistenza di pull-up 10 kΩ 1% per MD1")
+			)
+			(libsource
+				(lib "tickform_symbols")
+				(part "R")
+				(description "Resistor")
+			)
+			(property
+				(name "Sheetname")
+				(value "tickform_phase4_pcm1808c")
+			)
+			(property
+				(name "Sheetfile")
+				(value "tickform_phase4_pcm1808c.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "4db20d23-fd3a-52f3-aec1-42c8cf5184bc")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U1")
+			(value "WeAct_STM32G431_Header")
+			(footprint "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+			(datasheet "https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard")
+			(description "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)")
+			(fields
+				(field
+					(name "Footprint") "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+				(field
+					(name "Datasheet") "https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard")
+				(field
+					(name "Description") "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)")
+			)
+			(libsource
+				(lib "tickform_symbols")
+				(part "WeAct_STM32G431_Header")
+				(description "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)")
+			)
+			(property
+				(name "Sheetname")
+				(value "tickform_phase4_pcm1808c")
+			)
+			(property
+				(name "Sheetfile")
+				(value "tickform_phase4_pcm1808c.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "deab59ad-2517-5ac3-b2c1-119e32120dbc")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "2")
+						)
+						(pin
+							(num "3")
+						)
+						(pin
+							(num "4")
+						)
+					)
+				)
+			)
+		)
+		(comp
+			(ref "U2")
+			(value "XO_24M576_DIP14")
+			(footprint "Oscillator:Oscillator_DIP-14")
+			(description "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin")
+			(fields
+				(field
+					(name "Footprint") "Oscillator:Oscillator_DIP-14")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin")
+			)
+			(libsource
+				(lib "tickform_symbols")
+				(part "XO_24M576_DIP14")
+				(description "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin")
+			)
+			(property
+				(name "Sheetname")
+				(value "tickform_phase4_pcm1808c")
+			)
+			(property
+				(name "Sheetfile")
+				(value "tickform_phase4_pcm1808c.kicad_sch")
+			)
+			(sheetpath
+				(names "/")
+				(tstamps "/")
+			)
+			(tstamps "48dbaad7-dcb4-5d30-a734-3dae32fbaf9b")
+			(units
+				(unit
+					(name "A")
+					(pins
+						(pin
+							(num "1")
+						)
+						(pin
+							(num "4")
+						)
+						(pin
+							(num "8")
+						)
+						(pin
+							(num "5")
+						)
+					)
+				)
+			)
+		)
+	)
+	(groups)
+	(variants)
+	(libparts
+		(libpart
+			(lib "tickform_symbols")
+			(part "C")
+			(description "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)")
+			(fields
+				(field
+					(name "Reference") "C")
+				(field
+					(name "Value") "C")
+				(field
+					(name "Footprint") "Capacitor_THT:C_Disc_D5.0mm_W2.5mm_P2.50mm")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Condensatore di bypass locale 100 nF per XO (documentato in FASE 3, non nuovamente verificato su C)")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "tickform_symbols")
+			(part "Logic_Analyzer_8CH")
+			(description "Analizzatore logico USB 8CH / 24 MHz (PulseView) - Strumento passivo esterno (escluso da netlist)")
+			(fields
+				(field
+					(name "Reference") "INSTR")
+				(field
+					(name "Value") "Logic_Analyzer_8CH")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Analizzatore logico USB 8CH / 24 MHz (PulseView) - Strumento passivo esterno (escluso da netlist)")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "2")
+					(name "CH1_D0")
+					(type "input")
+				)
+				(pin
+					(num "3")
+					(name "CH2_D1")
+					(type "input")
+				)
+				(pin
+					(num "4")
+					(name "CH3_D2")
+					(type "input")
+				)
+				(pin
+					(num "5")
+					(name "CH4_D3")
+					(type "input")
+				)
+				(pin
+					(num "6")
+					(name "CH5_D4")
+					(type "input")
+				)
+				(pin
+					(num "7")
+					(name "CH6_D5")
+					(type "input")
+				)
+				(pin
+					(num "8")
+					(name "CH7_D6")
+					(type "input")
+				)
+				(pin
+					(num "9")
+					(name "CH8_D7")
+					(type "input")
+				)
+			)
+		)
+		(libpart
+			(lib "tickform_symbols")
+			(part "PCM1808_Breakout_C")
+			(description "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)")
+			(docs "https://www.ti.com/lit/ds/symlink/pcm1808.pdf")
+			(fields
+				(field
+					(name "Reference") "MOD")
+				(field
+					(name "Value") "PCM1808_Breakout_C")
+				(field
+					(name "Footprint")
+				)
+				(field
+					(name "Datasheet") "https://www.ti.com/lit/ds/symlink/pcm1808.pdf")
+				(field
+					(name "Description") "Breakout stereo ADC PCM1808 (modulo C, Master 96 kHz) - TI SLES177B (Rev. Aug 2015)")
+			)
+			(pins
+				(pin
+					(num "J1.1")
+					(name "+5V")
+					(type "power_in")
+				)
+				(pin
+					(num "J1.2")
+					(name "3.3")
+					(type "power_in")
+				)
+				(pin
+					(num "J1.3")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "J1.4")
+					(name "MD0")
+					(type "input")
+				)
+				(pin
+					(num "J1.5")
+					(name "MD1")
+					(type "input")
+				)
+				(pin
+					(num "J1.6")
+					(name "FMT")
+					(type "input")
+				)
+				(pin
+					(num "J2.1")
+					(name "3.3V")
+					(type "power_in")
+				)
+				(pin
+					(num "J2.2")
+					(name "GND_2")
+					(type "power_in")
+				)
+				(pin
+					(num "J2.3")
+					(name "SCK")
+					(type "input")
+				)
+				(pin
+					(num "J2.4")
+					(name "LRC")
+					(type "output")
+				)
+				(pin
+					(num "J2.5")
+					(name "OUT")
+					(type "output")
+				)
+				(pin
+					(num "J2.6")
+					(name "BCK")
+					(type "output")
+				)
+				(pin
+					(num "J3.1")
+					(name "RIN")
+					(type "input")
+				)
+				(pin
+					(num "J3.2")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "J3.3")
+					(name "LIN")
+					(type "input")
+				)
+			)
+		)
+		(libpart
+			(lib "tickform_symbols")
+			(part "R")
+			(description "Resistor")
+			(fields
+				(field
+					(name "Reference") "R")
+				(field
+					(name "Value") "R")
+				(field
+					(name "Footprint") "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P7.62mm_Horizontal")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Resistor")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "")
+					(type "passive")
+				)
+				(pin
+					(num "2")
+					(name "")
+					(type "passive")
+				)
+			)
+		)
+		(libpart
+			(lib "tickform_symbols")
+			(part "WeAct_STM32G431_Header")
+			(description "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)")
+			(docs "https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "WeAct_STM32G431_Header")
+				(field
+					(name "Footprint") "Connector_PinHeader_2.54mm:PinHeader_1x04_P2.54mm_Vertical")
+				(field
+					(name "Datasheet") "https://github.com/WeActStudio/WeActStudio.STM32G431CoreBoard")
+				(field
+					(name "Description") "WeAct Studio V1.0 STM32G431 Core Board - Header destro (pin 1..4)")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "3V3")
+					(type "power_out")
+				)
+				(pin
+					(num "2")
+					(name "GND")
+					(type "power_out")
+				)
+				(pin
+					(num "3")
+					(name "B11")
+					(type "bidirectional")
+				)
+				(pin
+					(num "4")
+					(name "V+")
+					(type "power_out")
+				)
+			)
+		)
+		(libpart
+			(lib "tickform_symbols")
+			(part "XO_24M576_DIP14")
+			(description "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin")
+			(fields
+				(field
+					(name "Reference") "U")
+				(field
+					(name "Value") "XO_24M576_DIP14")
+				(field
+					(name "Footprint") "Oscillator:Oscillator_DIP-14")
+				(field
+					(name "Datasheet")
+				)
+				(field
+					(name "Description") "Oscillatore a cristallo attivo 24.576 MHz, DIP-14 metal can 4-pin")
+			)
+			(pins
+				(pin
+					(num "1")
+					(name "OE")
+					(type "input")
+				)
+				(pin
+					(num "4")
+					(name "GND")
+					(type "power_in")
+				)
+				(pin
+					(num "5")
+					(name "OUT")
+					(type "output")
+				)
+				(pin
+					(num "8")
+					(name "VCC")
+					(type "power_in")
+				)
+			)
+		)
+	)
+	(libraries
+		(library
+			(logical "tickform_symbols")
+			(uri "${KIPRJMOD}/tickform_symbols.kicad_sym")
+		)
+	)
+	(nets
+		(net
+			(code "1")
+			(name "/+5V")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J1.1")
+				(pinfunction "+5V_J1.1")
+				(pintype "power_in")
+			)
+			(node
+				(ref "U1")
+				(pin "4")
+				(pinfunction "V+_4")
+				(pintype "power_out")
+			)
+		)
+		(net
+			(code "2")
+			(name "/3V3")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "MOD1")
+				(pin "J1.2")
+				(pinfunction "3.3_J1.2")
+				(pintype "power_in")
+			)
+			(node
+				(ref "MOD1")
+				(pin "J2.1")
+				(pinfunction "3.3V_J2.1")
+				(pintype "power_in")
+			)
+			(node
+				(ref "R1")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "R2")
+				(pin "1")
+				(pintype "passive")
+			)
+			(node
+				(ref "U1")
+				(pin "1")
+				(pinfunction "3V3_1")
+				(pintype "power_out")
+			)
+			(node
+				(ref "U2")
+				(pin "8")
+				(pinfunction "VCC_8")
+				(pintype "power_in")
+			)
+		)
+		(net
+			(code "3")
+			(name "/GND")
+			(class "Default")
+			(node
+				(ref "C1")
+				(pin "2")
+				(pintype "passive")
+			)
+			(node
+				(ref "MOD1")
+				(pin "J2.2")
+				(pinfunction "GND_2_J2.2")
+				(pintype "power_in")
+			)
+			(node
+				(ref "U1")
+				(pin "2")
+				(pinfunction "GND_2")
+				(pintype "power_out")
+			)
+			(node
+				(ref "U2")
+				(pin "4")
+				(pinfunction "GND_4")
+				(pintype "power_in")
+			)
+		)
+		(net
+			(code "4")
+			(name "/MD0")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J1.4")
+				(pinfunction "MD0_J1.4")
+				(pintype "input")
+			)
+			(node
+				(ref "R1")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "5")
+			(name "/MD1")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J1.5")
+				(pinfunction "MD1_J1.5")
+				(pintype "input")
+			)
+			(node
+				(ref "R2")
+				(pin "2")
+				(pintype "passive")
+			)
+		)
+		(net
+			(code "6")
+			(name "/PCM_BCK")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J2.6")
+				(pinfunction "BCK_J2.6")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "7")
+			(name "/PCM_LRC")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J2.4")
+				(pinfunction "LRC_J2.4")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "8")
+			(name "/PCM_SCK")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J2.3")
+				(pinfunction "SCK_J2.3")
+				(pintype "input")
+			)
+			(node
+				(ref "U2")
+				(pin "5")
+				(pinfunction "OUT_5")
+				(pintype "output")
+			)
+		)
+		(net
+			(code "15")
+			(name "unconnected-(MOD1-FMT-PadJ1.6)")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J1.6")
+				(pinfunction "FMT_J1.6")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "16")
+			(name "unconnected-(MOD1-GND-PadJ1.3)")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J1.3")
+				(pinfunction "GND_J1.3")
+				(pintype "power_in+no_connect")
+			)
+		)
+		(net
+			(code "17")
+			(name "unconnected-(MOD1-GND-PadJ3.2)")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J3.2")
+				(pinfunction "GND_J3.2")
+				(pintype "power_in+no_connect")
+			)
+		)
+		(net
+			(code "18")
+			(name "unconnected-(MOD1-LIN-PadJ3.3)")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J3.3")
+				(pinfunction "LIN_J3.3")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "19")
+			(name "unconnected-(MOD1-OUT-PadJ2.5)")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J2.5")
+				(pinfunction "OUT_J2.5")
+				(pintype "output+no_connect")
+			)
+		)
+		(net
+			(code "20")
+			(name "unconnected-(MOD1-RIN-PadJ3.1)")
+			(class "Default")
+			(node
+				(ref "MOD1")
+				(pin "J3.1")
+				(pinfunction "RIN_J3.1")
+				(pintype "input+no_connect")
+			)
+		)
+		(net
+			(code "21")
+			(name "unconnected-(U1-B11-Pad3)")
+			(class "Default")
+			(node
+				(ref "U1")
+				(pin "3")
+				(pinfunction "B11_3")
+				(pintype "bidirectional+no_connect")
+			)
+		)
+		(net
+			(code "22")
+			(name "unconnected-(U2-OE-Pad1)")
+			(class "Default")
+			(node
+				(ref "U2")
+				(pin "1")
+				(pinfunction "OE_1")
+				(pintype "input+no_connect")
+			)
+		)
+	)
+)

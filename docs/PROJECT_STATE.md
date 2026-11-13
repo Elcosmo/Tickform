@@ -2,10 +2,10 @@
 
 Fotografia vivente dello stato corrente. Aggiornare quando cambia realmente il progetto; la cronologia resta in PROJECT_LOG e le decisioni negli ADR.
 
-- **Last updated:** 2026-10-05
+- **Last updated:** 2026-11-13
 - **Reference commit:** 97f102b — M0 bootstrap baseline
-- **Current milestone:** FASE 3 — XO standalone: COMPLETE
-- **Next milestone:** FASE 4 — PCM1808 no AFE
+- **Current milestone:** FASE 4 — PCM1808 C clock bring-up: COMPLETE
+- **Next milestone:** FASE 5 — PCM1808 → STM32 (ricezione I2S, DMA, acquisizione campioni)
 
 ## Gate status
 
@@ -13,48 +13,52 @@ Fotografia vivente dello stato corrente. Aggiornare quando cambia realmente il p
 - Gate 2 — minimal firmware: PASS
 - Gate 3 — MCU clock 170 MHz: PASS
 - Gate 4 — native USB enumeration: PASS
+- Gate 5 — LRCK nominale 96 kHz (PCM1808 C): PASS
+- Gate 6 — Conversione audio PCM1808: PENDING (non ancora verificata)
 
 ## Hardware status
 
-Tutti gli ordini TME, Amazon e AliExpress sono ricevuti completi. Esiti consolidati comunicati dalla supervisione il 2026-09-25; dettagli e misure nel PROJECT_LOG alla stessa data. BOM **AS PURCHASED**, non AS BUILT. **Ricevuto e FASE 0 COMPLETE non significano hardware funzionalmente validato.**
+Tutti gli ordini TME, Amazon e AliExpress sono ricevuti completi. Esiti consolidati comunicati dalla supervisione; dettagli e misure nel PROJECT_LOG. BOM **AS PURCHASED**, non AS BUILT. **Ricevuto e FASE 0 COMPLETE non significano hardware funzionalmente validato.**
 
-- WeAct Studio STM32G431 Core Board: PCB WeAct Studio V1.0, marcatura STM32G431CBU6 verificata, visual inspection PASS. A board completamente scollegata: continuità GND/SWD_GND e GND/GND PASS, 3V3/GND circa 540 kΩ, VCC/GND circa 350 kΩ; nessun corto evidente. Gate 1 SWD PASS a 400 kHz; rail 3V3 circa 3.29 V, nessun corto evidente dopo saldatura/collegamenti. CubeProgrammer identifica STM32G43x/G44x, Device ID 0x468, Cortex-M4, NVM 128 KB, target voltage circa 3.22 V. Gate 2 esecuzione firmware minimale e LED PC6 validati fisicamente. Clock MCU 170 MHz nominali validato operativamente nel Gate 3; USB FS CDC enumeration validata nel Gate 4. Configurazione validata: WeAct alimentata via USB-C dati collegata al PC; ST-Link solo SWD, nessuna alimentazione 3.3 V o 5 V dallo ST-Link.
-- 2 breakout PCM1808 visivamente equivalenti, PCB PCM1808 SKU:01325, chip marking coerente. Visual inspection PASS e nessun corto evidente nei controlli passivi. Topologia completa, rail sotto alimentazione, clock, ADC e configurazione MD/FMT non ancora verificati.
-- 2 DS3231 HW-084 con chip DS3231SN ed EEPROM AT24C32: visual inspection PASS, pin SQW identificato, controlli passivi senza corti evidenti. Rete D2 + R4 marcata 201 visibile, associata al circuito di carica: **NON inserire CR2032 non ricaricabile**. Batteria non necessaria per V0. Modulo #1: I2C e SQW 1 Hz validati funzionalmente in FASE 2; accuratezza non misurata, modulo #2 non validato funzionalmente.
-- 2 XO marcati 24.5760 MHz: metal can, 4 pin, geometria DIP-14; visual inspection PASS. XO usato in FASE 3 alimentato a 3.3 V (circa 3.3 V misurati, precedentemente 3.29 V), bypass locale 100 nF. Pinout operativo usato: pin 4 GND, pin 5 OUT, pin 8 VCC, pin 1 OPEN. Power-up e clock detection PASS; nessuna anomalia termica, nessun test a 5 V. Il secondo XO non è dichiarato funzionalmente validato; accuratezza assoluta non misurata.
-- 2 MCP6022-I/P: marcatura coerente, DIP-8 corretto, nessun danno visivo evidente; VISUAL IDENTIFICATION PASS, FUNCTIONAL TEST NOT YET PERFORMED. AFE definitivo aperto.
-- RG174 coerente con HELU 400189 / RG174/U e costruzione coassiale miniaturizzata. Controlli a campione PASS: 1 kΩ → 0.998 kΩ; 100 kΩ → 99.1 kΩ; 4.7 MΩ → 4.703 MΩ; 1N4148-DIO forward 0.61 V, reverse OL. Non costituiscono caratterizzazione completa della BOM.
-- 10 piezo cablati 27 mm ricevuti, etichetta buzzer-27mm-10pc, visual inspection PASS. Tre campioni: 29 / 33 / 33.6 nF; nessun campione palesemente aperto/anomalo. Sensibilità, risposta meccanica e pickup non validati; meccanica sperimentale.
-
-Strumenti disponibili: ST-Link V2, UNI-T UT139S, saldatore/stazione, stagno, flussante, millefori, Dupont, termorestringente e cavi vari; treccia dissaldante e pompetta aspirastagno ricevute. UT139S functional PASS limitatamente a resistenza, continuità, diode test e capacità usati nella receiving inspection. Logic analyzer 8 CH / 24 MHz nominali ricevuto con cavo USB e fascio cavi/probe, visual inspection PASS; USB/acquisizione usate con successo per la verifica funzionale SQW 1 Hz in FASE 2; nessuna calibrazione metrologica attestata. Uso previsto: SQW, I²C, GPIO, LRCK e I2S; margine limitato per BCK 6,144 MHz, non adatto a caratterizzare seriamente MCLK 24,576 MHz. Oscilloscopio, alimentatore da banco e generatore di funzioni non disponibili secondo lo stato noto.
+- **WeAct Studio STM32G431 Core Board (V1.0, STM32G431CBU6):** Visual inspection PASS. A board scollegata: continuità GND/SWD_GND e GND/GND PASS, 3V3/GND circa 540 kΩ, VCC/GND circa 350 kΩ. Gate 1 SWD PASS a 400 kHz; rail 3V3 circa 3.29 V. Gate 2 minimal firmware e LED PC6 validati. Clock MCU 170 MHz nominali validato operativamente nel Gate 3. USB FS CDC enumeration validata nel Gate 4 (COM5 locale, VID:PID 0483:5740 development-only). Alimentazione da cavo USB-C al PC; pin header destro (fila 1..4): 1° 3V3 (3,2 V - 3,3 V), 2° GND, 3° B11 (aperto), 4° V+ (5,0 V da VBUS a valle diodo Schottky).
+- **Oscillatore Attivo XO 24.576 MHz (DIP-14 metal can 4-pin):** Visual inspection PASS. Alimentato a 3,3 V da WeAct 3V3; Pin 4 GND, Pin 5 OUT, Pin 8 VCC, Pin 1 OE aperto (pull-up interno). Bypass locale C1 (100 nF) documentato storicamente in FASE 3 (`PROJECT_LOG.md#L180`), non nuovamente verificato a banco nel collaudo C. OUT collegato direttamente a SCK del breakout PCM1808 C con filo diretto, senza resistenza da 100 Ω esterna (a differenza del cablaggio esplorativo temporaneo su PA0 in F3).
+- **Modulo Breakout PCM1808 C (modulo commerciale generico per TI PCM1808):** La marcatura `SKU:01325` non è accertata fisicamente sull'esemplare C. Chip TSSOP-14 (datasheet ufficiale TI `SLES177B – APRIL 2006 – REVISED AUGUST 2015`).
+  - **Bring-up FASE 4:** Collaudato con successo in Master Mode (MD0 e MD1 a livello HIGH tramite due resistenze di pull-up da 10 kΩ a 3,3 V attestate su J1.2 "3.3"; FMT aperto a LOW tramite pull-down interno al chip).
+  - **Evidenze sperimentali di banco (12/11/2026):**
+    - VCC analogica: 5,0 V (da WeAct V+).
+    - VDD digitale: 3,2 V (da WeAct 3V3).
+    - Frequenza LRCK: **96,000 kHz rilevati tramite cursori PulseView** (Gate LRCK 96 kHz SUPERATO).
+    - Frequenza BCK: circa 16 periodi in 2,625 µs su PulseView, compatibile con **6,144 MHz nominali** ($64 \times F_s$); nessuna misura metrologica esatta a 6,144 MHz dichiarata.
+    - Master clock SCK: 24,576 MHz nominali via filo diretto da XO.
+  - **Misure di continuità e topologia breakout C:**
+    - Misura passiva su C: resistenza tra `AGND chip pin 2` e `GND 2 breakout (J2.2)` pari a circa **0,2 Ω** (confermata con multimetro su C; non estesa automaticamente ad altre continuità interne non misurate).
+    - Resistenza serie onboard osservata: circa **100 Ω** lungo la pista interna tra `J2.3 (SCK)` e `Pin 6 (SCKI)` del chip.
+    - Continuità 3,3 V (`J2.1 ↔ J1.2`): classificata come **IPOTIZZATA / PRESUNTA su C** (la misura 0 Ω di FASE 0 `PROJECT_LOG.md#L88` appartiene esclusivamente agli esemplari #1 e #2); operativamente funzionante nel collaudo a 96 kHz.
+    - Connettore analogico tripolare `J3 (RIN, GND, LIN)`: aperto (NC esterno).
+  - **Conversione audio A/D:** **NON ancora verificata** (nessun segnale applicato a RIN/LIN; stadio AFE non connesso).
+- **Vecchi moduli PCM1808 A e B:** Ricevuti in FASE 0 con marcatura SKU:01325. Modulo B impiegato nelle prove preliminari; causa dell'anomalia di mancata oscillazione/clock riscontrata sulla vecchia scheda B: **SCONOSCIUTA**.
+- **DS3231 HW-084 / DS3231SN (#1):** Visual inspection PASS, pin SQW identificato. Precauzione confermata: **NON inserire CR2032 non ricaricabile** a causa della rete di carica D2 + R4 (201). Modulo #1: I2C1 (PA15/PB7) e configurazione/generazione SQW 1 Hz validati funzionalmente in FASE 2. Modulo #2 non validato funzionalmente. Metrologia BCK/TIM2 non iniziata.
+- **Strumentazione di misura:**
+  - Logic analyzer USB 8CH / 24 MHz nominali (PulseView/sigrok): strumento passivo ad alta impedenza. Acquisizione canali passivi: CH1/D0 su LRC (J2.4), CH2/D1 su BCK (J2.6), GND su massa comune. Segnale SCK 24,576 MHz **escluso dall'acquisizione** (oltre limite Nyquist 24 MS/s).
+  - Nello schema CAD R0.1, lo strumento compare graficamente ma è configurato con `on_board no` ed è escluso dalla netlist PCB esportata.
+  - Multimetro UNI-T UT139S: usato per misure di continuità e tensione.
+- **CAD Schema Elettrico:** Progetto nativo KiCad 10 (`hardware/v0_perfboard/schematic/phase4_pcm1808c/`) in revisione **R0.1 APPROVATO TECNICAMENTE DA CHAT OVERVIEW** (13/11/2026). ERC 0 errori / 0 avvisi; netlist e grafica conformi.
 
 ## Firmware status
 
-Gate 1/2 PASS; baseline Gate 2 fisicamente validata nel commit b9fadb9. Gate 3 ora PASS sulla base degli esiti fisici comunicati il 2026-09-26: firmware compilato, programmato e verificato, software reset riuscito. PC6 osservato per circa 10–15 secondi: circa 0.5 s ON / 0.5 s OFF, nessun LED fisso/failure path e nessun andamento circa 5 s ON/OFF.
-
-Configurazione validata: HSI16, PLLM=4, PLLN=85, PLLR=2; ingresso PLL 4 MHz, VCO 340 MHz, SYSCLK/HCLK/PCLK1/PCLK2 nominali 170 MHz, AHB/APB1/APB2 /1 a regime, Range 1 Boost, Flash 4 WS, transizione AHB /2 come implementata. SysTick reload fisso 169999: test diagnostico coerente con 170 MHz operativamente attivi, non misura metrologica di accuratezza assoluta né prova di stabilità prolungata.
-
-Gate 4 — native USB enumeration PASS: build, flash, verify (Download verified successfully) e software reset riusciti. Windows ha enumerato Dispositivo seriale USB, senza errori driver o triangoli gialli, indicato come funzionante correttamente e senza driver custom. Enumerazione stabile almeno 60 secondi; disconnect/reconnect USB-C PASS. COM5 è soltanto la porta assegnata durante il test, non un identificatore stabile o parte del protocollo.
-
-Core Gate 3 invariato; USB FS PA11=DM/PA12=DP, HSI48 dedicato con CRS sincronizzato ai SOF USB, CDC ACM del middleware ufficiale ST/STM32CubeG4. Product string Tickform Gate 4; VID/PID 0483:5740 DEVELOPMENT ONLY, non identità definitiva, da riesaminare e sostituire prima di qualsiasi release/prodotto. CDC è solo diagnostica di bring-up; protocollo e trasporto RAW restano da progettare separatamente.
-
-Build CMake/Ninja, ARM GCC 14.3.1 tramite CubeCLT 1.22.0 e CubeG4 1.6.3, senza warning: flash 31052 B, RAM allocata 4184 B. Sorgenti in firmware/stm32g431; build/gate4 e tutti gli artefatti Gate 2/3/4 ignorati. Nel Gate 4 era stata verificata solo l’enumerazione; in FASE 2 anche la diagnostica ASCII CDC è stata osservata con successo. FASE 1 COMPLETE: piattaforma MCU standalone validata per SWD, firmware custom, clock nominale 170 MHz e USB FS CDC enumeration. Non validati streaming USB, protocollo RAW, throughput audio, I2S, DMA o metrologia BCK/DS3231.
-
-FASE 2 — DS3231 standalone COMPLETE, esiti fisici comunicati dalla supervisione il 2026-09-27. Modulo #1 HW-084 / DS3231SN, senza batteria, alimentato da WeAct 3V3/GND; VCC e linee idle circa 3.3 V, pull-up I2C onboard circa 4.7 kΩ. I2C1 PA15 SCL / PB7 SDA, AF4 open-drain senza pull-up interne, Standard Mode 100 kHz: PASS. DS3231 7-bit 0x68 (HAL 0xD0) FOUND; letture e scrittura Control necessaria validate. CTRL 0x1C → 0x00, readback PASS; STATUS 0x88, OSF=1 conservato, compatibile con power loss senza batteria e non interpretato come guasto. Temperatura 27.00 °C, sola evidenza di comunicazione reale. Nessuna scrittura data/ora o AT24C32; 32K non utilizzato.
-
-SQW configuration PASS: INTCN/RS2/RS1/A2IE/A1IE azzerati con read-modify-write. SQW physical 1 Hz verification PASS: pull-up SQW onboard circa 4.6 kΩ verso 3V3; logic analyzer USB 8CH/24 MHz con PulseView/sigrok, SQW su CH1/D0 e massa comune, acquisizione 100 kHz / 1 M samples, circa 10 s. Circa 10 cicli regolari, periodo ~1.0 s, HIGH/LOW ~0.5 s, duty ~50%. Verifica funzionale, nessuna accuratezza ppm attribuita; metrologia BCK/TIM2 non iniziata.
-
-Mapping da preservare: PB8/BOOT0 escluso come SCL per questo prototipo; pull-down board circa 10 kΩ con pull-up modulo circa 4.7 kΩ forma il partitore coerente con SCL ~2.2 V osservati. PB6/PB7 scartato: PB6 non dispone di I2C SCL sullo STM32G431CBU6. PA15/PB7 è una correzione del pin mapping, non una modifica architetturale; nessun ADR/change request necessario.
-
-Firmware FASE 2: TIMINGR 0xD0F32F38 derivato da CubeMX per PCLK1 170 MHz, analog filter ON, digital filter 0, rise/fall ipotizzati 1000/300 ns. Core 170 MHz e USB HSI48/CRS invariati. Flash/verify (Download verified successfully) e USB CDC PASS; COM5 osservata, non porta stabile né specifica Tickform. Build senza warning: flash 40792 B, RAM allocata 7384 B; artefatti build/phase2 ignorati. Timeout finiti, diagnostica registri/OSF/temperatura; nessuna scrittura EEPROM.
-
-FASE 3 — XO standalone COMPLETE, esiti fisici comunicati dalla supervisione il 2026-10-05. OUT pin 5 -> 100 ohm serie -> PA0/TIM2_ETR AF14 validato; resistenza prudenziale per il cablaggio temporaneo, non decisione architetturale definitiva. TIM2 32 bit, External Clock Mode 2, rising edge, ETR /1, filtro 0, PSC=0, ARR=0xFFFFFFFF. Finestre ~1000 ms via HAL tick, delta con wrap, normalizzazione sulla durata rilevata, diagnostica USB CDC e min/max dall'avvio. Flash PASS, verify Download verified successfully e USB CDC PASS. Sedici finestre consecutive: Signal detected >=1000 Hz PASS e plausibility 24.576 MHz ±5% (23.347200–25.804800 MHz) PASS; circa 24.6 milioni di fronti per finestra, stime 24.589627–24.602978 MHz.
-
-FUNCTIONAL / APPROXIMATE FREQUENCY CHECK, non ppm metrology: la finestra usa il clock interno STM32 e non misura l'accuratezza assoluta dell'XO; nessuna conformità alla presunta specifica ±20 ppm. Edges=0 iniziale causato dal pin A0/PA0 non saldato correttamente: dopo saldatura conteggio immediatamente presente. Continuità DC non garantisce integrità del collegamento per segnali ad alta frequenza. Build XO senza warning: flash 37004 B, RAM allocata 6544 B; artefatti build/phase3 ignorati. Metrologia BCK + DS3231 non iniziata.
+Gate 1/2/3/4 PASS; piattaforma MCU standalone validata:
+- Gate 1: SWD a 400 kHz, target voltage 3.22 V.
+- Gate 2: minimal firmware blink PC6 (~500 ms ON/OFF).
+- Gate 3: Core HSI16 → PLL a 170 MHz nominali, AHB/APB /1, SysTick reload 169999.
+- Gate 4: USB FS CDC device CDC ACM nativo (HSI48 + CRS), enumerazione stabile su Windows.
+- FASE 2: I2C1 Standard Mode 100 kHz PA15/PB7, configurazione DS3231 SQW 1 Hz.
+- FASE 3: TIM2 External Clock Mode 2 via PA0 per conteggio fronti XO (~24.6 M fronti/s).
+- FASE 4: Nessuna modifica firmware richiesta per il collaudo del clock hardware Master PCM1808 C. La WeAct è stata utilizzata come fornitore di alimentazione USB pulita (V+ 5V e 3V3).
+- Prossima fase firmware (FASE 5): Ricezione I2S2 slave (PB12=WS, PB13=CK, PB15=SD) con DMA circolare e contatore campioni continuo a 64 bit.
 
 ## Software status
 
-Sostanzialmente non iniziato. GUI non iniziata, da affrontare dopo acquisizione RAW affidabile. Nessun DSP, viewer, synthetic generator, dipendenza Python o ambiente virtuale creato in M0.
+Non iniziato. GUI, DSP, viewer e parser RAW da affrontare dopo acquisizione dati reali affidabili da STM32.
 
 ## Current architecture
 
@@ -64,56 +68,39 @@ Clock: XO attivo 24,576 MHz → PCM1808 master, MD1 = HIGH, MD0 = HIGH, 256 × F
 
 Metrologia: BCK contato da TIM2 + DS3231 INT/SQW 1 Hz in input capture. Il DS3231 è un riferimento indipendente, non genera il sample clock. Mapping previsto e limiti in [V0_BASELINE](architecture/V0_BASELINE.md); decisioni consolidate negli [ADR](decisions/).
 
-Target indicativi, non prestazioni ottenute: V0 circa ±0,5 s/day di errore strumentale sul rate o meglio; V1 avvicinamento a circa ±0,1 s/day. Risoluzione e accuratezza non sono equivalenti.
-
 ## Completed
 
-- Ispezione iniziale: root ufficiale esistente e vuota; nessun file preesistente o `.git`.
-- Struttura e documentazione M0 preparate, inclusi sei ADR accettati dalla specifica di avvio.
-- BOM as purchased, costi indicativi, checklist e formato RAW draft documentati.
-- Review M0 superata; baseline iniziale committata (97f102b).
-- Repository locale inizializzato su main; remote origin configurato.
-- Memoria documentale primaria attiva nel repository; baseline M0 pubblicata su origin/main.
-- FASE 0 completa: tutti gli ordini ricevuti, componenti principali identificati, controlli visivi e passivi a campione completati; nessun problema macroscopico rilevato. Le verifiche funzionali appartengono alle fasi successive.
-
-- Gate 1 — SWD e Gate 2 — firmware minimale: PASS; flash/verify riusciti e blink PC6 osservato fisicamente, come comunicato dalla supervisione il 2026-09-26.
-
-- Gate 3 — MCU clock 170 MHz: PASS; flash/verify e test LED diagnostico validati fisicamente il 2026-09-26, senza failure path osservato. Non è una misura di accuratezza assoluta del clock.
-
-- Gate 4 — native USB enumeration: PASS; stabilità almeno 60 s e disconnect/reconnect verificati. FASE 1 — WeAct standalone COMPLETE.
-
-- FASE 2 — DS3231 standalone COMPLETE: I2C1 PA15/PB7, registri, configurazione e verifica fisica SQW ~1 Hz PASS.
-
-- FASE 3 — XO standalone COMPLETE: power-up 3.3 V, PA0/TIM2_ETR AF14, conteggio e plausibility ±5% PASS; accuratezza assoluta non misurata.
+- Baseline M0, FASE 0, FASE 1, FASE 2, FASE 3: COMPLETE.
+- Gate 1 (SWD), Gate 2 (minimal firmware), Gate 3 (MCU clock 170 MHz), Gate 4 (USB enumeration): PASS.
+- FASE 4 — PCM1808 C clock bring-up: COMPLETE.
+  - Generazione Master clock confermata con XO 24,576 MHz e pull-up 10 kΩ su MD0/MD1.
+  - Gate LRCK 96 kHz: PASS (96,000 kHz rilevati tramite cursori PulseView).
+  - Gate BCK ~6,144 MHz: PASS (~16 periodi in 2,625 µs su PulseView).
+  - Schema CAD nativo KiCad 10 (Rev. R0.1): prodotto, validato con ERC (0 errori/avvisi) e APPROVATO tecnicamente da CHAT OVERVIEW.
+  - Script deterministico e portabile `generate_schematic.py` e pacchetto ZIP consolidati.
 
 ## Open questions
 
-- Schema effettivo, alimentazioni e configurazione dei breakout PCM1808.
-- XO: accuratezza assoluta e presunte specifiche ppm da verificare con riferimento indipendente; secondo esemplare non validato funzionalmente.
-- DS3231 #1: I2C e SQW funzionalmente validati, accuratezza e metrologia ancora da verificare; mantenere il divieto di CR2032 non ricaricabile con il circuito di carica presente.
-- AFE definitivo, guadagno/shaping e accoppiamento all'ADC dopo misure reali.
-- Meccanica del pickup; caratteristiche osservabili nei segnali reali.
-- Trasporto USB, framing firmware e dettagli del formato RAW da definire e validare.
-- Accuratezza reale della catena e del riferimento; strategia di calibrazione da validare.
-- Licenze definitive e prezzi esatti non congelati.
+- Causa dell'anomalia riscontrata sul vecchio breakout PCM1808 B: SCONOSCIUTA.
+- Conversione audio A/D del PCM1808 C: non ancora verificata funzionalmente (LIN/RIN aperti; segnale reale assente).
+- FASE 5: Integrazione I2S2 slave su STM32G431 (PB12 WS, PB13 CK, PB15 SD) con gestione DMA e streaming verso USB.
+- AFE definitivo MCP6022: polarizzazione VREF, guadagno e accoppiamento dopo prime acquisizioni.
+- Meccanica del pickup piezo.
 
 ## Blockers
 
-Nessun blocco aperto per la FASE 3 consolidata. Alimentazioni, clock e configurazione del breakout PCM1808 restano da verificare in FASE 4; il sistema completo non è validato.
+Nessun blocco aperto. Gate LRCK 96 kHz superato e schema CAD R0.1 approvato.
 
 ## Next actions
 
-1. FASE 4 — PCM1808 no AFE NEXT: verificare alimentazioni reali del breakout, SCK/MCLK da XO, configurazione MD0/MD1/FMT, presenza LRCK e BCK prima della ricezione I2S.
-2. FASE 4 non avviata in questo consolidamento.
+1. Procedere con la pianificazione e l'avvio della **FASE 5 — PCM1808 → STM32**:
+   - Cablaggio dei segnali digitali audio: LRCK → PB12 (I2S2_WS), BCK → PB13 (I2S2_CK), DOUT (J2.5) → PB15 (I2S2_SD).
+   - Configurazione firmware STM32 per ricezione I2S2 in modalità Slave Receiver a 24-bit / 96 kHz con clock da PCM1808 Master.
+   - Attivazione DMA circolare su buffer audio e contatore continuo di campioni.
+   - Prima verifica della conversione audio reale.
 
 ## Important constraints
 
-- Root ufficiale: `A:\Documenti\Tickform`; PC locale sorgente primaria di verità.
-- Remote pubblico: https://github.com/Elcosmo/Tickform.git; non creare un'altra repository.
-- Preservare RAW e tracciabilità; sample index come base temporale, USB non è clock metrologico.
-- Nessun display V0; PC parte integrante della V0; secondo canale mantenuto disponibile.
-- Non assumere specifiche AliExpress come certe né componenti ricevuti senza verifica.
-- Non confondere ipotesi, risoluzione, accuratezza e misure reali; niente DSP avanzato prima di dati reali affidabili.
-- Non modificare l'architettura senza CHANGE REQUEST documentata e decisione della supervisione.
-- Nessun secret o informazione personale nel repository; nessuna modifica alle configurazioni Git globali.
-- Questa attività consolida firmware XO già validato ed evidenze della FASE 3, con un commit e push autorizzati. Architettura e ADR invariati; non avvia FASE 4; nessun branch, tag o release aggiuntivo.
+- Non intervenire sul banco, sul firmware o sulla topologia elettrica senza specifica autorizzazione.
+- Non eseguire commit o push: rimangono soggetti a successiva autorizzazione OVERVIEW.
+- Mantenere la distinzione rigorosa tra misure verificate, collegamenti presunti e ipotesi.

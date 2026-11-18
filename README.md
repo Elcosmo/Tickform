@@ -1,5 +1,7 @@
 # Tickform
 
+> **Punto d'ingresso per la supervisione e nuovi agenti:** Per avviare una nuova sessione di supervisione (CHAT OVERVIEW) o comprendere rapidamente lo stato attuale, le evidenze consolidate e le regole di continuità, consultare [PROMPT.md](PROMPT.md).
+
 Tickform è un progetto DIY destinato a essere sviluppato e pubblicato come progetto open-source/open-hardware per realizzare un timegrapher avanzato per orologi meccanici. La strategia di licenza è ancora in review; le licenze non sono state formalmente adottate. L'obiettivo è conservare e analizzare il waveform acquisito dal pickup, mantenendo tracciabilità e riproducibilità delle misure.
 
 Stato: **early development / repository bootstrap**. Hardware e software non sono ancora validati; le specifiche richiedono verifica sperimentale. La strategia di licenza è ancora in revisione: vedere [LICENSE](LICENSE), che non è una licenza finale.
@@ -16,7 +18,10 @@ Il RAW deve restare conservabile. Il secondo canale stereo rimane disponibile pe
 
 ## Documentazione
 
+- [Prompt di supervisione](PROMPT.md) (punto d'ingresso per CHAT OVERVIEW e continuità operativa).
+- [Memoria centrale persistente](docs/TICKFORM_PROJECT_MEMORY.md) e [passaggio di consegne completo](docs/TICKFORM_FULL_PROJECT_HANDOFF.md).
 - [Stato corrente](docs/PROJECT_STATE.md), [log append-only](docs/PROJECT_LOG.md) e [passaggio di contesto](docs/CHAT_HANDOFF.md).
+- [Rapporto di consolidamento C01](docs/TICKFORM_CONSOLIDATION_C01_REPORT.md).
 - [Architettura V0](docs/architecture/V0_BASELINE.md) e [ADR accettati](docs/decisions/).
 - [Checklist di bring-up](docs/bringup/BRINGUP_CHECKLIST.md).
 - [Formato RAW draft v0.1](docs/data-format/RAW_FORMAT_V0_1.md).

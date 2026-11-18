@@ -1,6 +1,12 @@
 #include "stm32g4xx.h"
 #include "stm32g4xx_hal.h"
+#if defined(TICKFORM_PHASE5_I2S_RX)
+#include "i2s_rx.h"
+#elif defined(TICKFORM_PHASE5_DIAG)
+#include "i2s_rx_diag.h"
+#else
 #include "xo_counter.h"
+#endif
 int diagnostic_cdc_send(const char *text);
 void gate4_usb_init(void);
 
@@ -140,9 +146,23 @@ int main(void)
         Error_Handler();
     }
     gate4_usb_init();
+#if defined(TICKFORM_PHASE5_I2S_RX)
+    i2s_rx_init();
+    for (;;) {
+        i2s_rx_poll();
+        HAL_Delay(1U);
+    }
+#elif defined(TICKFORM_PHASE5_DIAG)
+    i2s_rx_diag_init();
+    for (;;) {
+        i2s_rx_diag_poll();
+        HAL_Delay(1U);
+    }
+#else
     xo_counter_init();
     for (;;) {
         xo_counter_poll();
         HAL_Delay(1U);
     }
+#endif
 }

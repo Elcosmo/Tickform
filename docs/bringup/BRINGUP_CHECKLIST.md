@@ -54,11 +54,14 @@ Esiti FASE 4, 12-13/11/2026 (PROJECT_LOG): Breakout C validato operativamente pe
 
 ## FASE 5 — PCM1808 → STM32
 
-- [ ] STM32 receives I2S
-- [ ] DMA running
-- [ ] DMA stability verified
-- [ ] Continuous 64-bit sample counter implemented
-- [ ] Overflow/error handling implemented
+- [x] STM32 receives I2S (I²S2 Slave Receiver operativo a 96 kHz stereo su PB12/13/15; verificato in F5-D03)
+- [x] DMA running (DMA1 Channel 1 in modalità circolare; CNDTR monitorato e decrementato nominalmente)
+- [x] DMA stability verified (acquisizioni nominali di 10 secondi convalidate con firmware diagnostico F5-D03 con 3.750–3.751 callback Half/Full; stabilità continuativa di lunga durata e streaming RAW non ancora certificati)
+- [ ] Collaudo formale firmware normale operativo F5-A02-R2.1 (tickform_phase5_i2s_rx.bin approvato crittograficamente; collaudo a banco con clock attivi pendente con log archiviato)
+- [ ] Continuous 64-bit sample counter implemented (struttura dati predisposta a livello firmware, da convalidare operativamente nello streaming continuo)
+- [ ] Overflow/error handling implemented (strumentazione di monitoraggio e reporting errori ed OVR verificata in F5-D03; ripristino e recupero automatico post-anomalia da implementare e collaudare)
+
+Esiti FASE 5, 17-18/11/2026 (PROJECT_LOG): Qualifica del trasporto dati hardware I²S2→DMA completata con successo tramite diagnostica F5-D03 su banco con cablaggio ripristinato. Run nominali con 3750-3751 CB in 10s e zero errori durante l'acquisizione. Firmware in esecuzione durante le prove e i sei reboot: tickform_phase5_diag.bin. Collaudo del firmware normale F5-A02-R2.1 identificato come prossimo gate aperto obbligatorio prima della chiusura formale della fase. FASE 6 NON INIZIATA e NON AUTORIZZATA.
 
 ## FASE 6 — RAW → PC
 

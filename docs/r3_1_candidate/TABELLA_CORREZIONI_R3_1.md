@@ -1,0 +1,37 @@
+# TICKFORM — TABELLA COMPARATIVA DELLE CORREZIONI R3.1
+
+**Data:** 18 novembre 2026  
+**Documento di riferimento:** Revisione indipendente ChatGPT R3 (`TICKFORM_R3_REVIEW_INDIPENDENTE_20261118.md`) e Mandato R3.1  
+**Stato:** Revisione Candidata R3.1  
+**Destinatario:** CHAT OVERVIEW / Revisore Tecnico Indipendente  
+**Repository:** `A:\Documenti\Tickform`
+
+---
+
+## 1. Mappa delle Correzioni e Verifiche Applicate tra R3 ed R3.1
+
+La presente tabella correla ciascun rilievo della revisione indipendente R3 e ciascuna prescrizione del Mandato R3.1 con le modifiche e le verifiche adottate nei documenti candidati R3.1.
+
+| ID Rilievo | Oggetto / Tema | Stato nella R3 | Correzione Adottata nella R3.1 Candidata | Documenti Aggiornati | Evidenza a Supporto |
+| :---: | :--- | :--- | :--- | :--- | :--- |
+| **R3-ERR-01** | **Unità di misura DMA nel Run 1** | Riportato erroneamente "296 byte" trasferiti prima dello stallo. | Corretto rigorosamente: CNDTR è decrementato di **296 halfword da 16 bit (`PSIZE=1, MSIZE=1`), corrispondenti a 592 byte**. Formula adottata: *«CNDTR diminuito di 296 halfword (592 byte) prima dello stallo osservato; zero callback Half/Full»*. | `TICKFORM_PROJECT_MEMORY.md` (§8.A), `HANDOFF` (tabella Run 1), `PROPOSTA_SINCRONIZZAZIONE`, `RAPPORTO_VERIFICHE_MIRATE` | Registri DMA1 Channel 1 (`PSIZE=1, MSIZE=1`), log Run 1 (`CNDTR init=2048, fin=1752`). |
+| **R3-ERR-02** | **Cronologia e cause dei guasti non isolate** | Alcune frasi descrivevano come fatto accertato la caduta dei clock durante lo streaming o l'origine dei flood di IRQ SPI2. | Riclassificate tutte le asserzioni causali: il test GPIO IDR avviene **dopo** lo stop DMA; i livelli fissi (HIGH nel run 1, LOW nel run 3) fotografano lo stato post-stop di 10 ms e **non misurano retroattivamente lo stato dinamico continuo dei 10s precedenti**. Il flood di IRQ è un fatto misurato, ma l'origine resta un'ipotesi tecnica plausibile non isolata strumentalmente. | `TICKFORM_PROJECT_MEMORY.md` (§8.A, §8.C, §11), `HANDOFF` (§5, §8), `PROPOSTA_SINCRONIZZAZIONE` | Codice `i2s_rx_diag.c` (riga 715 invocata post-stop riga 692), teoria di campionamento. |
+| **R3-ERR-03** | **Checklist: gestione errori e stabilità DMA** | Proposta la spunta `[x]` su `Overflow/error handling implemented` con dicitura di ripristino verificato. | **Voce lasciata non spuntata `[ ]`:** F5-D03 convalida la strumentazione di monitoraggio/reporting di errori ed OVR, ma **non un recupero automatico post-anomalia**. La voce `DMA stability verified` è stata ristretta formalmente ad *«acquisizioni nominali di 10 secondi con firmware diagnostico F5-D03»* senza estenderla a streaming continuativo a lungo termine. | `PROPOSTA_SINCRONIZZAZIONE_CANONICI_R3_1.md` (§5) | Mandato R3.1 (§3), `BRINGUP_CHECKLIST.md` originale. |
+| **R3-ERR-04** | **Stato stop I²S (`Status=1, ErrorCode=0x40`)** | Annotato nei log ma non analizzato a livello di codice driver/HAL. | **Verifica in sola lettura completata:** Accertato che `Status=1` (`HAL_ERROR`) ed `ErrorCode=0x40` (`HAL_I2S_ERROR_BUSY_LINE_RX`) sono generati sistematicamente da `HAL_I2S_DMAStop` in modalità Slave RX quando il Master clock continua ad oscillare. `i2s_rx_diag.c` (righe 708–709) riconosce esplicitamente questa clausola assegnando `StopOK=SI`. È un comportamento previsto e deterministico, non un'anomalia di ricezione. | `RAPPORTO_VERIFICHE_MIRATE_R3_1.md` (§1), `TICKFORM_PROJECT_MEMORY.md` (§8.A, §11), `HANDOFF` (§4.2) | Codice `i2s_rx_diag.c:692-712`, `stm32g4xx_hal_i2s.c:1450-1456`, `stm32g4xx_hal_i2s.h:102`. |
+| **R3-ERR-05** | **Dimensione e hash del binario normale** | Alcuni documenti citavano 43.748 byte ed altri 43.756 byte con lo stesso hash `04B95777...`. | **Verifica fisica su target completata:** Il file reale su disco `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` misura **esattamente 43.756 byte** con SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`. Il valore 43.748 byte era un refuso di trascrizione manuale nato in `RAPPORTO_F5_D03.md`. Tutte le tabelle sono state bonificate con 43.756 B. | `RAPPORTO_VERIFICHE_MIRATE_R3_1.md` (§2), `TICKFORM_PROJECT_MEMORY.md` (§13.2), `HANDOFF` (§6) | Verifica diretta filesystem con Python `os.path.getsize` ed `hashlib.sha256`. |
+
+---
+
+## 2. Sintesi delle Evidenze di Laboratorio Riconciliate (F5-D03)
+
+La seguente tabella riepiloga in modo univoco i 6 run diagnostici estratti dai log archiviati in `docs/evidenze_f5_d03/`, con l'unità di misura DMA corretta a 592 byte e la rigorosa classificazione fenomenologica:
+
+| Run # | File Sorgente | SHA-256 File | DMA Total CB | Raw IRQ DMA | Raw IRQ SPI2 | HAL Err CB | CNDTR Min/Fin | GPIO PB12 (LRCK) post-stop | GPIO PB13 (BCK) post-stop | Freq. IDR | Esito Tecnico di Laboratorio |
+| :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Run 1** | `Testo incollato(20261117-133519)(1).txt` | `4A449FCB...` | 0 | 0 | 103 | 103 | 1752 / 1752 | 0 trans (H=1, L=0) | 0 trans (H=1, L=0) | 2067 kSps | **Anomalo:** CNDTR diminuito di 296 halfword (592 byte) prima dello stallo osservato; 0 callback Half/Full; 103 interrupt grezzi SPI2 e callback HAL; PB12/13 campionati a livello HIGH post-stop. 10 ritrasmissioni identiche. |
+| **Run 2** | `Testo incollato(20261117-220546).txt` | `6583F3ED...` | **3751** | 3751 | 0 | 0 | 1 / 668 | 1920 trans (H=1, L=1) | 7290 trans (H=1, L=1) | 1921 kSps | **Regolare:** Trasferimento continuo nominale per 10s; 0 interrupt SPI2, 0 callback errore HAL, 0 OVR; PB12 con 1920 transizioni post-stop (~96 kHz). Stop `Status=1, ErrorCode=0x40, StopOK=SI` (nominale per Slave RX). 3 ritrasmissioni. |
+| **Run 3** | `Testo incollato(20261117-222021).txt` | `DFC1BEDC...` | 1122 | 1122 | 518.924 | 518.924 | 1 / 1479 | 0 trans (H=0, L=1) | 0 trans (H=0, L=1) | 2067 kSps | **Anomalo:** DMA interrotto dopo 1122 callback; flood di 518.924 interrupt SPI2 e callback HAL (last=0x00000000, OVR=0); PB12/13 campionati a livello LOW post-stop. 4 ritrasmissioni. |
+| **Run 4** | `Testo incollato(20261117-222542).txt` | `0A8C70DA...` | 3714 | 3714 | 3.567.483 | 3.567.483 | 1 / 1853 | 1921 trans (H=1, L=1) | 7552 trans (H=1, L=1) | 1917 kSps | **Anomalo:** Trasferimento quasi completo (3714 CB) ma flood massivo di 3.567.483 interrupt SPI2 e callback HAL (last=0x00000000, OVR=0); PB12 con 1921 transizioni post-stop. 4 ritrasmissioni. |
+| **Run 5A**| `Testo incollato(20261117-224318).txt` (Rep 1) | `88F48EDF...` | **3750** | 3750 | 0 | 0 | 1 / 1462 | 1921 trans (H=1, L=1) | 8152 trans (H=1, L=1) | 1908 kSps | **Regolare:** Esattamente 3750 callback DMA nominali in 10s; 0 interrupt SPI2, 0 errori HAL; PB12 con 1921 transizioni e PB13 con 8152 transizioni post-stop. Stop nominale con `StopOK=SI`. Primo report del file. |
+| **Run 5B**| `Testo incollato(20261117-224318).txt` (Rep 2-3)| `88F48EDF...` | **3751** | 3751 | 0 | 0 | 1 / 391 | 1922 trans (H=1, L=1) | 8139 trans (H=1, L=1) | 1908 kSps | **Regolare:** 3751 callback DMA nominali in 10s; 0 interrupt SPI2, 0 errori HAL; PB12 con 1922 transizioni e PB13 con 8139 transizioni post-stop. Stop nominale con `StopOK=SI`. Secondo report distinto (Rep 3 ritrasmissione). |
+| **Reboot**| Dichiarazione operatore (nessun log) | N/A | Non mis. | Non mis. | Non mis. | Non mis. | Non mis. | Non mis. | Non mis. | N/A | **Osservazionale:** 3 reset NRST + 3 power-cycle USB con LED spento. Firmware in esecuzione: `tickform_phase5_diag.bin`. Nessun log seriale archiviato. |

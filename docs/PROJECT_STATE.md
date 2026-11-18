@@ -2,19 +2,21 @@
 
 Fotografia vivente dello stato corrente. Aggiornare quando cambia realmente il progetto; la cronologia resta in PROJECT_LOG e le decisioni negli ADR.
 
-- **Last updated:** 2026-11-13
-- **Reference commit:** 97f102b — M0 bootstrap baseline
-- **Current milestone:** FASE 4 — PCM1808 C clock bring-up: COMPLETE
-- **Next milestone:** FASE 5 — PCM1808 → STM32 (ricezione I2S, DMA, acquisizione campioni)
+- **Last updated:** 2026-11-18
+- **Reference commit:** e857849 — Checkpoint PCM1808 C 96kHz bring-up and KiCad schematic
+- **Current milestone:** FASE 5 — PCM1808 → STM32 (ricezione I²S2, DMA circolare, diagnostica hardware): QUALIFICA TRASPORTO COMPLETATA (Collaudo firmware normale pendente)
+- **Next milestone:** Collaudo firmware normale F5-A02-R2.1 → Rilievo hardware AS BUILT → Chiusura formale FASE 5 → (Subordinata) FASE 6 RAW Stream (FASE 6: NON INIZIATA — NON AUTORIZZATA)
 
 ## Gate status
 
-- Gate 1 — SWD: PASS
-- Gate 2 — minimal firmware: PASS
-- Gate 3 — MCU clock 170 MHz: PASS
-- Gate 4 — native USB enumeration: PASS
-- Gate 5 — LRCK nominale 96 kHz (PCM1808 C): PASS
-- Gate 6 — Conversione audio PCM1808: PENDING (non ancora verificata)
+- Gate 1 — SWD: PASS (400 kHz, rail 3V3 verificato)
+- Gate 2 — minimal firmware: PASS (LED PC6 lampeggiante)
+- Gate 3 — MCU clock 170 MHz: PASS (PLL e SysTick convalidati)
+- Gate 4 — native USB enumeration: PASS (COM CDC 0483:5740 operativo)
+- Gate 5 — LRCK nominale 96 kHz (PCM1808 C): PASS (oscillazione Master verificata)
+- Gate 6 — Ricezione hardware I²S2/DMA STM32 (F5-D03): PASS (3.750–3.751 CB in 10s, 0 errori DMA/SPI2/HAL, clock verificati su PB12/13)
+- Gate 7 — Collaudo firmware normale operativo F5-A02-R2.1: PENDING (approvato crittograficamente; in attesa di prova a banco con log)
+- Gate 8 — Conversione audio e campioni acustici: PENDING (ingressi analogici aperti; AFE non connesso)
 
 ## Hardware status
 

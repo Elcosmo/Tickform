@@ -1,0 +1,290 @@
+==================================================
+TICKFORM FASE 5 - DIAGNOSTICA F5-D03 (PARTE 1/6)
+SPI2/I2S2 -> DMAMUX1 -> DMA1 Channel 1 + GPIO IDR
+==================================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA Buffer:   1024 slots (2048 halfwords = 4096 B)
+
+--- STATO DIAGNOSTICO PRINCIPALE ---
+CLASSIFICAZIONE: [DMA E CALLBACK ENTRAMBI OSSERVATI]
+ANALISI:         Osservati trasferimenti DMA (CNDTR variato) e invocazione di callback Half/Full durante la prova. Non attesta automaticamente continuita' nominale per 10 secondi o assenza di errori audio.
+
+--- PARTE 2/6: CONTATORI EVENTI, CNDTR ED INDIRIZZI DMA ---
+--- CONTATORI EVENTI E INTERRUPT ---
+DMA Half Cplt:       1876
+DMA Full Cplt:       1875
+DMA Total CB:        3751 (attesi ~3750 a 96 kHz)
+Raw IRQ DMA1_Ch1:    3751 (ingressi prima di HAL)
+Raw IRQ SPI2:        0 (ingressi prima di HAL)
+HAL I2S Error CB:    0 (last=0x00000000)
+SPI2 OVR contati:    0
+
+--- MONITORAGGIO CNDTR (DMA1 Channel 1) ---
+CNDTR Iniziale:      2048 (nominale 2048)
+CNDTR Minimo:        1
+CNDTR Massimo:       2048
+CNDTR Pre-Stop:      669
+CNDTR Post-Stop:     668
+CNDTR Variazioni:    5001
+
+--- INDIRIZZI DMA1 CHANNEL 1 (CPAR / CMAR) ---
+CPAR letto:          0x4000380C (atteso 0x4000380C -> CONFORME)
+CMAR letto:          0x2000110C (atteso 0x2000110C -> CONFORME)
+
+--- PARTE 3/6: VERIFICA CONFIGURAZIONE REGISTRI ---
+RCC SPI2 Clock:      ABILITATO (APB1ENR1=0x10804500)
+RCC DMA1 Clock:      ABILITATO (AHB1ENR=0x00000105)
+RCC DMAMUX1 Clock:   ABILITATO (AHB1ENR=0x00000105)
+RCC GPIOB Clock:     ABILITATO (AHB2ENR=0x00000006)
+NVIC DMA1_Ch1 En:    ABILITATO
+NVIC SPI2 En:        ABILITATO
+DMAMUX1_Ch0 ReqID:   12 (atteso 12 = SPI2_RX) -> CONFORME
+PB12 (WS):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+PB13 (CK):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+PB15 (SD):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+
+--- PARTE 4/6: VERIFICA DIGITALE INGRESSI PB12/PB13 (GPIO IDR) ---
+Finestra misura:     10000 us (campioni totali: 19219)
+Freq. campionamento: 1921 kSps (~1.9 MSps)
+Modalita' pin:       AF5 SPI2 (MODER=AF, nessun cambio configurazione)
+
+PB12 (LRCK / WS - nominale 96 kHz):
+  Transizioni:       1920 (attese ~1920 in finestra)
+  Livelli visti:     HIGH=SI, LOW=SI (init=1, final=1)
+  Stato segnale:     TRANSIZIONI E ENTRAMBI I LIVELLI RILEVATI
+
+PB13 (BCK / CK - nominale 6.144 MHz):
+  Transizioni:       7290
+  Livelli visti:     HIGH=SI, LOW=SI (init=0, final=0)
+  Stato segnale:     TRANSIZIONI E ENTRAMBI I LIVELLI RILEVATI
+  Nota PB13:         Campionamento SW a ~1.9 MSps (sotto Nyquist per 6.144 MHz).
+                     Aliasing atteso; transizioni > 0 indicano attivita' di toggle;
+                     non dichiarare assenza clock senza verifica strumentale diretta.
+
+--- PARTE 5/6: SNAPSHOT REGISTRI (INIT E MID) ---
+[INIT (t=0 ms)]
+  SPI2:   I2SCFGR=0x0D03 (I2SE=1, I2SMOD=1, CFG=1, STD=0, DATLEN=1, CHLEN=1)
+          CR2=0x0721 (RXDMAEN=1, ERRIE=1)
+          SR=0x0082 (RXNE=0, OVR=0, BSY=1, CHSIDE=0, FRLVL=0)
+  DMA1:   CCR=0x25AF (EN=1, CIRC=1, HTIE=1, TCIE=1, TEIE=1, PSIZE=1, MSIZE=1)
+          CNDTR=2048, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C (REQ_ID=12)
+  GPIOB:  IDR=0x0000 (PB12=0, PB13=0, PB15=0)
+[MID (t=5000 ms)]
+  SPI2:   I2SCFGR=0x0D03, CR2=0x0721, SR=0x0082 (RXNE=0, OVR=0, BSY=1, FRLVL=0)
+  DMA1:   CCR=0x25AF, CNDTR=494, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C
+  GPIOB:  IDR=0xB010 (PB12=1, PB13=1, PB15=1)
+
+--- PARTE 6/6: SNAPSHOT REGISTRI (STOP) ED ESITO ---
+[PRE-STOP (t=10000 ms)]
+  SPI2:   I2SCFGR=0x0D03, CR2=0x0721, SR=0x0086 (RXNE=0, OVR=0, BSY=1, FRLVL=0)
+  DMA1:   CCR=0x25AF, CNDTR=669, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C
+  GPIOB:  IDR=0xB010 (PB12=1, PB13=1, PB15=1)
+[POST-STOP (t=10000 ms)]
+  SPI2:   I2SCFGR=0x0903, CR2=0x0700, SR=0x0082
+  DMA1:   CCR=0x25A0 (EN=0), CNDTR=668, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000
+  GPIOB:  IDR=0x2010 (PB12=0, PB13=1, PB15=0)
+  Stop:   Status=1, ErrorCode=0x40, StopOK=SI
+==================================================
+
+==================================================
+TICKFORM FASE 5 - DIAGNOSTICA F5-D03 (PARTE 1/6)
+SPI2/I2S2 -> DMAMUX1 -> DMA1 Channel 1 + GPIO IDR
+==================================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA Buffer:   1024 slots (2048 halfwords = 4096 B)
+
+--- STATO DIAGNOSTICO PRINCIPALE ---
+CLASSIFICAZIONE: [DMA E CALLBACK ENTRAMBI OSSERVATI]
+ANALISI:         Osservati trasferimenti DMA (CNDTR variato) e invocazione di callback Half/Full durante la prova. Non attesta automaticamente continuita' nominale per 10 secondi o assenza di errori audio.
+
+--- PARTE 2/6: CONTATORI EVENTI, CNDTR ED INDIRIZZI DMA ---
+--- CONTATORI EVENTI E INTERRUPT ---
+DMA Half Cplt:       1876
+DMA Full Cplt:       1875
+DMA Total CB:        3751 (attesi ~3750 a 96 kHz)
+Raw IRQ DMA1_Ch1:    3751 (ingressi prima di HAL)
+Raw IRQ SPI2:        0 (ingressi prima di HAL)
+HAL I2S Error CB:    0 (last=0x00000000)
+SPI2 OVR contati:    0
+
+--- MONITORAGGIO CNDTR (DMA1 Channel 1) ---
+CNDTR Iniziale:      2048 (nominale 2048)
+CNDTR Minimo:        1
+CNDTR Massimo:       2048
+CNDTR Pre-Stop:      669
+CNDTR Post-Stop:     668
+CNDTR Variazioni:    5001
+
+--- INDIRIZZI DMA1 CHANNEL 1 (CPAR / CMAR) ---
+CPAR letto:          0x4000380C (atteso 0x4000380C -> CONFORME)
+CMAR letto:          0x2000110C (atteso 0x2000110C -> CONFORME)
+
+--- PARTE 3/6: VERIFICA CONFIGURAZIONE REGISTRI ---
+RCC SPI2 Clock:      ABILITATO (APB1ENR1=0x10804500)
+RCC DMA1 Clock:      ABILITATO (AHB1ENR=0x00000105)
+RCC DMAMUX1 Clock:   ABILITATO (AHB1ENR=0x00000105)
+RCC GPIOB Clock:     ABILITATO (AHB2ENR=0x00000006)
+NVIC DMA1_Ch1 En:    ABILITATO
+NVIC SPI2 En:        ABILITATO
+DMAMUX1_Ch0 ReqID:   12 (atteso 12 = SPI2_RX) -> CONFORME
+PB12 (WS):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+PB13 (CK):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+PB15 (SD):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+
+--- PARTE 4/6: VERIFICA DIGITALE INGRESSI PB12/PB13 (GPIO IDR) ---
+Finestra misura:     10000 us (campioni totali: 19219)
+Freq. campionamento: 1921 kSps (~1.9 MSps)
+Modalita' pin:       AF5 SPI2 (MODER=AF, nessun cambio configurazione)
+
+PB12 (LRCK / WS - nominale 96 kHz):
+  Transizioni:       1920 (attese ~1920 in finestra)
+  Livelli visti:     HIGH=SI, LOW=SI (init=1, final=1)
+  Stato segnale:     TRANSIZIONI E ENTRAMBI I LIVELLI RILEVATI
+
+PB13 (BCK / CK - nominale 6.144 MHz):
+  Transizioni:       7290
+  Livelli visti:     HIGH=SI, LOW=SI (init=0, final=0)
+  Stato segnale:     TRANSIZIONI E ENTRAMBI I LIVELLI RILEVATI
+  Nota PB13:         Campionamento SW a ~1.9 MSps (sotto Nyquist per 6.144 MHz).
+                     Aliasing atteso; transizioni > 0 indicano attivita' di toggle;
+                     non dichiarare assenza clock senza verifica strumentale diretta.
+
+--- PARTE 5/6: SNAPSHOT REGISTRI (INIT E MID) ---
+[INIT (t=0 ms)]
+  SPI2:   I2SCFGR=0x0D03 (I2SE=1, I2SMOD=1, CFG=1, STD=0, DATLEN=1, CHLEN=1)
+          CR2=0x0721 (RXDMAEN=1, ERRIE=1)
+          SR=0x0082 (RXNE=0, OVR=0, BSY=1, CHSIDE=0, FRLVL=0)
+  DMA1:   CCR=0x25AF (EN=1, CIRC=1, HTIE=1, TCIE=1, TEIE=1, PSIZE=1, MSIZE=1)
+          CNDTR=2048, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C (REQ_ID=12)
+  GPIOB:  IDR=0x0000 (PB12=0, PB13=0, PB15=0)
+[MID (t=5000 ms)]
+  SPI2:   I2SCFGR=0x0D03, CR2=0x0721, SR=0x0082 (RXNE=0, OVR=0, BSY=1, FRLVL=0)
+  DMA1:   CCR=0x25AF, CNDTR=494, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C
+  GPIOB:  IDR=0xB010 (PB12=1, PB13=1, PB15=1)
+
+--- PARTE 6/6: SNAPSHOT REGISTRI (STOP) ED ESITO ---
+[PRE-STOP (t=10000 ms)]
+  SPI2:   I2SCFGR=0x0D03, CR2=0x0721, SR=0x0086 (RXNE=0, OVR=0, BSY=1, FRLVL=0)
+  DMA1:   CCR=0x25AF, CNDTR=669, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C
+  GPIOB:  IDR=0xB010 (PB12=1, PB13=1, PB15=1)
+[POST-STOP (t=10000 ms)]
+  SPI2:   I2SCFGR=0x0903, CR2=0x0700, SR=0x0082
+  DMA1:   CCR=0x25A0 (EN=0), CNDTR=668, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000
+  GPIOB:  IDR=0x2010 (PB12=0, PB13=1, PB15=0)
+  Stop:   Status=1, ErrorCode=0x40, StopOK=SI
+==================================================
+
+==================================================
+TICKFORM FASE 5 - DIAGNOSTICA F5-D03 (PARTE 1/6)
+SPI2/I2S2 -> DMAMUX1 -> DMA1 Channel 1 + GPIO IDR
+==================================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA Buffer:   1024 slots (2048 halfwords = 4096 B)
+
+--- STATO DIAGNOSTICO PRINCIPALE ---
+CLASSIFICAZIONE: [DMA E CALLBACK ENTRAMBI OSSERVATI]
+ANALISI:         Osservati trasferimenti DMA (CNDTR variato) e invocazione di callback Half/Full durante la prova. Non attesta automaticamente continuita' nominale per 10 secondi o assenza di errori audio.
+
+--- PARTE 2/6: CONTATORI EVENTI, CNDTR ED INDIRIZZI DMA ---
+--- CONTATORI EVENTI E INTERRUPT ---
+DMA Half Cplt:       1876
+DMA Full Cplt:       1875
+DMA Total CB:        3751 (attesi ~3750 a 96 kHz)
+Raw IRQ DMA1_Ch1:    3751 (ingressi prima di HAL)
+Raw IRQ SPI2:        0 (ingressi prima di HAL)
+HAL I2S Error CB:    0 (last=0x00000000)
+SPI2 OVR contati:    0
+
+--- MONITORAGGIO CNDTR (DMA1 Channel 1) ---
+CNDTR Iniziale:      2048 (nominale 2048)
+CNDTR Minimo:        1
+CNDTR Massimo:       2048
+CNDTR Pre-Stop:      669
+CNDTR Post-Stop:     668
+CNDTR Variazioni:    5001
+
+--- INDIRIZZI DMA1 CHANNEL 1 (CPAR / CMAR) ---
+CPAR letto:          0x4000380C (atteso 0x4000380C -> CONFORME)
+CMAR letto:          0x2000110C (atteso 0x2000110C -> CONFORME)
+
+--- PARTE 3/6: VERIFICA CONFIGURAZIONE REGISTRI ---
+RCC SPI2 Clock:      ABILITATO (APB1ENR1=0x10804500)
+RCC DMA1 Clock:      ABILITATO (AHB1ENR=0x00000105)
+RCC DMAMUX1 Clock:   ABILITATO (AHB1ENR=0x00000105)
+RCC GPIOB Clock:     ABILITATO (AHB2ENR=0x00000006)
+NVIC DMA1_Ch1 En:    ABILITATO
+NVIC SPI2 En:        ABILITATO
+DMAMUX1_Ch0 ReqID:   12 (atteso 12 = SPI2_RX) -> CONFORME
+PB12 (WS):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+PB13 (CK):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+PB15 (SD):           MODER=2 (AF), AFRH=5 (AF5) -> CONFORME
+
+--- PARTE 4/6: VERIFICA DIGITALE INGRESSI PB12/PB13 (GPIO IDR) ---
+Finestra misura:     10000 us (campioni totali: 19219)
+Freq. campionamento: 1921 kSps (~1.9 MSps)
+Modalita' pin:       AF5 SPI2 (MODER=AF, nessun cambio configurazione)
+
+PB12 (LRCK / WS - nominale 96 kHz):
+  Transizioni:       1920 (attese ~1920 in finestra)
+  Livelli visti:     HIGH=SI, LOW=SI (init=1, final=1)
+  Stato segnale:     TRANSIZIONI E ENTRAMBI I LIVELLI RILEVATI
+
+PB13 (BCK / CK - nominale 6.144 MHz):
+  Transizioni:       7290
+  Livelli visti:     HIGH=SI, LOW=SI (init=0, final=0)
+  Stato segnale:     TRANSIZIONI E ENTRAMBI I LIVELLI RILEVATI
+  Nota PB13:         Campionamento SW a ~1.9 MSps (sotto Nyquist per 6.144 MHz).
+                     Aliasing atteso; transizioni > 0 indicano attivita' di toggle;
+                     non dichiarare assenza clock senza verifica strumentale diretta.
+
+--- PARTE 5/6: SNAPSHOT REGISTRI (INIT E MID) ---
+[INIT (t=0 ms)]
+  SPI2:   I2SCFGR=0x0D03 (I2SE=1, I2SMOD=1, CFG=1, STD=0, DATLEN=1, CHLEN=1)
+          CR2=0x0721 (RXDMAEN=1, ERRIE=1)
+          SR=0x0082 (RXNE=0, OVR=0, BSY=1, CHSIDE=0, FRLVL=0)
+  DMA1:   CCR=0x25AF (EN=1, CIRC=1, HTIE=1, TCIE=1, TEIE=1, PSIZE=1, MSIZE=1)
+          CNDTR=2048, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C (REQ_ID=12)
+  GPIOB:  IDR=0x0000 (PB12=0, PB13=0, PB15=0)
+[MID (t=5000 ms)]
+  SPI2:   I2SCFGR=0x0D03, CR2=0x0721, SR=0x0082 (RXNE=0, OVR=0, BSY=1, FRLVL=0)
+  DMA1:   CCR=0x25AF, CNDTR=494, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C
+  GPIOB:  IDR=0xB010 (PB12=1, PB13=1, PB15=1)
+
+--- PARTE 6/6: SNAPSHOT REGISTRI (STOP) ED ESITO ---
+[PRE-STOP (t=10000 ms)]
+  SPI2:   I2SCFGR=0x0D03, CR2=0x0721, SR=0x0086 (RXNE=0, OVR=0, BSY=1, FRLVL=0)
+  DMA1:   CCR=0x25AF, CNDTR=669, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000 (GIF=0, TCIF=0, HTIF=0, TEIF=0)
+  DMAMUX: CCR=0x0000000C
+  GPIOB:  IDR=0xB010 (PB12=1, PB13=1, PB15=1)
+[POST-STOP (t=10000 ms)]
+  SPI2:   I2SCFGR=0x0903, CR2=0x0700, SR=0x0082
+  DMA1:   CCR=0x25A0 (EN=0), CNDTR=668, CPAR=0x4000380C, CMAR=0x2000110C
+          ISR=0x00000000
+  GPIOB:  IDR=0x2010 (PB12=0, PB13=1, PB15=0)
+  Stop:   Status=1, ErrorCode=0x40, StopOK=SI
+==================================================

@@ -213,3 +213,33 @@ Esiti fisici comunicati dalla supervisione e revisione CAD consolidata; nessun i
   - Netlist PCB esportata (`tickform_phase4_pcm1808c.net`): verificata; lo strumento esterno INSTR1 è escluso dalla netlist PCB (`on_board no`).
   - **Revisione R0.1 APPROVATA TECNICAMENTE DA CHAT OVERVIEW** (13/11/2026).
 - **Checklist e stato:** FASE 4 — PCM1808 C clock bring-up: COMPLETE. Prossima milestone: FASE 5 — PCM1808 → STM32 (connessione I2S2 slave, DMA circolare, streaming e prima validazione conversione audio).
+
+
+## 2026-11-18 — FASE 5: Riconciliazione Diagnostica F5-D03, Qualifica Hardware e Allineamento Documentale R3.1
+
+- **Attività svolta:** Riconciliazione integrale dei log di laboratorio F5-D03, verifica tecnica mirata su stop I²S ed hash binari, e allineamento documentale R3.1.
+- **Evidenze sperimentali archiviate:**
+  - Importati in `docs/evidenze_f5_d03/` i 5 file di log Tera Term originali con verifica crittografica SHA-256 contro il relativo manifest.
+  - Identificati formalmente 6 run diagnostici distinti del firmware `tickform_phase5_diag.bin` (F5-D03, SHA-256 `29786361...`):
+    - Run 1 (13:35:19): Stallo hardware iniziale; CNDTR diminuito di 296 halfword (592 byte) prima dello stallo osservato; 0 callback Half/Full; 103 interrupt grezzi SPI2 ed altrettante callback di errore HAL; nella successiva finestra post-stop di 10 ms i pin PB12/13 sono stati campionati a livello HIGH senza transizioni.
+    - Run 2 (22:05:46): Regolare; 3.751 callback DMA (Half=1876, Full=1875), 0 interrupt SPI2, 0 callback errore HAL, 0 OVR; nella finestra post-stop PB12 ha registrato 1920 transizioni a 1921 kSps (~96 kHz nominali) e PB13 7290 transizioni.
+    - Run 3 (22:20:21): Anomalo; DMA interrotto dopo 1122 callback; flood di 518.924 interrupt SPI2 e callback HAL; nella finestra post-stop PB12/13 campionati a livello LOW senza transizioni.
+    - Run 4 (22:25:42): Anomalo; 3.714 callback DMA con flood di 3.567.483 interrupt SPI2 / callback HAL; clock con transizioni rilevate nella finestra post-stop (PB12: 1921 trans; PB13: 7552 trans).
+    - Run 5A (22:43:18 rep 1): Regolare; 3.750 callback DMA nominali in 10s, 0 interrupt SPI2, 0 errori HAL; PB12 con 1921 transizioni e PB13 con 8152 transizioni post-stop.
+    - Run 5B (22:43:18 rep 2-3): Regolare; 3.751 callback DMA nominali in 10s, 0 interrupt SPI2, 0 errori HAL; PB12 con 1922 transizioni e PB13 con 8139 transizioni post-stop.
+- **Analisi tecnica della segnalazione Stop: Status=1, ErrorCode=0x40, StopOK=SI (C01-B-ERR-01, C01-B-ERR-02):**
+  - Accertato che `Status=1` (`HAL_ERROR`) e `ErrorCode=0x40` (`HAL_I2S_ERROR_BUSY_LINE_RX`) derivano dal driver ST HAL (`HAL_I2S_DMAStop` in `stm32g4xx_hal_i2s.c`), che nel ramo Slave Receiver imposta incondizionatamente tale codice senza verificare esplicitamente il flag BSY. Non rappresenta una misura del clock esterno né un'anomalia di ricezione (zero errori nei 10s di streaming).
+  - La logica del firmware diagnostico verifica direttamente lo spegnimento del canale DMA (`DMA1_Channel1->CCR.EN == 0`) e di RXDMAEN (`SPI2->CR2.RXDMAEN == 0`), convalidando lo stop come nominale (`StopOK=SI`).
+- **Rettifica fondamentale sul firmware dei 6 riavvii:**
+  - A seguito del riposizionamento fisico dei collegamenti su breadboard, l'operatore ha eseguito tre reset NRST e tre cicli di spegnimento USB-C senza riscontrare accensione fissa del LED blu di errore.
+  - Durante questi 6 reboot il firmware in esecuzione sulla STM32 era `tickform_phase5_diag.bin`, NON il firmware normale `tickform_phase5_i2s_rx.bin` (nessun nuovo flash è stato effettuato).
+  - Tali riavvii costituiscono evidenza osservazionale di ripetibilità del boot e del LED, non collaudo certificato con log salvati.
+- **Riconciliazione campionamento GPIO IDR:**
+  - Frequenza reale misurata su target compresa tra 1908 e 2067 kSps (~1,9–2,1 MSps).
+  - La misura avviene post-stop: è idonea a verificare LRCK a 96 kHz (PB12), mentre è sotto Nyquist per BCK a 6,144 MHz (PB13), generando aliasing. Zero transizioni su PB13 non provano l'assenza fisica del clock.
+- **Verifica del binario normale operativo:**
+  - Confermato che `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` ha dimensione effettiva di **43.756 byte** con SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`. Il riferimento a 43.748 byte era un refuso tipografico storico di trascrizione.
+- **Stato CAD KiCad e Hardware AS BUILT:**
+  - Lo schema KiCad R0.1 è confermato integro e approvato per FASE 4 (ERC 0 errori / 0 avvisi).
+  - Si distingue formalmente la prescrizione CAD (due resistenze 10 kΩ R1/R2) dalla realtà del banco fisico AS BUILT (livello logico HIGH confermato, ma valore resistivo e topologia Y non misurati con multimetro).
+- **Prossimi passi:** Collaudo del firmware normale `tickform_phase5_i2s_rx.bin` con archiviazione del log formale; FASE 6 rigorosamente NON INIZIATA e NON AUTORIZZATA.

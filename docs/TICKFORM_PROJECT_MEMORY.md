@@ -1,13 +1,22 @@
 # TICKFORM — MEMORIA CENTRALE PERSISTENTE DEL PROGETTO
 **Master Technical Reference & System Memory Document**  
-**Stato documento:** REVISIONE CONSOLIDATA R3.1 (18 Novembre 2026) — Consolidamento Mandato C01 con rettifiche editoriali  
+**Stato documento:** REVISIONE CONSOLIDATA AGGIORNATA (20 Novembre 2026) — Mandato F5-CLOSEOUT-DOC / H01
 **Autore:** Antigravity (Archivista di Progetto e Ingegnere di Sistema)  
 **Supervisione:** CHAT OVERVIEW  
 **Repository Locale:** `A:\Documenti\Tickform`  
-**Baseline Git:** commit [`e857849debbc54e655a8a87a88c07a2ee0386d43`](https://github.com/Elcosmo/Tickform/commit/e857849debbc54e655a8a87a88c07a2ee0386d43) (`main`, allineato a `origin/main`)  
-**Ultimo aggiornamento documentale:** 18/11/2026  
+**Baseline Git:** commit [`7d714302867f93a5351c12164b412b08d0ae2e98`](https://github.com/Elcosmo/Tickform/commit/7d714302867f93a5351c12164b412b08d0ae2e98) (`main`, allineato a `origin/main`)
+**Ultimo aggiornamento documentale:** 20/11/2026
 
 ---
+
+## Note di Aggiornamento — Mandato F5-CLOSEOUT-DOC / H01 (20/11/2026)
+La presente revisione recepisce gli esiti operativi del collaudo del firmware normale I²S/DMA e le prescrizioni del mandato esecutivo della supervisione:
+1. **Qualifica nominale firmware normale completata con successo:** Flash controllato di `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` (F5-A02-R2.1, 43.756 B, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`). Tre prove nominali da 10s positive (F5-N01-R1 3751 CB, F5-N02-R1 3751 CB, F5-N03 3750 CB; 0 errori DMA/OVR). Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03; il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati.
+2. **Archiviazione log ed evidenze sperimentali:** I tre file di log originali recuperabili (`F5_N02_RESET.txt`, `F5_N02_R1_RESET.txt`, `F5_N03_POWER_CYCLE.txt`) sono archiviati in [`docs/evidenze_f5_n01_n03/`](./evidenze_f5_n01_n03/) con manifest verificato `MANIFEST_EVIDENZE_F5N01_N03_20261120.txt`. Per F5-N01 (FAIL al primo boot per connettore Dupont scollegato; collegamento esatto non identificato nella documentazione) e F5-N01-R1 non esistono file di log originali recuperabili sul PC; i relativi esiti provengono direttamente dai rapporti operativi trasmessi dall'operatore alla CHAT OVERVIEW. Preservato anche F5-N02 (eseguito ma non validabile per campioni azzerati). Riconosciuto formalmente che i report duplicati nella USB CDC ogni 5s sono ritrasmissioni automatiche e non test indipendenti.
+3. **Hardware AS BUILT confermato dall'operatore:** 1) Pin J1.3 GND del PCM1808 collegato direttamente a GND ST-Link; 2) XO già saldato su basetta millefori con condensatore ceramico da 100 nF; 3) MD0 e MD1 con derivazione a Y con una resistenza da 10 kΩ per ciascun ramo verso 3,3 V; 4) DS3231 conforme (nessuna batteria CR2032 non ricaricabile inserita).
+4. **Inserimento Gate H01 nella roadmap:** Ricognizione e stabilizzazione hardware delle connessioni (prevenzione distacchi accidentali Dupont) tra FASE 5 e FASE 6.
+5. **Requisiti residui aperti e stato di FASE 5:** FASE 5 NON ANCORA FORMALMENTE CHIUSA. Continuous 64-bit sample counter e recovery attiva overflow/errori rimangono aperti e non completati. FASE 6 rigorosamente NON INIZIATA e NON AUTORIZZATA.
+6. **Requisito futuro di telemetria firmware registrato:** Inserimento nelle future versioni firmware di Boot ID univoco, Test ID progressivo e contatore di uptime (ms/s) per distinguere formalmente ritrasmissioni e riavvii.
 
 ## Note di Rettifica R3.1 (18/11/2026)
 La presente revisione candidata R3.1 recepisce integralmente e puntualmente le 5 osservazioni emerse dalla revisione indipendente di CHAT OVERVIEW (`TICKFORM_R3_REVIEW_INDIPENDENTE_20261118.md`):
@@ -111,13 +120,13 @@ L'architettura hardware e firmware di TICKFORM è strutturata in stadi funzional
 
 ### 3.1. Distinzione fondamentale: AS PURCHASED vs AS BUILT
 - **BOM AS PURCHASED:** Elenco dei componenti acquistati per il progetto (ordini TME, Amazon, AliExpress). Tutti i lotti risultano formalmente consegnati e ispezionati visivamente in FASE 0 ([`bom/V0.0_AS_PURCHASED.md`](../bom/V0.0_AS_PURCHASED.md)). La disponibilità d'acquisto non attesta automaticamente la funzionalità del componente nel circuito.
-- **Hardware AS BUILT (Banco Sperimentale Reale):** Il circuito effettivamente assemblato e operante sul banco sperimentale di FASE 5, che comprende:
+- **Hardware AS BUILT (Banco Sperimentale Reale — Aggiornato alle conferme dell'operatore del 20/11/2026):** Il circuito effettivamente assemblato e operante sul banco sperimentale di FASE 5, che comprende:
   - WeAct Studio STM32G431 Core Board alimentata da porta USB-C del PC.
-  - Oscillatore attivo XO DIP-14 a 24,576 MHz alimentato a 3,3 V con condensatore di bypass ceramico da 100 nF.
-  - Modulo breakout PCM1808 (esemplare C) alimentato a 5 V (analogico) e 3,3 V (digitale).
-  - Resistenze di pull-up su MD0 e MD1 per la modalità Master 96 kHz. *Attenzione:* nello schema KiCad R0.1 sono documentate come due resistenze assiali da 10 kΩ; sul banco fisico AS BUILT l'operatore ha impiegato una derivazione volante a Y e le resistenze non sono state misurate con multimetro (livello HIGH confermato operativamente).
-  - Connessioni I²S volanti tramite cavetti jumper Dupont verso i pin PB12, PB13 e PB15 della WeAct.
-  - Modulo RTC Maxim DS3231 con batteria non inserita (pericolo di sovraccarica della rete D2+R4 per batterie CR2032 non ricaricabili), collegato via I2C1 (PA15/PB7) e pin SQW.
+  - Oscillatore attivo XO DIP-14 a 24,576 MHz alimentato a 3,3 V: **confermato già saldato su basetta millefori/perfboard con condensatore di disaccoppiamento ceramico da 100 nF presente**.
+  - Modulo breakout PCM1808 (esemplare C) alimentato a 5 V (analogico) e 3,3 V (digitale). **Confermato pin J1.3 GND del breakout PCM1808 collegato direttamente al GND dello ST-Link V2**.
+  - Resistenze di pull-up su MD0 e MD1 per la modalità Master 96 kHz: **l'operatore ha confermato la configurazione fisica della derivazione a Y con una resistenza da 10 kΩ per ciascun ramo verso 3,3 V**, coerente con lo schema KiCad (conferma della configurazione fisica riferita dall'operatore con livello logico HIGH confermato operativamente; non costituisce misurazione ohmica strumentale indipendente, demandata alla verifica del Gate H01).
+  - Connessioni I²S volanti tramite cavetti jumper Dupont verso i pin PB12 (WS), PB13 (CK) e PB15 (SD) della WeAct.
+  - Modulo RTC Maxim DS3231 con batteria non inserita (pericolo di sovraccarica della rete D2+R4 per batterie CR2032 non ricaricabili), collegato via I2C1 (PA15/PB7) e pin SQW su PA1.
 
 ### 3.2. Riepilogo componenti chiave e stato di validazione
 | Sottosistema | Componente Specifico | Ruolo | Stato di Validazione a Banco |
@@ -239,8 +248,9 @@ La roadmap originaria del progetto TICKFORM si articola in 11 milestone sequenzi
 | **FASE 2** | **DS3231 Standalone Bring-up:** Comunicazione I2C1 (PA15/PB7) e onda quadra SQW 1 Hz. | **COMPLETA** | Commit `0b45ffa`. |
 | **FASE 3** | **XO Standalone Bring-up:** Alimentazione 3,3 V e conteggio fronti 24,576 MHz via TIM2_ETR (PA0). | **COMPLETA** | Commit `d95845e`. |
 | **FASE 4** | **PCM1808 C Clock Bring-up:** Clock Master 96 kHz convalidato strumentalmente, CAD KiCad R0.1. | **COMPLETA** | Commit `e857849`. (Modulo B guasto; causa SCONOSCIUTA). |
-| **FASE 5** | **PCM1808 → STM32 (I²S2 Slave DMA):** Ricezione hardware I²S2 su PB12/13/15, DMA circolare, diagnostica interna F5-D03 convalidata. | **QUALIFICA HW COMPLETATA** | Run regolari F5-D03 (3750 CB, 0 err). **Pendente collaudo F5-A02-R2.1 con log.** |
-| **FASE 6** | **RAW Streaming → PC Host:** Trasferimento continuo campioni grezzi su USB e archiviazione loss-less. | **NON INIZIATA — NON AUTORIZZATA** | Bloccata in attesa della chiusura formale di FASE 5. |
+| **FASE 5** | **PCM1808 → STM32 (I²S2 Slave DMA):** Ricezione hardware I²S2 su PB12/13/15, DMA circolare, collaudo firmware normale F5-A02-R2.1 completato. | **QUALIFICA NOMINALE COMPLETATA** | 3 prove nominali positive (F5-N01-R1 3751 CB, F5-N02-R1 3751 CB, F5-N03 3750 CB; 0 err DMA/OVR; log archiviati in `docs/evidenze_f5_n01_n03/`). **Fase formalmente non chiusa** (requisiti 64-bit e recovery aperti). |
+| **GATE H01** | **Ricognizione e Stabilizzazione Hardware:** Ricognizione AS BUILT e fissaggio meccanico cablaggi (prevenzione distacchi Dupont tipo F5-N01). | **APERTO / NEXT** | Pre-requisito tassativo di stabilità prima dell'autorizzazione a FASE 6. |
+| **FASE 6** | **RAW Streaming → PC Host:** Trasferimento continuo campioni grezzi su USB e archiviazione loss-less. | **NON INIZIATA — NON AUTORIZZATA** | Bloccata in attesa del superamento di Gate H01 e chiusura formale di FASE 5. |
 | **FASE 7** | **Metrologia di Frequenza (Clock Tracking):** Misura continua fronti BCK tra impulsi 1 Hz del DS3231 (TIM2 capture). | **NON INIZIATA** | Subordinata a FASE 6. |
 | **FASE 8** | **Stadio Analogico AFE:** Caratterizzazione guadagno, rumore e clipping dell'MCP6022. | **NON INIZIATA** | Subordinata a FASE 7. |
 | **FASE 9** | **Piezo + Orologio Meccanico:** Acquisizione del primo segnale reale di ticchettio da orologio. | **NON INIZIATA** | Subordinata a FASE 8. |
@@ -306,6 +316,33 @@ Tutti i log originali scambiati nella conversazione sono stati archiviati byte-f
    - Verifica GPIO IDR (1908 kSps): PB12 **1922 transizioni**; PB13 **8139 transizioni**.
    - *Esito:* Secondo test nominale consecutivo perfetto.
 
+### A.1. Collaudo Firmware Normale F5-A02-R2.1 (20 Novembre 2026)
+In data 20/11/2026 è stato eseguito il mandato CHAT OVERVIEW per il collaudo formale del firmware normale operativo `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` (F5-A02-R2.1, 43.756 B, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`).
+
+I tre file di log originali recuperabili scambiati sono archiviati byte-for-byte in [`docs/evidenze_f5_n01_n03/`](./evidenze_f5_n01_n03/) con manifest verificato `MANIFEST_EVIDENZE_F5N01_N03_20261120.txt`:
+
+1. **F5-N01-R1 — Primo Avvio Nominale:**
+   - Eseguito a seguito del ripristino di un connettore Dupont scollegato a banco (il collegamento/pin esatto non è stato identificato nella documentazione trasmessa alla OVERVIEW). Per F5-N01 (FAIL originale al primo boot per tale distacco) e F5-N01-R1 non esistono file di log originali recuperabili sul PC; i relativi esiti provengono direttamente dai rapporti operativi trasmessi dall'operatore alla CHAT OVERVIEW.
+   - Risultato: **PASS**, 3.751 callback DMA (Half=1876, Full=1875), 0 Error CB, 0 OVR, 0 HAL Error.
+2. **F5-N02-R1 — `F5_N02_R1_RESET.txt` (46.725 byte, SHA-256 `17E4C6CF...`):**
+   - Eseguito dopo pressione del tasto RESET NRST sulla WeAct Core Board.
+   - Durata: 10000 ms.
+   - DMA Total Callbacks: **3751** (Half=1876, Full=1875, diff=1).
+   - Throughput: 768.204 B/s (nominale 768.000 B/s).
+   - Error CB = 0, Overrun(OVR) = 0, HAL Error = 0x00000000, DMA Stalled = NO.
+   - Campioni RAW: F0: L=501, R=445; F1: L=277, R=533; F2: L=661, R=549; F3: L=237, R=396.
+   - Esito e validazione: **PASS: DMA RX ~96 kHz FUNCTIONAL (rate entro +/-2%)**. Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03 (e nel precedente run F5-N02, `F5_N02_RESET.txt`, 10.552 byte, SHA-256 `AFF52837...`). Il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati.
+3. **F5-N03 — `F5_N03_POWER_CYCLE.txt` (15.828 byte, SHA-256 `CED1DC13...`):**
+   - Eseguito dopo disconnessione e riconnessione del cavo USB-C di alimentazione WeAct.
+   - Durata: 10000 ms.
+   - DMA Total Callbacks: **3750** (Half=1875, Full=1875, bilanciamento perfetto diff=0).
+   - Throughput: 768.000 B/s (nominale 768.000 B/s).
+   - Error CB = 0, Overrun(OVR) = 0, HAL Error = 0x00000000, DMA Stalled = NO.
+   - Esito: **PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)**.
+
+**Nota di metodo sulle ritrasmissioni USB CDC:**
+Le molteplici sezioni ripetute nei file (8 in N02, 35 in N02_R1, 12 in N03) sono re-trasmissioni automatiche generate dal firmware ogni 5000 ms nello stato `TEST_STATE_COMPLETED` per consentire l'aggancio del terminale seriale; non rappresentano sessioni di test distinte o ripetute.
+
 ### B. Dichiarazioni dell'Operatore Non Accompagnate da Log Archiviati
 A seguito delle prove sopra documentate, l'operatore di banco ha eseguito un intervento manuale di riposizionamento dei collegamenti fisici:
 1. **Intervento fisico:** Riposizionamento e pressione meccanica complessiva dei contatti breadboard, dei cavetti Dupont e dei morsetti Wago.
@@ -328,16 +365,15 @@ A seguito delle prove sopra documentate, l'operatore di banco ha eseguito un int
 
 ### 9.1. Prossimi passi formalmente approvati
 1. **Collaudo formale del firmware normale operativo F5-A02-R2.1 (GAP-V-01):**
-   - Programmare sulla STM32 il binario approvato `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` (SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`).
-   - Eseguire una prova di ricezione DMA di 10 secondi sul banco attualmente funzionante.
-   - Salvare il log formale del terminale seriale nel repository per certificare il firmware normale.
+   - **COMPLETATO con esito positivo (20/11/2026):** Programmazione di `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` (SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`). Convalidate 3 acquisizioni nominali da 10s (F5-N01-R1, F5-N02-R1, F5-N03; 3750-3751 CB, 0 errori). Log archiviati in `docs/evidenze_f5_n01_n03/`.
 2. **Rilievo e documentazione hardware AS BUILT (GAP-V-02):**
-   - Eseguire fotografie ad alta risoluzione del banco.
-   - Misurare a circuito spento con multimetro il valore ohmico effettivo delle resistenze di pull-up su MD0 e MD1 per formalizzare la scheda AS BUILT.
-3. **Aggiornamento CAD KiCad (Revisione R0.2, previa autorizzazione):**
-   - Integrare nello schema KiCad i collegamenti I²S su PB12, PB13, PB15 e il modulo DS3231.
-4. **FASE 6 (RAW Streaming su PC):**
-   - Rimane rigorosamente **NON INIZIATA e NON AUTORIZZATA** fino al superamento dei punti 1 e 2.
+   - **CONFERMATO dall'operatore (20/11/2026):** Masse (J1.3 su GND ST-Link), XO saldato su basetta con C bypass 100 nF, Y-split MD0/MD1 con resistenze da 10 kΩ per ramo, modulo DS3231.
+3. **GATE H01 — Ricognizione e Stabilizzazione Hardware (NEXT):**
+   - Ispezione e fissaggio meccanico-elettrico di tutti i cavetti jumper Dupont e morsetti Wago a banco prima di procedere a qualsiasi prova continuativa di lunga durata (prevenzione distacchi accidentali come avvenuto in F5-N01).
+4. **Valutazione e Chiusura Formale di FASE 5:**
+   - La qualifica nominale del firmware normale è completata, ma FASE 5 **non è ancora formalmente chiusa**: restano aperti i requisiti originali di continuous 64-bit sample counter e recovery attiva post-overflow/errori, da trattare formalmente con CHAT OVERVIEW.
+5. **FASE 6 (RAW Streaming su PC):**
+   - Rimane rigorosamente **NON INIZIATA e NON AUTORIZZATA** fino al superamento formale del Gate H01 e alla chiusura di FASE 5.
 
 ---
 
@@ -364,16 +400,19 @@ A seguito delle prove sopra documentate, l'operatore di banco ha eseguito un int
 6. **Silent Drop USB CDC in F5-D02:** Causa: Buffer `tx_buffer[1536]` rifiutava report da ~2900 byte. Risolto segmentando il report in parti < 1000 byte con pacing di 10 ms.
 7. **Inversione etichette I2SE e I2SMOD in F5-D02-R2:** Causa: Bit 10 etichettato come MOD e bit 11 come I2SE. Risolto in F5-D03 (bit 10 = I2SE, bit 11 = I2SMOD).
 8. **Stallo hardware del banco durante i primi test di FASE 5 (17/11/2026):** Causa: Mancato contatto elettrico su linee volatili della breadboard (identificato da PB12/13 fissi a HIGH nel run 1 e a LOW nel run 3). Risolto riposizionando e ripremendo i collegamenti fisici a banco. *Nota:* Il singolo contatto specifico non è stato isolato.
+9. **Ritrovamento connettore DuPont scollegato durante F5-N01 (20/11/2026):** Causa: distacco accidentale di un connettore DuPont a banco prima del primo run (0 callback). L'operatore ha confermato il ritrovamento di un connettore Dupont scollegato e il successivo ripristino del funzionamento; il collegamento/pin esatto non è stato identificato nella documentazione trasmessa alla OVERVIEW. Risolto: ripristino del contatto a banco; i successivi test F5-N01-R1, F5-N02-R1 e F5-N03 hanno confermato il ripristino del funzionamento (3750–3751 CB, 0 err). *Lezione:* I collegamenti volanti a banco sono vulnerabili e richiedono ricognizione e stabilizzazione formale prima di FASE 6 (Gate H01).
 
 ---
 
 ## 12. Problemi Aperti, Blocchi Noti e Rischi Tecnici
 
-1. **Collaudo del firmware normale operativo F5-A02-R2.1 pendente:** Il binario `tickform_phase5_i2s_rx.bin` non è mai stato collaudato con i clock attivi (le prove positive del 17/11/2026 hanno eseguito esclusivamente il firmware diagnostico). È prioritario eseguire questo collaudo e archiviarne il log.
-2. **Certificazione della conversione audio reale da PCM1808 C:** Non ancora verificata funzionalmente (LIN/RIN lasciati flottanti; AFE non connesso).
+1. **Gate H01 — Ricognizione e Stabilizzazione Hardware a Banco (PRIORITÀ IMMEDIATA):** Dopo il successo della qualifica nominale del firmware normale F5-A02-R2.1 (F5-N01..N03), la FASE 5 non è ancora formalmente chiusa e la FASE 6 NON è autorizzata. Prima di procedere, è necessario verificare e consolidare tutti i collegamenti a banco (jumper DuPont, alimentazioni, masse, partitori MD0/MD1, fissaggi meccanici) per eliminare la vulnerabilità riscontrata in F5-N01.
+2. **Certificazione della conversione audio reale da PCM1808 C:** Non ancora verificata funzionalmente (LIN/RIN lasciati flottanti; AFE non connesso). Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03. Il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati.
 3. **Causa del guasto della scheda PCM1808 B:** Permane non accertata (SCONOSCIUTA).
 4. **Circuito di carica DS3231:** Divieto tassativo di inserire batterie CR2032 non ricaricabili per la presenza della rete D2 + R4 (200 Ω).
 5. **Vulnerabilità meccanica dei cablaggi jumper:** I collegamenti volanti su breadboard rimangono sensibili a vibrazioni e falsi contatti.
+6. **Requisiti firmware residui FASE 5 (Contatore continuo 64-bit e Gestione Overflow/Errori):** Come stabilito dai criteri di accettazione storici (`BRINGUP_CHECKLIST.md` e `RAW_FORMAT_V0_1.md`), sono previsti un contatore continuo a 64 bit dei campioni e una politica attiva di recupero/resincronizzazione da overflow/errori. Attualmente il firmware implementa conteggio callback su finestra temporale e rilevamento/conteggio degli errori OVR/UDR/DMA, ma senza recovery automatico. Tali requisiti rimangono aperti e motivano il mantenimento della FASE 5 non formalmente chiusa.
+7. **Requisito futuro di telemetria (Boot ID, Test ID progressivo, Uptime):** La telemetria USB CDC ripete periodicamente l'ultimo report a test completato (ogni 5 s). Per distinguere con certezza nei log le ripetizioni passive dai riavvii hardware o esecuzioni successive, è necessario integrare nei futuri report di telemetria: Boot ID (identificativo univoco del ciclo di accensione), Test ID progressivo (contatore incrementale dell'acquisizione) e Uptime (tempo di accensione in millisecondi o secondi).
 
 ---
 
@@ -381,7 +420,10 @@ A seguito delle prove sopra documentate, l'operatore di banco ha eseguito un int
 
 ### 13.1. Cronologia dei commit Git consolidati
 ```text
-* e857849 (HEAD -> main, origin/main) docs(hardware): checkpoint PCM1808 C 96kHz bring-up and KiCad schematic (13/11/2026)
+* 7d71430 (HEAD -> main, origin/main) docs: prepare repository for GitHub publication (18/11/2026)
+* ee89c29 docs: consolidate documentation R3.1 and evidence (18/11/2026)
+* 2cb3de5 chore: complete project safety backup and pre-consolidation tag (18/11/2026)
+* e857849 docs(hardware): checkpoint PCM1808 C 96kHz bring-up and KiCad schematic (13/11/2026)
 * d95845e feat: validate XO standalone bringup (05/10/2026)
 * 0b45ffa feat: validate DS3231 standalone bringup (27/09/2026)
 * b39939e feat: complete STM32 standalone bringup (26/09/2026)
@@ -405,7 +447,7 @@ eq$ firmware collaudato.*
 | **15/11/2026** | `tickform_phase5_i2s_rx` (F5-A02-R2.1) | `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` | 43.756 B | `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465` | Mandato F5-A02-R2 | ST-Link CLI log F5-A02-T01 | **COLLAUDO ANOMALO (0 CB):** Flash eseguito a `0x08000000`, 0 callback in 10s per stallo hardware dei clock a banco. |
 | **16/11/2026** | `tickform_phase5_diag` (F5-D02-R2) | `firmware/stm32g431/build/diag/tickform_phase5_diag.bin` (D02) | 47.404 B | `D42E1CBC484CD5D1E0F100302BE18DAEC3571F3CE5E2A1CE9CED0D23AA71A11C` | Mandato F5-D02-R2 | Report F5-D02-R2 | **COLLAUDATO:** CNDTR fermo a 2048, CDC segmentato funzionante. Riscontrata inversione bit etichette. |
 | **17/11/2026** | `tickform_phase5_diag` (F5-D03) | `firmware/stm32g431/build/diag/tickform_phase5_diag.bin` (D03) | 52.308 B | `29786361C8299AE5CEFDA480C97EC100A30616624D8029BAE275F164BA3A43B7` | Mandato F5-D03 | ST-Link log F5-D03-T01; 5 file log Tera Term in `docs/evidenze_f5_d03/` | **COLLAUDATO CON SUCCESSO:** Eseguiti 6 run diagnostici. Run 2, 5A, 5B nominali (3750–3751 CB, 0 err). Presente nei 6 reboot successivi. |
-| **PENDENTE** | `tickform_phase5_i2s_rx` (F5-A02-R2.1) | `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` | 43.756 B | `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465` | In attesa di mandato CHAT OVERVIEW | Non ancora programmato post-ripristino banco | **NON ANCORA COLLAUDATO:** In attesa di autorizzazione per test su target con clock attivi. |
+| **20/11/2026** | `tickform_phase5_i2s_rx` (F5-A02-R2.1) | `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin` | 43.756 B | `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465` | Mandato F5-N01/N02/N03 | ST-Link CLI flash; 3 log Tera Term in `docs/evidenze_f5_n01_n03/` | **COLLAUDATO CON SUCCESSO:** Eseguiti F5-N01-R1 (PASS, 3751 CB, 0 err), F5-N02-R1 (PASS post-RESET, 3751 CB), F5-N03 (PASS post-power cycle, 3750 CB, 0 err). Osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03; contenuto audio, formato e sincronismo non ancora validati. Qualifica nominale superata. |
 
 ---
 

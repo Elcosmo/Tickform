@@ -1,6 +1,6 @@
 # Tickform — Bring-up checklist
 
-Strumento operativo vivo. Stato aggiornato al 2026-11-13: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4/5 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0 completa; FASE 1 COMPLETE (Gate 1/2/3/4 PASS); FASE 2 DS3231 standalone COMPLETE (I2C e SQW 1 Hz verificati); FASE 3 XO standalone COMPLETE (power-up 3.3 V e conteggio fronti PASS); **FASE 4 PCM1808 C clock bring-up COMPLETE (Gate LRCK 96 kHz PASS, CAD KiCad R0.1 APPROVATO)**. FASE 5 PCM1808 → STM32 NEXT.
+Strumento operativo vivo. Stato aggiornato al 2026-11-20: le voci spuntate attestano gli esiti consolidati della receiving inspection e dei Gate 1/2/3/4/5/6/7 riportati nel PROJECT_LOG. Spuntare solo con evidenza reale, data e riferimento al test; disponibilità dichiarata e acquisto non dimostrano ricezione o funzionamento. FASE 0–4 complete; **FASE 5: QUALIFICA NOMINALE FIRMWARE NORMALE COMPLETATA (F5-N01-R1/N02-R1/N03 PASS)**, FASE 5 non ancora formalmente chiusa (requisiti 64-bit e recovery aperti). **GATE H01 (Ricognizione e stabilizzazione cablaggi/hardware) NEXT**. FASE 6 NON INIZIATA e NON AUTORIZZATA.
 
 ## FASE 0 — Receiving inspection
 
@@ -54,14 +54,21 @@ Esiti FASE 4, 12-13/11/2026 (PROJECT_LOG): Breakout C validato operativamente pe
 
 ## FASE 5 — PCM1808 → STM32
 
-- [x] STM32 receives I2S (I²S2 Slave Receiver operativo a 96 kHz stereo su PB12/13/15; verificato in F5-D03)
+- [x] STM32 receives I2S (I²S2 Slave Receiver operativo a 96 kHz stereo su PB12/13/15; verificato in F5-D03 e nei collaudi normali F5-N01-R1/N02-R1/N03)
 - [x] DMA running (DMA1 Channel 1 in modalità circolare; CNDTR monitorato e decrementato nominalmente)
-- [x] DMA stability verified (acquisizioni nominali di 10 secondi convalidate con firmware diagnostico F5-D03 con 3.750–3.751 callback Half/Full; stabilità continuativa di lunga durata e streaming RAW non ancora certificati)
-- [ ] Collaudo formale firmware normale operativo F5-A02-R2.1 (tickform_phase5_i2s_rx.bin approvato crittograficamente; collaudo a banco con clock attivi pendente con log archiviato)
-- [ ] Continuous 64-bit sample counter implemented (struttura dati predisposta a livello firmware, da convalidare operativamente nello streaming continuo)
-- [ ] Overflow/error handling implemented (strumentazione di monitoraggio e reporting errori ed OVR verificata in F5-D03; ripristino e recupero automatico post-anomalia da implementare e collaudare)
+- [x] DMA stability verified (acquisizioni nominali di 10 secondi convalidate con diagnostica F5-D03 e firmware normale F5-N01..N03 con 3.750–3.751 callback Half/Full; stabilità continuativa di lunga durata e streaming RAW non ancora certificati)
+- [x] Collaudo formale firmware normale operativo F5-A02-R2.1 (tickform_phase5_i2s_rx.bin, 43.756 B, SHA-256 04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465; convalidato con 3 prove nominali positive: F5-N01-R1 PASS 3751 CB, F5-N02-R1 PASS 3751 CB, F5-N03 PASS 3750 CB; 0 errori; osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03; contenuto audio, formato e sincronismo non ancora validati; 3 log originali recuperabili archiviati in docs/evidenze_f5_n01_n03/)
+- [ ] Continuous 64-bit sample counter implemented (requisito aperto della baseline originato in BRINGUP_CHECKLIST e RAW_FORMAT_V0_1; non implementato nel firmware FASE 5, previsto contatore monotono continuo a 64 bit a livello di frame nello streaming RAW senza perdita)
+- [ ] Overflow/error handling implemented (requisito aperto della baseline originato in BRINGUP_CHECKLIST; strumentazione diagnostica di monitoraggio OVR ed errori HAL presente, ma policy di recupero attivo e reinizializzazione automatica post-anomalia non implementata)
 
-Esiti FASE 5, 17-18/11/2026 (PROJECT_LOG): Qualifica del trasporto dati hardware I²S2→DMA completata con successo tramite diagnostica F5-D03 su banco con cablaggio ripristinato. Run nominali con 3750-3751 CB in 10s e zero errori durante l'acquisizione. Firmware in esecuzione durante le prove e i sei reboot: tickform_phase5_diag.bin. Collaudo del firmware normale F5-A02-R2.1 identificato come prossimo gate aperto obbligatorio prima della chiusura formale della fase. FASE 6 NON INIZIATA e NON AUTORIZZATA.
+Esiti FASE 5, 20/11/2026 (PROJECT_LOG): Qualifica del firmware normale operativo `tickform_phase5_i2s_rx.bin` (F5-A02-R2.1) completata con 3 collaudi nominali positivi (F5-N01-R1 3751 CB, F5-N02-R1 3751 CB, F5-N03 3750 CB; 0 errori DMA/OVR; osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03; contenuto audio, formato e sincronismo non ancora validati). Preservati i log originali recuperabili con manifest in `docs/evidenze_f5_n01_n03/` (per F5-N01 e F5-N01-R1 gli esiti provengono direttamente dai rapporti operativi trasmessi alla OVERVIEW). FASE 5 NON ANCORA FORMALMENTE CHIUSA per i due requisiti residui aperti (contatore 64 bit e recovery overflow) e in attesa del Gate H01. FASE 6 NON INIZIATA e NON AUTORIZZATA.
+
+## GATE H01 — Ricognizione e Stabilizzazione Hardware (Tra FASE 5 e FASE 6)
+
+- [ ] Stabilizzazione meccanica ed elettrica delle connessioni jumper/Dupont su banco di laboratorio (prevenzione disconnessioni accidentali)
+- [ ] Riconciliazione e rilievo AS BUILT confermato dall'operatore; verifica strumentale ohmica indipendente di MD0/MD1 con multimetro e rilievo fotografico prima di FASE 6
+- [ ] Verifica assenza di contatti intermittenti sotto sollecitazione meccanica prima di autorizzare lo streaming
+- [ ] Approvazione formale OVERVIEW per chiusura FASE 5 e transizione a FASE 6
 
 ## FASE 6 — RAW → PC
 

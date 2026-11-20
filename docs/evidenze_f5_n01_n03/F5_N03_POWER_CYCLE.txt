@@ -1,0 +1,420 @@
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+
+========================================
+TICKFORM FASE 5 - I2S2 RX + DMA TEST
+========================================
+Duration:     10000 ms (nominal 10000 ms)
+Master:       PCM1808 C (96 kHz nominal)
+STM32:        I2S2 Slave RX, Philips 24b/32b frame
+Pins:         PB12=WS (LRCK), PB13=CK (BCK), PB15=SD (DOUT)
+DMA:          DMA1 Ch1 circular, buffer 1024 slots (4096 B)
+DMA Stop:     OK (BUSY_LINE_RX expected, DMA1_Ch1=OFF, RXDMAEN=OFF)
+
+--- CALLS & THROUGHPUT ---
+Half Cplt:    1875 (rate ~187.5/s)
+Full Cplt:    1875 (rate ~187.5/s, balance diff=0)
+Total DMA CB: 3750 (expected: 3750, tol +/-2%: 3675..3825)
+Slots recv:   1920000
+Bytes recv:   7680000
+Throughput:   768000 B/s (nominal 768000 B/s)
+
+--- ERROR MONITORING ---
+Error CB:     0
+Overrun(OVR): 0
+Frame Error (FRE): NON MONITORATO — sincronismo frame non verificato
+HAL Error:    0x00000000
+DMA Stalled:  NO
+
+--- RAW SAMPLES (First 4 frames: MS, LS -> PCM24) ---
+F0: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F1: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F2: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+F3: L=(0x0000,0x0000 -> 0) R=(0x0000,0x0000 -> 0)
+
+--- OVERALL STATUS ---
+PASS: DMA RX ~96 kHz FUNCTIONAL (rate within +/-2%, audio conversion NOT YET validated)
+========================================
+

@@ -243,3 +243,31 @@ Esiti fisici comunicati dalla supervisione e revisione CAD consolidata; nessun i
   - Lo schema KiCad R0.1 è confermato integro e approvato per FASE 4 (ERC 0 errori / 0 avvisi).
   - Si distingue formalmente la prescrizione CAD (due resistenze 10 kΩ R1/R2) dalla realtà del banco fisico AS BUILT (livello logico HIGH confermato, ma valore resistivo e topologia Y non misurati con multimetro).
 - **Prossimi passi:** Collaudo del firmware normale `tickform_phase5_i2s_rx.bin` con archiviazione del log formale; FASE 6 rigorosamente NON INIZIATA e NON AUTORIZZATA.
+
+
+## 2026-11-20 — FASE 5: Collaudo Firmware Normale I²S/DMA (F5-N01..N03), Qualifica Nominale e Preparazione Gate H01
+
+- **Attività svolta:** Esecuzione del mandato di collaudo del firmware normale operativo `tickform_phase5_i2s_rx.bin` (F5-A02-R2.1, 43.756 byte, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`) a 96 kHz Slave I²S2 su STM32G431.
+- **Evidenze sperimentali di laboratorio archiviate:**
+  - Creata la cartella di archiviazione `docs/evidenze_f5_n01_n03/` contenente i file originali salvati durante le prove e il manifest crittografico `MANIFEST_EVIDENZE_F5N01_N03_20261120.txt`:
+    1. `F5_N02_RESET.txt` (10.552 byte, SHA-256 `AFF5283767A8ABB66804951F738B907704E159E40B206DC077939643B99E064E`): Eseguito dopo RESET, 3751 callback DMA, zero errori, campioni grezzi azzerati (F0..F3 = 0x0000 -> 0); classificato come eseguito ma non validabile per conversione audio.
+    2. `F5_N02_R1_RESET.txt` (46.725 byte, SHA-256 `17E4C6CF78B4D21A3107E52AF233377F46CDFD2D78B9048B2859236C76F92890`): PASS dopo RESET; 3751 callback DMA nominali (Half=1876, Full=1875, diff=1), 0 Error CB, 0 OVR, 0 HAL Error. Sono stati osservati valori RAW non nulli in F5-N02-R1 (F0: L=501, R=445; F1: L=277, R=533; F2: L=661, R=549; F3: L=237, R=396) e valori zero in F5-N03; il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati.
+    3. `F5_N03_POWER_CYCLE.txt` (15.828 byte, SHA-256 `CED1DC138CB1CEB3C101277BD32949C7024C46160FE1108D4967188DCEB694C0`): PASS dopo ciclo di spegnimento e riaccensione USB; 3750 callback DMA nominali (Half=1875, Full=1875, bilanciamento perfetto diff=0), 0 Error CB, 0 OVR, 0 HAL Error.
+  - Prove storiche contestuali:
+    - F5-N01: FAIL originale al primo boot per un connettore Dupont scollegato a banco (il collegamento esatto non è stato identificato nella documentazione trasmessa alla OVERVIEW); l'operatore ha confermato il ritrovamento del connettore scollegato e il successivo ripristino del funzionamento. Non esiste un file di log originale recuperabile salvato; l'esito proviene direttamente dai rapporti operativi trasmessi alla OVERVIEW.
+    - F5-N01-R1: PASS (3751 callback DMA, 0 errori) registrato dopo ripristino del connettore Dupont scollegato. Non esiste un file di log originale recuperabile salvato; l'esito proviene direttamente dai rapporti operativi trasmessi alla OVERVIEW.
+- **Nota metodologica sui log CDC:** Le ripetizioni del report all'interno dei file (8 ripetizioni in N02, 35 in N02_R1, 12 in N03) sono ritrasmissioni automatiche generate dal firmware ogni 5000 ms nello stato `TEST_STATE_COMPLETED` per consentire la cattura da terminale seriale; non costituiscono acquisizioni indipendenti.
+- **Riconciliazione Hardware AS BUILT (conferme dell'operatore):**
+  - Pin J1.3 del breakout PCM1808 (GND) collegato direttamente al GND dello ST-Link V2.
+  - Oscillatore attivo XO 24,576 MHz già saldato su basetta millefori/perfboard con condensatore di disaccoppiamento da 100 nF.
+  - Terminali MD0 e MD1: l'operatore ha confermato la configurazione fisica della derivazione a Y con una resistenza da 10 kΩ per ciascun ramo verso 3,3 V, coerente con lo schema KiCad (conferma della configurazione fisica riferita dall'operatore con livello HIGH confermato operativamente; non costituisce misurazione ohmica strumentale indipendente, demandata alla verifica del Gate H01).
+  - Modulo DS3231 conforme alla documentazione precedente (connessione I2C1 su PA15/PB7, SQW su PA1, nessuna batteria CR2032 non ricaricabile inserita).
+- **Esame dei criteri e requisiti ancora aperti di FASE 5:**
+  - `Continuous 64-bit sample counter`: Requisito aperto della baseline (originato in `BRINGUP_CHECKLIST.md` e `RAW_FORMAT_V0_1.md`). Il firmware attuale calcola contatori `uint32_t` su finestra di 10s; un contatore monotono continuo a 64 bit a livello di frame stereo per lo streaming loss-less appartiene alla FASE 6. Rimane non spuntato (`[ ]`).
+  - `Overflow/error handling`: Requisito aperto della baseline. Il firmware attuale rileva e conta gli errori e gli overrun (0 riscontrati nei test nominali), ma non implementa una policy di ripristino, recupero o risincronizzazione automatica del flusso. Rimane non spuntato (`[ ]`).
+- **Decisione CHAT OVERVIEW:**
+  - Qualifica nominale del firmware normale completata con successo.
+  - **FASE 5 NON ANCORA FORMALMENTE CHIUSA** in attesa del soddisfacimento dei requisiti e dei gate di transizione.
+  - **Inserimento nella roadmap del Gate H01:** Ricognizione e stabilizzazione meccanico-elettrica dei collegamenti hardware (prevenzione distacchi Dupont) prima di qualsiasi autorizzazione per la FASE 6.
+  - **FASE 6:** Rigorosamente **NON INIZIATA e NON AUTORIZZATA**.
+  - **Requisito futuro di telemetria firmware:** Registrata la necessità di inserire nelle future revisioni firmware Boot ID univoco, Test ID progressivo e contatore di uptime (ms/s) per distinguere formalmente ritrasmissioni e riavvii.

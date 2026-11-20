@@ -1,0 +1,17 @@
+TICKFORM — LOG COLLAUDO FIRMWARE NORMALE F5-N01/N02/N03
+Data acquisizione: 20 novembre 2026
+Firmware testato: tickform_phase5_i2s_rx.bin (SHA-256 04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465)
+Nota di metodo: I rapporti CDC duplicati all’interno di ogni file sono ritrasmissioni periodiche automatiche (ogni 5000 ms in TEST_STATE_COMPLETED); non equivalgono a prove o acquisizioni indipendenti.
+Evidenze non presenti su file di log separato: Per F5-N01 (FAIL originale al primo boot per connettore Dupont scollegato; collegamento esatto non identificato nella documentazione) e F5-N01-R1 (PASS dopo ripristino del contatto) non esistono file di log originali recuperabili sul PC; gli esiti provengono direttamente dai rapporti operativi trasmessi dall'operatore alla CHAT OVERVIEW.
+
+F5_N02_RESET.txt
+  byte=10552
+  sha256=AFF5283767A8ABB66804951F738B907704E159E40B206DC077939643B99E064E
+
+F5_N02_R1_RESET.txt
+  byte=46725
+  sha256=17E4C6CF78B4D21A3107E52AF233377F46CDFD2D78B9048B2859236C76F92890
+
+F5_N03_POWER_CYCLE.txt
+  byte=15828
+  sha256=CED1DC138CB1CEB3C101277BD32949C7024C46160FE1108D4967188DCEB694C0

@@ -2,7 +2,7 @@
 
 > **Documento di avvio e continuità del progetto — da mantenere nel repository Git.**
 >
-> Ultimo aggiornamento del contenuto: **18 novembre 2026**, dopo il consolidamento C01 (secondo il rapporto operativo e la verifica conclusiva trasmessi da Antigravity).
+> Ultimo aggiornamento del contenuto: **20 novembre 2026**, dopo il collaudo nominale del firmware normale I²S/DMA (F5-N01/N02/N03), la qualifica nominale di FASE 5 e l'introduzione del Gate H01.
 >
 > **ATTENZIONE:** questo documento è una porta d'ingresso e una fotografia datata, non sostituisce sorgenti, log, decisioni e documenti canonici. Se un dato cambia, aggiornarlo e registrare la fonte. Non scambiare il contenuto locale per contenuto già pubblicato su GitHub.
 
@@ -27,33 +27,47 @@ Architettura prevista: **piezo 27 mm → AFE MCP6022 → PCM1808 C stereo 24 bit
 
 Hardware digitale attuale documentato: PCM1808 C master clock audio, STM32G431 ricevitore I²S2, `PB12=LRCK/WS`, `PB13=BCK/CK` (6,144 MHz nominali), `PB15=DOUT/SD`; DMA1 Channel 1, DMAMUX request 12. XO da 24,576 MHz; LRCK 96 kHz nominali. Lo schema KiCad R0.1 documenta principalmente FASE 4 e **non** rappresenta l'intero AS BUILT della FASE 5.
 
+**Conferme Hardware AS BUILT dall'operatore (20 novembre 2026):**
+- **Masse:** Pin J1.3 GND del breakout PCM1808 collegato direttamente al GND dello ST-Link V2.
+- **Oscillatore:** XO attivo 24,576 MHz saldato stabilmente su basetta millefori/perfboard con condensatore ceramico di disaccoppiamento locale da 100 nF.
+- **Modalità Master:** Terminali MD0 e MD1 collegati tramite derivazione a Y con una resistenza da 10 kΩ per ciascun ramo a 3,3 V (livello logico HIGH confermato operativamente).
+- **RTC DS3231:** Conforme alla documentazione precedente (I2C1 su PA15/PB7, SQW su PA1, nessuna batteria CR2032 non ricaricabile inserita).
+
 ## 3. Stato del progetto alla data di aggiornamento
 
-Roadmap storica: **M0 → FASE 0 → FASE 1 → FASE 2 → FASE 3 → FASE 4 → FASE 5 → FASE 6 → FASE 7 → FASE 8 → FASE 9 → FASE 10**. Consultare la roadmap canonica per definizioni e criteri originali: questa sezione è soltanto un riassunto.
+Roadmap storica: **M0 → FASE 0 → FASE 1 → FASE 2 → FASE 3 → FASE 4 → FASE 5 → GATE H01 → FASE 6 → FASE 7 → FASE 8 → FASE 9 → FASE 10**. Consultare la roadmap canonica per definizioni e criteri originali: questa sezione è soltanto un riassunto.
 
 - **FASE 0–4:** bring-up di scheda, RTC/clock e PCM1808 già documentato; KiCad fase 4 R0.1 approvato, non ancora aggiornato per tutti i collegamenti.
-- **FASE 5:** ricezione I²S2/DMA dimostrata con firmware **diagnostico**, ma **fase formalmente non chiusa**. Manca la prova in condizioni regolari del firmware operativo standard con log conservato.
+- **FASE 5:** ricezione I²S2/DMA qualificata positivamente sia con firmware diagnostico (F5-D03) sia con firmware normale operativo (F5-N01..N03), **ma fase formalmente non ancora chiusa**. Restano aperti i requisiti di contatore continuo a 64 bit e recupero attivo dagli errori, nonché la conversione audio con segnale acustico reale (AFE).
+- **GATE H01 (Ricognizione e stabilizzazione hardware):** inserito nella roadmap come gate obbligatorio intermedio per verificare e stabilizzare le connessioni meccaniche ed elettriche (prevenzione distacchi Dupont) prima di autorizzare la FASE 6.
 - **FASE 6, streaming RAW USB al PC:** **NON INIZIATA, NON AUTORIZZATA**.
 - **FASE 7–10:** attività successive della roadmap, non dichiararle completate.
 
-### Evidenze F5-D03 del 17 novembre 2026
+### Evidenze FASE 5 del 20 novembre 2026 (Collaudo Firmware Normale F5-N01/N02/N03)
 
-Firmware effettivamente flashato secondo cronologia e conferma dell'operatore: **`tickform_phase5_diag.bin`**, SHA-256 prescritto `29786361C8299AE5CEFDA480C97EC100A30616624D8029BAE275F164BA3A43B7`.
+Firmware normale flashato e collaudato con successo al primo tentativo: **`firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin`** (F5-A02-R2.1), dimensione verificata **43.756 byte**, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`.
 
-Sono archiviati **5 file originali Tera Term**, contenenti **6 run diagnostici distinti** (le ritrasmissioni CDC identiche non sono nuovi test): **3 regolari** (3750–3751 callback DMA / 10 s; IRQ SPI2 0, error callback HAL 0, OVR 0) e **3 anomali** (DMA fermo o incompleto e/o tempeste di IRQ SPI2). Dopo aver ripremuto i collegamenti provvisori, l'operatore riferisce **3 RESET + 3 cicli USB senza blocco finale del LED blu**; **non** sono conservati sei log numerici indipendenti. La causa fisica dell'intermittenza **non è isolata**.
+Risultati delle prove nominali di 10 secondi:
+1. **F5-N01-R1 (Primo Avvio nominale):** PASS, 3.751 callback DMA, zero errori, convalidato dopo il ritrovamento di un connettore Dupont scollegato a banco e il successivo ripristino del funzionamento (il collegamento/pin esatto non è stato identificato nella documentazione trasmessa alla OVERVIEW). Per F5-N01 (FAIL originale al primo boot per tale distacco) e F5-N01-R1 non esistono file di log originali recuperabili sul PC; gli esiti provengono direttamente dai rapporti operativi trasmessi alla OVERVIEW.
+2. **F5-N02-R1 (RESET WeAct):** PASS, 3.751 callback DMA (Half=1876, Full=1875), zero Error CB, zero OVR (`F5_N02_R1_RESET.txt`, 46.725 byte, SHA-256 `17E4C6CF...`). Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03 (e nella precedente esecuzione F5-N02, `F5_N02_RESET.txt`, 10.552 byte, SHA-256 `AFF52837...`). Il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati.
+3. **F5-N03 (Power-cycle USB):** PASS dopo ciclo di spegnimento e riaccensione del cavo USB, 3.750 callback DMA (Half=1875, Full=1875, bilanciamento diff=0), zero errori (`F5_N03_POWER_CYCLE.txt`, 15.828 byte, SHA-256 `CED1DC13...`).
 
-Il test software GPIO IDR a circa 1,9–2,1 MSps è eseguito **dopo lo stop del DMA**. Il campionamento di BCK a 6,144 MHz è sotto Nyquist: zero toggle campionati su PB13 **non** provano assenza fisica del clock. Il Run 1 ha un delta CNDTR di **296 trasferimenti da 16 bit = 592 byte** (non 296 byte).
+**Archiviazione e limiti dei log:**
+- Tutti i file di log originali sono archiviati in [`docs/evidenze_f5_n01_n03/`](docs/evidenze_f5_n01_n03/) con manifest crittografico SHA-256 (`MANIFEST_EVIDENZE_F5N01_N03_20261120.txt`).
+- **Nota metodologica sui log CDC:** Le ripetizioni del report seriale (8 in N02, 35 in N02_R1, 12 in N03) sono ritrasmissioni automatiche periodiche (ogni 5000 ms in `TEST_STATE_COMPLETED`), non nuove acquisizioni indipendenti.
+- **Requisito futuro di telemetria firmware registrato:** Inserire nelle future versioni firmware un Boot ID univoco, un Test ID progressivo e un contatore di uptime (ms/s) per distinguere formalmente ritrasmissioni e riavvii.
 
-Lo stop diagnostico può stampare `Status=1 ErrorCode=0x40 StopOK=SI`: secondo l'analisi del driver ST HAL utilizzato, il ramo Slave RX imposta `HAL_I2S_ERROR_BUSY_LINE_RX` senza effettuare nel ramo considerato una misura esplicita della continuità del clock. `StopOK` verifica la disabilitazione DMA e RXDMAEN, non ogni registro della periferica. Non confondere questo evento di stop con errori verificatisi durante i 10 secondi di acquisizione.
+### Evidenze F5-D03 del 17 novembre 2026 (Firmware Diagnostico)
 
-Il firmware **normale**, `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin`, è riportato come **43.756 byte**, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`; **non risulta ancora provato dopo il ripristino dei collegamenti**. Qualsiasi programmazione futura richiede mandato separato e verifica SHA sul file reale.
+Firmware flashato per le prove diagnostiche preliminari: **`tickform_phase5_diag.bin`**, SHA-256 `29786361C8299AE5CEFDA480C97EC100A30616624D8029BAE275F164BA3A43B7`.
 
-### Rischi residui
+Archiviati in [`docs/evidenze_f5_d03/`](docs/evidenze_f5_d03/) **5 file originali Tera Term** con **6 run diagnostici distinti** (3 regolari a 3750–3751 CB e 3 anomali con DMA fermo o tempeste di interrupt SPI2 prima del risistemamento dei contatti). Run 1 con delta CNDTR di 296 trasferimenti a 16 bit = **592 byte**.
 
-- Cablaggio temporaneo suscettibile di falsi contatti, causa esatta non dimostrata.
-- Misure fisiche AS BUILT, incluse le pull-up MD0/MD1, non completamente documentate; i 10 kΩ disegnati in KiCad R0.1 non equivalgono automaticamente a una misura del banco.
-- Recupero automatico dagli errori non validato; non dichiararlo completato sulla base del monitoraggio diagnostico.
-- Segnale audio analogico reale, sensore e AFE non ancora validati dall'esito F5-D03.
+### Rischi residui e requisiti ancora aperti
+
+- **Vulnerabilità meccanica cablaggio:** Connessioni volanti su breadboard soggette a disconnessioni accidentali (come evidenziato dal FAIL di F5-N01). Il superamento del **Gate H01** è propedeutico a qualsiasi attività di streaming continuativo.
+- **Requisiti ancora aperti di FASE 5:** Continuous 64-bit sample counter (previsto contatore continuo a livello di frame nello streaming senza perdita) e policy di recupero attivo post-overflow/errori non implementati nel firmware attuale; rimangono non completati.
+- **Conversione audio e campioni RAW:** Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03. Il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati; segnale analogico reale, microfono piezo e stadio AFE non sono ancora connessi.
 
 ## 4. Gerarchia delle fonti nel repository
 
@@ -68,35 +82,34 @@ Leggere prioritariamente, in quest'ordine:
 5. [`docs/CHAT_HANDOFF.md`](docs/CHAT_HANDOFF.md) — contesto operativo breve.
 6. [`docs/bringup/BRINGUP_CHECKLIST.md`](docs/bringup/BRINGUP_CHECKLIST.md) — gate test e spunte con evidenze.
 7. [`docs/decisions/`](docs/decisions/) — decisioni architetturali (ADR), secondo nomi e percorsi reali.
-8. [`docs/evidenze_f5_d03/`](docs/evidenze_f5_d03/) — log F5-D03 originali + manifest SHA-256.
-9. [`docs/TICKFORM_DOCUMENTATION_AUDIT.md`](docs/TICKFORM_DOCUMENTATION_AUDIT.md), rapporti Git/KiCad e gap register — storia delle verifiche e limiti.
-10. Sorgenti in [`firmware/stm32g431/`](firmware/stm32g431/) e schema [`hardware/v0_perfboard/schematic/phase4_pcm1808c/`](hardware/v0_perfboard/schematic/phase4_pcm1808c/) — evidenza primaria per ciò che codice e CAD contengono realmente.
-11. [`docs/TICKFORM_CONSOLIDATION_C01_REPORT.md`](docs/TICKFORM_CONSOLIDATION_C01_REPORT.md) — rapporto di consolidamento C01 e chiusura verifiche.
+8. [`docs/evidenze_f5_d03/`](docs/evidenze_f5_d03/) — log F5-D03 originali (firmware diagnostico) + manifest SHA-256.
+9. [`docs/evidenze_f5_n01_n03/`](docs/evidenze_f5_n01_n03/) — log collaudo firmware normale F5-N01/N02/N03 + manifest SHA-256.
+10. [`docs/TICKFORM_DOCUMENTATION_AUDIT.md`](docs/TICKFORM_DOCUMENTATION_AUDIT.md), rapporti Git/KiCad e gap register — storia delle verifiche e limiti.
+11. Sorgenti in [`firmware/stm32g431/`](firmware/stm32g431/) e schema [`hardware/v0_perfboard/schematic/phase4_pcm1808c/`](hardware/v0_perfboard/schematic/phase4_pcm1808c/) — evidenza primaria per ciò che codice e CAD contengono realmente.
+12. [`docs/TICKFORM_CONSOLIDATION_C01_REPORT.md`](docs/TICKFORM_CONSOLIDATION_C01_REPORT.md) — rapporto di consolidamento C01 e chiusura verifiche.
 
 In caso di conflitto: **sorgenti / log originali / file reali e loro hash**, quindi decisioni formali e documenti canonici aggiornati; una chat o un riepilogo storico possono sbagliare. Non trattare un risultato sperimentale come prova di caratteristiche non testate.
 
-## 5. Git e backup — fotografia del 18 novembre 2026
+## 5. Git, repository remoto e backup — fotografia del 20 novembre 2026
 
-Secondo il rapporto e la verifica conclusiva C01 di Antigravity, sul branch **`main` locale**:
+Secondo le operazioni C01, C02, C03 e il mandato F5-CLOSEOUT-DOC:
 
-- Baseline pre-C01: `e857849debbc54e655a8a87a88c07a2ee0386d43`.
-- Commit firmware FASE 5: `2cb3de5ea65d2329483839912765740a7b0d967d`.
-- Commit documentazione + evidenze: `ee89c2916e2fff2e09a29fef426ed805c41365d2`.
-- Commit consolidamento PROMPT e chiusura C01: da eseguire (questo documento + report C01).
-- **Nessun push verso GitHub eseguito** alla data dell'ultimo rapporto: non presumere che i commit siano visibili sul remoto.
-- Snapshot integrale **pre-commit C01** e Git bundle pre/post commit sono stati preparati e verificati sui dischi fisicamente distinti **B:** (SSD TSA 480GB) e **D:** (HDD WD 160GB); non confondere snapshot iniziale, bundle Git e un backup di file creati dopo.
-- **Chiusura documentale C01:** `docs/TICKFORM_CONSOLIDATION_C01_REPORT.md` (inizialmente untracked) viene integrato nel repository assieme a questo `PROMPT.md`.
-- Avvisi non bloccanti riportati da `git show --check`: una riga vuota finale in `i2s_rx.h` e doppi spazi Markdown; non indicano un errore funzionale del firmware.
-
-Prima di pubblicare su GitHub, controllare **Git status, remote URL, eventuali divergenze locali/remote, segreti, privacy, dimensioni e file da includere**. Non usare `git add .` indiscriminato; non pubblicare automaticamente file RAW privati, backup integrali, build, credenziali o archivî temporanei. Il push deve essere esplicitamente autorizzato dopo la revisione del contenuto.
+- **Baseline pubblicata su GitHub (`origin/main`):** commit [`7d714302867f93a5351c12164b412b08d0ae2e98`](https://github.com/Elcosmo/Tickform/commit/7d714302867f93a5351c12164b412b08d0ae2e98) (`chore: add PROMPT.md entry point and consolidate C01/C02 report`).
+- **Cronologia commit consolidati:**
+  - `e857849`: baseline storica FASE 4 (13/11/2026).
+  - `2cb3de5`: consolidamento sorgenti I²S2/DMA FASE 5 e diagnostica.
+  - `ee89c29`: riconciliazione documentale R3.1 ed evidenze F5-D03.
+  - `7d71430`: integrazione `PROMPT.md` e report C01.
+- **Pubblicazione GitHub verificata (C03):** Push completato su `https://github.com/Elcosmo/Tickform.git` branch `main`.
+- **Copie di sicurezza esterne:** Snapshot e Git bundle verificati e conservati sui supporti fisici indipendenti **B:** (SSD TSA 480GB) e **D:** (HDD WD 160GB).
+- **Nuove evidenze locali:** Cartella `docs/evidenze_f5_n01_n03/` e aggiornamenti documentali pronti per la proposta di commit dopo revisione OVERVIEW.
 
 ## 6. Prossimi passi, nell'ordine
 
-1. Inserire e versionare questo `PROMPT.md` nella root Git, insieme al rapporto C01, aggiornando riferimenti documentali nel README e copie di backup indipendenti.
-2. Dopo verifica di sicurezza e confronto con il remoto, ottenere conferma e fare **push verso GitHub** dei commit locali e del nuovo commit documentale. Verificare che il ramo remoto contenga davvero gli oggetti Git e i file attesi.
-3. Ottenere mandato specifico per flash/collaudo del firmware **normale FASE 5**, con hash verificato e log seriale conservato.
-4. Valutare e documentare AS BUILT/cablaggio stabile; progettare aggiornamento KiCad R0.2 con autorizzazione separata.
-5. Chiudere formalmente FASE 5 solo ai criteri stabiliti; autorizzare FASE 6 solo con nuova decisione.
+1. Sottoporre a CHAT OVERVIEW la proposta di commit documentale per il collaudo F5-N01..N03 e la preparazione del Gate H01.
+2. Eseguire il **Gate H01**: ricognizione e stabilizzazione meccanico-elettrica dei collegamenti hardware (prevenzione distacchi accidentali Dupont) sul banco sperimentale.
+3. Valutare con CHAT OVERVIEW i requisiti residui aperti (continuous 64-bit counter, overflow/error recovery) e la chiusura formale di FASE 5.
+4. FASE 6 (RAW Streaming su PC via USB): rigorosamente **NON INIZIATA e NON AUTORIZZATA** fino al superamento di H01 e all'approvazione formale.
 
 Nessun punto di questa lista costituisce autorizzazione implicita ad agire.
 

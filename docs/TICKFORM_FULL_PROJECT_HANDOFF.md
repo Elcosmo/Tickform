@@ -1,10 +1,20 @@
 # TICKFORM — COMPREHENSIVE PROJECT HANDOFF
 **Documento Unico di Passaggio di Consegne per ChatGPT / Nuovi Agenti AI**  
-**Stato documento:** REVISIONE CONSOLIDATA R3.1 (18 Novembre 2026) — Consolidamento Mandato C01  
-**Baseline Git:** commit [`e857849debbc54e655a8a87a88c07a2ee0386d43`](https://github.com/Elcosmo/Tickform/commit/e857849debbc54e655a8a87a88c07a2ee0386d43) (`main`, allineato a `origin/main`)  
+**Stato documento:** STATO POST-COLLAUDO NOMINALE FASE 5 E PREPARAZIONE GATE H01 (20 Novembre 2026)
+**Baseline Git:** commit [`7d714302867f93a5351c12164b412b08d0ae2e98`](https://github.com/Elcosmo/Tickform/commit/7d714302867f93a5351c12164b412b08d0ae2e98) (`main`, allineato a `origin/main`)
 **Root di Progetto:** `A:\Documenti\Tickform`
 
 ---
+
+## Note di Aggiornamento Post-Collaudo Nominale e Preparazione Gate H01 (20/11/2026)
+La presente revisione del documento di handoff registra i risultati consolidati del mandato operativo del 20/11/2026:
+1. **Qualifica Nominale Firmware Normale F5-A02-R2.1 Completata:** Il firmware normale operativo `tickform_phase5_i2s_rx.bin` (43.756 byte, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`) è stato programmato ed ha completato con successo tre prove nominali: F5-N01-R1 (PASS, 3751 CB, 0 err), F5-N02-R1 (PASS post-RESET, 3751 CB, 0 err), F5-N03 (PASS post-power cycle USB, 3750 CB, 0 err). Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03. Il contenuto audio, il formato effettivo dei campioni e il sincronismo completo non sono ancora validati.
+2. **FASE 5 NON Ancora Formalmente Chiusa:** Come stabilito dalla CHAT OVERVIEW e verificato sui criteri di accettazione storici (`BRINGUP_CHECKLIST.md` e `RAW_FORMAT_V0_1.md`), la qualifica nominale è superata ma la FASE 5 non è formalmente chiusa a causa dei requisiti aperti residui: implementazione del contatore continuo a 64 bit dei campioni e politica attiva di ripristino/resincronizzazione da overflow ed errori.
+3. **FASE 6 Rigorosamente NON INIZIATA e NON AUTORIZZATA:** Nessuna attività relativa allo streaming RAW su PC può iniziare prima della chiusura formale di FASE 5.
+4. **Gate H01 (Priorità Immediata):** Prima di autorizzare FASE 6 o chiudere formalmente FASE 5, è inserito il Gate H01 per la ricognizione strumentale, serraggio e stabilizzazione meccanica/elettrica di tutti i collegamenti a banco (jumper DuPont, masse, alimentazioni, partitori).
+5. **Conferme Operatore AS BUILT:** PCM1808 C J1.3 GND connesso direttamente a GND ST-Link; oscillatore XO saldato su millefori con condensatore di bypass ceramico da 100 nF; MD0 e MD1 collegati con derivazione a Y con una resistenza da 10 kΩ per ramo (livello HIGH confermato); modulo DS3231 privo di batteria CR2032 non ricaricabile.
+6. **Archiviazione Evidenze F5-N01..N03:** Censiti e archiviati in [`docs/evidenze_f5_n01_n03/`](./evidenze_f5_n01_n03/) i 3 log originali recuperabili (`F5_N02_RESET.txt`, `F5_N02_R1_RESET.txt`, `F5_N03_POWER_CYCLE.txt`) con manifesto SHA-256 (`MANIFEST_EVIDENZE_F5N01_N03_20261120.txt`). Per F5-N01 e F5-N01-R1 non esistono file di log originali recuperabili sul PC; gli esiti provengono direttamente dai rapporti operativi trasmessi dall'operatore alla CHAT OVERVIEW. Riconosciuto il limite tecnico della ritrasmissione periodica USB CDC ogni 5 s.
+7. **Requisiti Futuri di Telemetria:** Registrata la necessità di integrare Boot ID, Test ID progressivo e Uptime (ms/s) nei report USB CDC per le prossime versioni firmware.
 
 ## Note di Rettifica R3.1 (18/11/2026)
 La presente revisione candidata R3.1 recepisce le 5 osservazioni emerse dalla revisione indipendente di CHAT OVERVIEW (`TICKFORM_R3_REVIEW_INDIPENDENTE_20261118.md`):
@@ -46,29 +56,31 @@ A differenza degli strumenti commerciali di fascia economica (che riducono il se
 
 ```text
 A:\Documenti\Tickform\
-├── .git/                                [Git locale, branch main, HEAD e857849]
+├── .git/                                [Git locale, branch main, HEAD 7d71430]
 ├── README.md                            [Visione generale, indice documentale]
+├── PROMPT.md                            [Punto di ingresso ufficiale CHAT OVERVIEW]
 ├── LICENSE                              [Licenza MIT placeholder]
 ├── .gitignore                           [Esclusione build/, raw generici]
 ├── bom/
 │   ├── V0.0_AS_PURCHASED.md             [BOM d'acquisto: tutti i lotti RECEIVED]
 │   └── cost_tracking.csv                [Tracciamento costi: ~131 € totali]
 ├── docs/
-│   ├── TICKFORM_PROJECT_MEMORY.md       [MEMORIA CENTRALE: testo tecnico omnicomprensivo R3]
-│   ├── TICKFORM_FULL_PROJECT_HANDOFF.md [Il presente documento di handoff R3]
-│   ├── TICKFORM_DOCUMENTATION_AUDIT.md  [Audit documentale e inventario R3]
-│   ├── TICKFORM_GAP_REGISTER_R3.md      [Registro univoco dei disallineamenti D, V, A]
+│   ├── TICKFORM_PROJECT_MEMORY.md       [MEMORIA CENTRALE: testo tecnico omnicomprensivo]
+│   ├── TICKFORM_FULL_PROJECT_HANDOFF.md [Il presente documento di handoff]
+│   ├── TICKFORM_DOCUMENTATION_AUDIT.md  [Audit documentale e inventario]
+│   ├── TICKFORM_GAP_REGISTER_R3.md      [Registro univoco dei disallineamenti D, V, A, H, T]
 │   ├── TABELLA_CORREZIONI_R3.md         [Matrice comparativa correzioni R2 vs R3]
 │   ├── TICKFORM_R3_CHANGELOG.md         [Changelog di dettaglio della revisione R3]
 │   ├── RAPPORTO_VERIFICA_GIT_R3.md      [Rapporto di verifica Git non distruttivo]
 │   ├── RAPPORTO_VERIFICA_KICAD_R3.md    [Rapporto di verifica KiCad e matrice hardware]
-│   ├── PROPOSTA_SINCRONIZZAZIONE_CANONICI_R3.md [Bozza proposta per i 4 documenti canonici]
-│   ├── evidenze_f5_d03/                 [I 5 log Tera Term originali + manifest SHA-256]
-│   ├── PROJECT_STATE.md                 [Stato vivente: proposta di aggiornamento pronta]
-│   ├── PROJECT_LOG.md                   [Diario cronologico immutabile: append-only pronto]
-│   ├── CHAT_HANDOFF.md                  [Sintesi operativa chat: proposta pronta]
+│   ├── TICKFORM_CONSOLIDATION_C01_REPORT.md [Rapporto consolidamento C01]
+│   ├── evidenze_f5_d03/                 [I 5 log Tera Term diagnostici + manifest SHA-256]
+│   ├── evidenze_f5_n01_n03/             [I 3 log Tera Term collaudo normale + manifest SHA-256]
+│   ├── PROJECT_STATE.md                 [Stato vivente sincronizzato al 20/11/2026]
+│   ├── PROJECT_LOG.md                   [Diario cronologico immutabile: append-only]
+│   ├── CHAT_HANDOFF.md                  [Sintesi operativa chat sincronizzata]
 │   ├── decisions/                       [ADR-001 .. ADR-006 accettati]
-│   └── bringup/BRINGUP_CHECKLIST.md     [Checklist prove: proposta di aggiornamento pronta]
+│   └── bringup/BRINGUP_CHECKLIST.md     [Checklist prove con esiti FASE 5 e Gate H01]
 ├── hardware/v0_perfboard/schematic/phase4_pcm1808c/
 │   ├── tickform_phase4_pcm1808c.kicad_pro [KiCad 10: Progetto integro]
 │   ├── tickform_phase4_pcm1808c.kicad_sch [Foglio schema R0.1 approvato (FASE 4)]
@@ -77,7 +89,7 @@ A:\Documenti\Tickform\
 └── firmware/stm32g431/
     ├── CMakeLists.txt                   [3 target: phase3_xo, phase5_i2s_rx, phase5_diag]
     ├── build.ps1                        [Script build unificato con target switch]
-    ├── Core/Src/i2s_rx.c / i2s_rx.h     [Modulo normale operativo FASE 5]
+    ├── Core/Src/i2s_rx.c / i2s_rx.h     [Modulo normale operativo FASE 5 collaudato]
     ├── Core/Src/i2s_rx_diag.c / .h      [Modulo diagnostica interna F5-D03]
     └── build/                           [Output binari compilati e validati crittograficamente]
 ```
@@ -92,13 +104,13 @@ Lo schema risiede in [`hardware/v0_perfboard/schematic/phase4_pcm1808c/`](../har
 - **Limiti di perimetro:** Documenta esclusivamente la generazione dei clock a 96 kHz sul modulo **PCM1808 C**. **I pin I²S (PB12, PB13, PB15) e il modulo DS3231 NON sono collegati nello schema.** Le uscite clock LRC e BCK sono attestate solo sulle sonde dell'analizzatore logico (`INSTR1`).
 - **Resistenze pull-up:** Disegnate come due resistenze distinte da 10 kΩ (`R1` e `R2`) verso 3,3 V.
 
-### 3.2. Prototipo Fisico Reale AS BUILT (Banco Sperimentale F5-D03)
+### 3.2. Prototipo Fisico Reale AS BUILT (Banco Sperimentale al 20/11/2026)
 - WeAct alimentata via cavo USB-C dal PC (rail 3,3 V e V+ 5,0 V attivi).
-- Oscillatore XO 24,576 MHz alimentato a 3,3 V con condensatore di bypass ceramico da 100 nF. Uscita OUT collegata a `SCK` del PCM1808 C con filo diretto (R_onboard ~100 Ω accertata passivamente).
-- Modulo PCM1808 C alimentato a 5 V analogici (WeAct V+) e 3,3 V digitali (WeAct 3V3).
-- **MD0 e MD1:** Collegati a 3,3 V tramite derivazione a Y; **valore resistivo e topologia NON misurati con multimetro** prima del test; livello logico HIGH confermato dall'avvio della modalità Master a 96 kHz.
-- **Collegamenti I²S verso STM32:** Tre cavetti volanti Dupont maschio-femmina su breadboard collegano `LRC (J2.4)` a `PB12`, `BCK (J2.6)` a `PB13`, `OUT (J2.5)` a `PB15`.
-- **Modulo DS3231:** Connesso su breadboard (I2C1 su PA15/PB7, SQW 1 Hz); batteria non installata.
+- **Oscillatore XO 24,576 MHz:** Saldato su piastrina millefori (perfboard) con condensatore di bypass ceramico da 100 nF; alimentato a 3,3 V. Uscita OUT collegata a `SCK` del PCM1808 C con filo diretto (R_onboard ~100 Ω accertata passivamente).
+- **Modulo PCM1808 C:** Alimentato a 5 V analogici (WeAct V+) e 3,3 V digitali (WeAct 3V3). Pin J1.3 GND connesso direttamente al pin GND dell'adattatore ST-Link.
+- **MD0 e MD1:** L'operatore ha confermato la configurazione fisica con derivazione a Y con una resistenza da 10 kΩ per ramo verso 3,3 V, coerente con lo schema KiCad (conferma della configurazione fisica riferita dall'operatore con livello logico HIGH confermato operativamente; non costituisce misurazione ohmica strumentale indipendente, demandata alla verifica del Gate H01).
+- **Collegamenti I²S verso STM32:** Tre cavetti volanti Dupont maschio-femmina su breadboard collegano `LRC (J2.4)` a `PB12`, `BCK (J2.6)` a `PB13`, `OUT (J2.5)` a `PB15`. In F5-N01 riscontrato un connettore Dupont scollegato a banco (collegamento esatto non identificato nella documentazione trasmessa alla OVERVIEW), ripristinato con successo per i collaudi F5-N01-R1, F5-N02-R1 e F5-N03.
+- **Modulo DS3231:** Connesso su breadboard (I2C1 su PA15/PB7, SQW 1 Hz); batteria CR2032 non ricaricabile NON presente/non installata (conforme al divieto per circuito di carica D2+R4).
 
 ---
 
@@ -109,7 +121,7 @@ Lo schema risiede in [`hardware/v0_perfboard/schematic/phase4_pcm1808c/`](../har
 - **Configurazione I²S2:** Slave Receiver, Philips I²S 24-bit su frame 32-bit, clock polarity LOW.
 - **DMA:** DMA1 Channel 1 in modalità circolare, DMAMUX1 Request ID 12 (`SPI2_RX`). Dimensione trasferimento Halfword (16-bit), incremento memoria abilitato.
 - **Buffer circolare:** 2048 halfword (1024 frame stereo = 4096 byte). Ad ogni metà buffer (Half Transfer) e fine buffer (Transfer Complete) viene generata una callback HAL. A 96 kHz stereo, si registrano **375 callback/secondo** (~3750 callback in 10 secondi).
-- **Stato del binario:** Compilato e approvato crittograficamente (`firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin`, 43.756 byte, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`). **Collaudo formale a banco con clock attivi pendente.**
+- **Stato del binario:** Compilato, approvato e collaudato crittograficamente a banco il 20/11/2026 (`firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin`, 43.756 byte, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`). Prove nominali F5-N01-R1 (PASS), F5-N02-R1 (PASS), F5-N03 (PASS) con 3750–3751 CB e 0 errori. Qualifica nominale completata; FASE 5 non ancora formalmente chiusa per requisiti aperti residui.
 
 ### 4.2. Firmware Diagnostico F5-D03
 - **Target diagnostico:** `tickform_phase5_diag` ([`firmware/stm32g431/Core/Src/i2s_rx_diag.c`](../firmware/stm32g431/Core/Src/i2s_rx_diag.c)).
@@ -165,7 +177,7 @@ eq$ collaudato.*
 | Target Firmware | File Binario | SHA-256 Ufficiale | Dimensione | Stato di Validazione | Note Operative |
 | :--- | :--- | :--- | :---: | :--- | :--- |
 | `tickform_phase3_xo` | `build/phase3/tickform_phase3_xo.bin` | `E0B8F70661F62EC362DAB0EA53B8E7D3E06B02381FF284CB41865C8C9B1DC4BA` | 37.004 B | **COLLAUDATO CON SUCCESSO** | Baseline FASE 3 (contatore XO PA0/TIM2_ETR). |
-| `tickform_phase5_i2s_rx` | `build/phase5/tickform_phase5_i2s_rx.bin` | `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465` | 43.756 B | **APPROVATO / COLLAUDO PENDENTE** | Modulo normale F5-A02-R2.1. Flash fallito in F5-A02-T01 (0 CB per HW); non ritestato. |
+| `tickform_phase5_i2s_rx` | `build/phase5/tickform_phase5_i2s_rx.bin` | `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465` | 43.756 B | **COLLAUDATO CON SUCCESSO** | Modulo normale F5-A02-R2.1. Collaudato il 20/11/2026: F5-N01-R1 (PASS, 3751 CB, 0 err), F5-N02-R1 (PASS post-RESET, 3751 CB), F5-N03 (PASS post-power cycle, 3750 CB). Osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03; contenuto audio, formato e sincronismo non ancora validati. Qualifica nominale superata. |
 | `tickform_phase5_diag` (D02) | `build/diag/tickform_phase5_diag.bin` | `D42E1CBC484CD5D1E0F100302BE18DAEC3571F3CE5E2A1CE9CED0D23AA71A11C` | 47.404 B | **COLLAUDATO (Storico)** | Diagnostica F5-D02-R2. CNDTR 2048 fisso, CDC segmentato ok. |
 | `tickform_phase5_diag` (D03) | `build/diag/tickform_phase5_diag.bin` | `29786361C8299AE5CEFDA480C97EC100A30616624D8029BAE275F164BA3A43B7` | 52.308 B | **COLLAUDATO CON SUCCESSO** | Diagnostica F5-D03. Eseguito a banco il 17/11/2026 (Run 1..5B e 6 reboot). |
 
@@ -175,19 +187,18 @@ eq$ collaudato.*
 
 - **Root locale:** `A:\Documenti\Tickform`
 - **Branch attivo:** `main` (allineato a `origin/main` su `https://github.com/Elcosmo/Tickform.git`).
-- **Commit HEAD:** `e857849debbc54e655a8a87a88c07a2ee0386d43` (docs(hardware): checkpoint PCM1808 C 96kHz bring-up and KiCad schematic, 13/11/2026).
+- **Commit HEAD:** `7d714302867f93a5351c12164b412b08d0ae2e98` (docs: prepare repository for GitHub publication, 18/11/2026).
 - **Working Tree:**
-  - 4 file tracciati modificati: `CMakeLists.txt`, `stm32g4xx_hal_conf.h`, `main.c`, `build.ps1`.
-  - Sorgenti I²S untracked protetti nel filesystem locale: `i2s_rx.c`, `i2s_rx.h`, `i2s_rx_diag.c`, `i2s_rx_diag.h`.
-  - Documentazione candidata R3 e pacchetti di review untracked.
-- **Divieti operativi:** Nessun commit, push, reset o rebase eseguito.
+  - File tracciati consolidati nei commit C01 (`ee89c29`), C02 (`7d71430`) e pubblicati su GitHub (C03).
+  - Modifiche in corso: documentazione post-collaudo nominale FASE 5 (F5-CLOSEOUT-DOC), preparazione Gate H01 e archiviazione evidenze F5-N01..N03 in `docs/evidenze_f5_n01_n03/`.
+- **Divieti operativi:** Nessun commit, push, flash, modifica hardware o build non autorizzati.
 
 ---
 
 ## 8. Prossime Attività e Decisioni Aperte per CHAT OVERVIEW
 
-Per procedere formalmente dopo la consegna del pacchetto R3, CHAT OVERVIEW dovrà valutare:
-1. **Mandato Operativo di Collaudo F5-A02-R2.1 (GAP-V-01 / GAP-A-01):** Autorizzare il flash di `tickform_phase5_i2s_rx.bin` (SHA-256 `04B95777...`) ed eseguire il collaudo di ricezione DMA di 10 secondi sul banco funzionante, salvando il log ufficiale.
-2. **Documentazione AS BUILT (GAP-V-02):** Fotografare il banco e misurare le resistenze di pull-up MD0/MD1 con multimetro prima di qualsiasi saldatura.
-3. **Approvazione della Sincronizzazione Documenti Canonici (GAP-A-04):** Autorizzare l'applicazione delle modifiche proposte in `docs/PROPOSTA_SINCRONIZZAZIONE_CANONICI_R3.md` a `PROJECT_STATE.md`, `PROJECT_LOG.md`, `CHAT_HANDOFF.md` e `BRINGUP_CHECKLIST.md`.
+Per procedere formalmente dopo la qualifica nominale FASE 5, CHAT OVERVIEW dovrà valutare:
+1. **Gate H01 — Ricognizione e Stabilizzazione Hardware a Banco (PRIORITÀ IMMEDIATA):** Ispezione visiva, verifica strumentale e stabilizzazione meccanica/elettrica dei jumper DuPont, alimentazioni, masse e fissaggi a banco per eliminare le fragilità riscontrate in F5-N01.
+2. **Requisiti Residui FASE 5 (GAP-A-01 / GAP-V-01):** Valutare l'implementazione del contatore continuo a 64 bit dei campioni e dell'algoritmo attivo di recupero/resincronizzazione da overflow/errori prima della chiusura formale di FASE 5.
+3. **Requisiti Futuri di Telemetria:** Inserimento di Boot ID, Test ID progressivo e Uptime nei report USB CDC per disambiguare le ritrasmissioni passive dalle nuove esecuzioni.
 4. **FASE 6 (RAW Streaming su PC):** Rimane rigorosamente **NON INIZIATA e NON AUTORIZZATA** fino alla chiusura formale di FASE 5.

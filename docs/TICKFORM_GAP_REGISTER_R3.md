@@ -27,15 +27,17 @@ I disallineamenti e le lacune del progetto sono catalogati in tre classi tassati
 | **GAP-D-03** | D | Interpretazione e campionamento GPIO IDR: stima teorica e limite Nyquist su BCK | MEDIA | NO | NO | **RISOLTO IN R3** |
 | **GAP-D-04** | D | Confusione tra CAD (resistenze 10k R1/R2) e cablaggio banco AS BUILT (non misurato) | MEDIA | NO | NO | **RISOLTO IN R3** |
 | **GAP-D-05** | D | Presenza di collegamenti non portabili `file:///A:/...` nei Markdown | BASSA | NO | NO | **RISOLTO IN R3** |
-| **GAP-D-06** | D | Documenti canonici (`PROJECT_STATE`, `LOG`, `HANDOFF`, `CHECKLIST`) fermi a FASE 4 | ALTA | SÌ (approv. proposta) | NO | **PROPOSTA PRONTA** |
-| **GAP-V-01** | V | Collaudo formale del firmware normale `tickform_phase5_i2s_rx` con log salvato | ALTA | SÌ (autorizz. flash) | SÌ | **APERTO (Post-R3)** |
-| **GAP-V-02** | V | Rilievo strumentale e documentazione AS BUILT del cablaggio MD0/MD1 su breadboard | MEDIA | NO | SÌ | **APERTO (Post-R3)** |
+| **GAP-D-06** | D | Documenti canonici (`PROJECT_STATE`, `LOG`, `HANDOFF`, `CHECKLIST`) fermi a FASE 4 | ALTA | SÌ (approv. proposta) | NO | **RISOLTO IN C01/C02** |
+| **GAP-V-01** | V | Collaudo formale del firmware normale `tickform_phase5_i2s_rx` con log salvato | ALTA | SÌ (autorizz. flash) | SÌ | **RISOLTO (20/11/2026)** |
+| **GAP-V-02** | V | Documentazione AS BUILT e verifica strumentale MD0/MD1 e alimentazioni | MEDIA | NO | SÌ | **AS BUILT CONFERMATO / MISURA PENDENTE (H01)** |
 | **GAP-V-03** | V | Verifica strumentale (LA/PulseView) della continuità del clock BCK a 6,144 MHz | MEDIA | NO | SÌ | **APERTO (Post-R3)** |
-| **GAP-V-04** | V | Verifica allineamento e pulizia del working tree Git prima del commit FASE 5 | BASSA | NO | NO | **APERTO (Post-R3)** |
-| **GAP-A-01** | A | Autorizzazione al flash e al collaudo del firmware normale F5-A02-R2.1 | ALTA | SÌ | NO | **IN ATTESA OVERVIEW** |
+| **GAP-V-04** | V | Verifica allineamento e pulizia del working tree Git prima del commit FASE 5 | BASSA | NO | NO | **RISOLTO IN C01/C02** |
+| **GAP-A-01** | A | Autorizzazione al flash e al collaudo del firmware normale F5-A02-R2.1 | ALTA | SÌ | NO | **RISOLTO (20/11/2026)** |
 | **GAP-A-02** | A | Approvazione della strategia di stabilizzazione HW e futuro passaggio a KiCad R0.2 | MEDIA | SÌ | NO | **IN ATTESA OVERVIEW** |
-| **GAP-A-03** | A | Chiusura formale di FASE 5 e autorizzazione al passaggio a FASE 6 (RAW Stream) | CRITICA | SÌ | NO | **IN ATTESA OVERVIEW** |
-| **GAP-A-04** | A | Approvazione formale dell'applicazione delle sincronizzazioni ai 4 documenti canonici | MEDIA | SÌ | NO | **IN ATTESA OVERVIEW** |
+| **GAP-A-03** | A | Chiusura formale di FASE 5 e autorizzazione al passaggio a FASE 6 (RAW Stream) | CRITICA | SÌ | NO | **IN ATTESA OVERVIEW (subordinata a H01)** |
+| **GAP-A-04** | A | Approvazione formale dell'applicazione delle sincronizzazioni ai 4 documenti canonici | MEDIA | SÌ | NO | **RISOLTO IN C01/C02** |
+| **GAP-H-01** | V/A | Stabilizzazione meccanica ed elettrica cablaggi hardware banco (Gate H01) | ALTA | SÌ | SÌ | **APERTO / NEXT (Gate H01)** |
+| **GAP-T-01** | D/V | Implementazione continuous 64-bit sample counter e recovery attiva overflow/errori | ALTA | SÌ | SÌ | **APERTO (Requisiti FASE 6)** |
 
 ---
 
@@ -141,31 +143,27 @@ I disallineamenti e le lacune del progetto sono catalogati in tre classi tassati
 
 ---
 
-### GAP-V-01 — Mancato collaudo del firmware normale operativo F5-A02-R2.1
+### GAP-V-01 — Collaudo del firmware normale operativo F5-A02-R2.1
 - **Categoria:** V — Verifica necessaria
-- **Descrizione:** Il firmware approvato per la ricezione normale I²S2 Slave DMA (`tickform_phase5_i2s_rx.bin`, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`) è stato programmato e testato solo nella seduta F5-A02-T01 del 15/11/2026, dove ha dato esito negativo (zero callback) a causa dello stallo hardware di banco non ancora risolto. Dopo il ripristino dei contatti del 17/11/2026 è stato testato esclusivamente il firmware diagnostico `tickform_phase5_diag.bin`. Il firmware normale non è mai stato collaudato con i clock operativi.
-- **Documenti coinvolti:** `firmware/stm32g431/RAPPORTO_F5_A02_R2.md`, `BRINGUP_CHECKLIST.md` (FASE 5 checklist), `PROJECT_STATE.md`.
-- **Evidenza disponibile:** File binario `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin`, esiti F5-A02-T01, cronologia dei flash del 17/11/2026.
+- **Descrizione:** Il firmware approvato per la ricezione normale I²S2 Slave DMA (`tickform_phase5_i2s_rx.bin`, SHA-256 `04B9577710B948BAF02331178EFA399A6099BFAFFAF41D23BAED49823B767465`) necessitava di un collaudo controllato a banco con log seriale salvato per certificare la qualifica nominale.
+- **Documenti coinvolti:** `firmware/stm32g431/RAPPORTO_F5_A02_R2.md`, `BRINGUP_CHECKLIST.md` (FASE 5 checklist), `PROJECT_STATE.md`, `docs/evidenze_f5_n01_n03/`.
+- **Evidenza disponibile:** File binario `firmware/stm32g431/build/phase5/tickform_phase5_i2s_rx.bin`, 3 file di log originali recuperabili archiviati in `docs/evidenze_f5_n01_n03/` (`F5_N02_RESET.txt`, `F5_N02_R1_RESET.txt`, `F5_N03_POWER_CYCLE.txt`) e relativo manifest SHA-256. Per F5-N01 e F5-N01-R1, non essendovi file di log originali recuperabili, gli esiti provengono direttamente dai rapporti operativi trasmessi alla OVERVIEW.
 - **Gravità:** ALTA.
-- **Causa accertata:** Mancata esecuzione del test con firmware normale dopo la risoluzione del problema di cablaggio (sono stati eseguiti solo test diagnostici e riavvii con firmware diag).
-- **Azione richiesta:** Richiedere autorizzazione a CHAT OVERVIEW per programmare `tickform_phase5_i2s_rx.bin` (SHA-256 `04B95777...`) ed eseguire un test di ricezione DMA di 10 secondi, salvando il log formale.
-- **Necessità decisione OVERVIEW:** SÌ (autorizzazione al flash).
-- **Necessità prova HW:** SÌ.
-- **Criterio oggettivo di chiusura:** Esecuzione del test a banco, verifica della ricezione nominale (~3750 CB DMA) con zero errori, salvataggio del file di log nel repository.
+- **Stato:** **RISOLTO (20/11/2026)**. Mandato CHAT OVERVIEW F5-N01/N02/N03 eseguito: flash riuscito al primo tentativo con verifica crittografica; collaudi nominali positivi (F5-N01-R1 PASS 3751 CB, F5-N02-R1 PASS 3751 CB, F5-N03 PASS 3750 CB; 0 errori). Preservati anche F5-N01 (FAIL originale per connettore Dupont scollegato a banco, collegamento esatto non identificato nella documentazione, privo di log salvato) e F5-N02 (eseguito ma non validabile per campioni azzerati). Sono stati osservati valori RAW non nulli in F5-N02-R1 e valori zero in F5-N03; contenuto audio, formato e sincronismo non ancora validati.
+- **Criterio oggettivo di chiusura:** Esecuzione del test a banco, verifica della ricezione nominale (~3750 CB DMA) con zero errori, salvataggio dei file di log nel repository con manifest.
 
 ---
 
-### GAP-V-02 — Rilievo strumentale e documentazione AS BUILT del cablaggio MD0/MD1
+### GAP-V-02 — Documentazione AS BUILT e verifica strumentale del cablaggio MD0/MD1 e alimentazioni
 - **Categoria:** V — Verifica necessaria
-- **Descrizione:** L'esatta configurazione fisica del cablaggio delle linee MD0 e MD1 sulla breadboard (singola o doppia resistenza, valore ohmico nominale ed effettivo, punto di prelievo 3,3 V) non è mai stata misurata con multimetro o fotografata in dettaglio.
-- **Documenti coinvolti:** `hardware/v0_perfboard/schematic/phase4_pcm1808c/README.md`, `TICKFORM_PROJECT_MEMORY.md` (§3.1, §5.1).
-- **Evidenza disponibile:** R0.1 CAD (che prescrive due resistenze da 10 kΩ), dichiarazioni dell'operatore sul cavo a Y.
+- **Descrizione:** L'esatta configurazione fisica del cablaggio delle linee MD0 e MD1 sulla breadboard, le masse e l'oscillatore necessitavano di ricostruzione AS BUILT e verifica strumentale.
+- **Documenti coinvolti:** `TICKFORM_PROJECT_MEMORY.md` (§3.1, §5.1), `PROJECT_STATE.md`.
+- **Evidenza disponibile:** Conferme fornite dall'operatore a CHAT OVERVIEW in data 20/11/2026.
 - **Gravità:** MEDIA.
-- **Causa accertata:** Cablaggio sperimentale rapido su breadboard senza registrazione dei valori dei componenti passivi.
-- **Azione richiesta:** Misurare con multimetro a banco scollegato la resistenza tra MD0 e 3V3 e tra MD1 e 3V3, verificare la continuità verso il pin di alimentazione e scattare una fotografia del cablaggio prima di procedere a qualsiasi saldatura.
-- **Necessità decisione OVERVIEW:** NO.
-- **Necessità prova HW:** SÌ (misura passiva a freddo con multimetro).
-- **Criterio oggettivo di chiusura:** Annotazione formale del valore ohmico misurato e della topologia fisica nella scheda AS BUILT.
+- **Stato:** **AS BUILT CONFERMATO DA OPERATORE / MISURAZIONE STRUMENTALE PENDENTE (Demandata a Gate H01)**.
+  - *Ricostruzione AS BUILT (confermata dall'operatore):* L'operatore ha confermato la configurazione fisica con derivazione a Y con una resistenza da 10 kΩ per ramo verso 3,3 V, coerente con lo schema KiCad (livello HIGH confermato operativamente); XO saldato su millefori con condensatore ceramico di disaccoppiamento da 100 nF; J1.3 GND connesso direttamente a GND ST-Link; DS3231 conforme (nessuna batteria CR2032 non ricaricabile).
+  - *Verifica strumentale ohmica indipendente:* La misurazione ohmica con multimetro e il rilievo fotografico non sono stati effettuati a banco; restano previsti come controllo strumentale nel Gate H01 prima di FASE 6.
+- **Criterio oggettivo di chiusura:** Esecuzione del controllo strumentale e documentazione fotografica/ohmica nel Gate H01.
 
 ---
 
